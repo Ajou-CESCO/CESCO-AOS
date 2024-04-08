@@ -1,4 +1,4 @@
-# CESCO-AOS
+# CESCO-Android
 
 ## 팀원 소개
 
