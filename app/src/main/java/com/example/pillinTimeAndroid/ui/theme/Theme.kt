@@ -1,4 +1,4 @@
-package com.example.pillintime_android.ui.theme
+package com.example.pillinTimeAndroid.ui.theme
 
 import android.app.Activity
 import android.os.Build

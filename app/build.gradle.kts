@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pillintime_android"
+    namespace = "com.example.pillinTimeAndroid"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.pillintime_android"
+        applicationId = "com.example.pillinTimeAndroid"
         minSdk = 31
         targetSdk = 34
         versionCode = 1

@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PillinTime-Android"
+rootProject.name = "pillinTimeAndroid"
 include(":app")
- 
+

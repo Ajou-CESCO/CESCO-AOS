@@ -1,4 +1,4 @@
-package com.example.pillintime_android
+package com.example.pillinTimeAndroid
 
 import org.junit.Test
 

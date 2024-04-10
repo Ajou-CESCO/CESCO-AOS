@@ -1,4 +1,4 @@
-package com.example.pillintime_android
+package com.example.pillinTimeAndroid
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.pillintime_android.ui.theme.PillinTimeAndroidTheme
+import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

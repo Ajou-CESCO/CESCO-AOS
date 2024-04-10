@@ -1,4 +1,4 @@
-package com.example.pillintime_android
+package com.example.pillinTimeAndroid
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

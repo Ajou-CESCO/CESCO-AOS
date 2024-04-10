@@ -19,8 +19,8 @@ composeBom = "2024.04.00"
 navigationCompose = "2.7.7"
 pagingCompose = "3.2.1"
 retrofit = "2.9.0"
-ksp = "1.9.20-1.0.14"
-parcelize = "2.0.0-RC1"
+ksp = "1.9.0-1.0.12"
+parcelize = "1.9.0"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }

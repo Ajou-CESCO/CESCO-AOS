@@ -1,4 +1,4 @@
-package com.example.pillintime_android.ui.theme
+package com.example.pillinTimeAndroid.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
