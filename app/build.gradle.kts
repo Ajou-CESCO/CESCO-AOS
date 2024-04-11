@@ -27,8 +27,7 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }
@@ -43,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.9.0"
     }
     packaging {
         resources {
@@ -73,7 +72,7 @@ dependencies {
     // Splash screen
     implementation(libs.androidx.core.splashscreen)
 
-    //Compose Navigation
+    // Compose Navigation
     implementation(libs.androidx.navigation.compose)
 
     // Datastore
@@ -84,7 +83,7 @@ dependencies {
 
     // Dagger Hilt
     ksp(libs.hilt.android)
-    ksp(libs.hilt.compiler)   // Hilt compiler
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
 
     // Compose foundation
