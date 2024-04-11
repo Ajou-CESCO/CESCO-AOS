@@ -21,273 +21,272 @@ private val Pretendard = FontFamily(
 )
 
 internal val Typography = PillinTimeTypography(
-    Logo1_Medium = TextStyle(
+    logo1Medium = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.Medium,
         fontSize = 36.sp,
     ),
-    Logo1_Extra = TextStyle(
+    logo1Extra = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 36.sp,
     ),
-    Logo2_Medium = TextStyle(
+    logo2Medium = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.Medium,
         fontSize = 24.sp,
     ),
-    Logo2_Extra = TextStyle(
+    logo2Extra = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 24.sp,
     ),
-    Logo3_Medium = TextStyle(
+    logo3Medium = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 20.sp,
     ),
-    Logo3_Extra = TextStyle(
+    logo3Extra = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 20.sp,
     ),
-    Logo4_Medium = TextStyle(
+    logo4Medium = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 16.sp,
     ),
-    Logo4_Extra = TextStyle(
+    logo4Extra = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 16.sp,
     ),
-    Logo5_Medium = TextStyle(
+    logo5Medium = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 12.sp,
     ),
-    Logo5_Extra = TextStyle(
+    logo5Extra = TextStyle(
         fontFamily = OAGothic,
         fontWeight = FontWeight.ExtraBold,
         fontSize = 12.sp,
     ),
-    Headline1_Regular = TextStyle(
+    headline1Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 48.sp,
     ),
-    Headline1_Medium = TextStyle(
+    headline1Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 48.sp,
     ),
-    Headline1_Bold = TextStyle(
+    headline1Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 48.sp,
     ),
-    Headline2_Regular = TextStyle(
+    headline2Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 34.sp,
     ),
-    Headline2_Medium = TextStyle(
+    headline2Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 34.sp,
     ),
-    Headline2_Bold = TextStyle(
+    headline2Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 34.sp,
     ),
-    Headline3_Regular = TextStyle(
+    headline3Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 28.sp,
     ),
-    Headline3_Medium = TextStyle(
+    headline3Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 28.sp,
     ),
-    Headline3_Bold = TextStyle(
+    headline3Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
     ),
-    Headline4_Regular = TextStyle(
+    headline4Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp,
     ),
-    Headline4_Medium = TextStyle(
+    headline4Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 24.sp,
     ),
-    Headline4_Bold = TextStyle(
+    headline4Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
     ),
-    Headline5_Regular = TextStyle(
+    headline5Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp,
     ),
-    Headline5_Medium = TextStyle(
+    headline5Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
     ),
-    Headline5_Bold = TextStyle(
+    headline5Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
     ),
-    Body1_Regular = TextStyle(
+    body1Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
     ),
-    Body1_Medium = TextStyle(
+    body1Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
     ),
-    Body1_Bold = TextStyle(
+    body1Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
     ),
-    Body2_Regular = TextStyle(
+    body2Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
     ),
-    Body2_Medium = TextStyle(
+    body2Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
     ),
-    Body2_Bold = TextStyle(
+    body2Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
     ),
-    Caption1_Regular = TextStyle(
+    caption1Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
     ),
-    Caption1_Medium = TextStyle(
+    caption1Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
     ),
-    Caption1_Bold = TextStyle(
+    caption1Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
     ),
-    Caption2_Regular = TextStyle(
+    caption2Regular = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Normal,
         fontSize = 11.sp,
     ),
-    Caption2_Medium = TextStyle(
+    caption2Medium = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Medium,
         fontSize = 11.sp,
     ),
-    Caption2_Bold = TextStyle(
+    caption2Bold = TextStyle(
         fontFamily = Pretendard,
         fontWeight = FontWeight.Bold,
         fontSize = 11.sp,
     ),
 )
 
-
 @Immutable
 data class PillinTimeTypography(
-    val Logo1_Medium: TextStyle,
-    val Logo1_Extra: TextStyle,
-    val Logo2_Medium: TextStyle,
-    val Logo2_Extra: TextStyle,
-    val Logo3_Medium: TextStyle,
-    val Logo3_Extra: TextStyle,
-    val Logo4_Medium: TextStyle,
-    val Logo4_Extra: TextStyle,
-    val Logo5_Medium: TextStyle,
-    val Logo5_Extra: TextStyle,
-    val Headline1_Regular: TextStyle,
-    val Headline1_Medium: TextStyle,
-    val Headline1_Bold: TextStyle,
-    val Headline2_Regular: TextStyle,
-    val Headline2_Medium: TextStyle,
-    val Headline2_Bold: TextStyle,
-    val Headline3_Regular: TextStyle,
-    val Headline3_Medium: TextStyle,
-    val Headline3_Bold: TextStyle,
-    val Headline4_Regular: TextStyle,
-    val Headline4_Medium: TextStyle,
-    val Headline4_Bold: TextStyle,
-    val Headline5_Regular: TextStyle,
-    val Headline5_Medium: TextStyle,
-    val Headline5_Bold: TextStyle,
-    val Body1_Regular: TextStyle,
-    val Body1_Medium: TextStyle,
-    val Body1_Bold: TextStyle,
-    val Body2_Regular: TextStyle,
-    val Body2_Medium: TextStyle,
-    val Body2_Bold: TextStyle,
-    val Caption1_Regular: TextStyle,
-    val Caption1_Medium: TextStyle,
-    val Caption1_Bold: TextStyle,
-    val Caption2_Regular: TextStyle,
-    val Caption2_Medium: TextStyle,
-    val Caption2_Bold: TextStyle,
+    val logo1Medium: TextStyle,
+    val logo1Extra: TextStyle,
+    val logo2Medium: TextStyle,
+    val logo2Extra: TextStyle,
+    val logo3Medium: TextStyle,
+    val logo3Extra: TextStyle,
+    val logo4Medium: TextStyle,
+    val logo4Extra: TextStyle,
+    val logo5Medium: TextStyle,
+    val logo5Extra: TextStyle,
+    val headline1Regular: TextStyle,
+    val headline1Medium: TextStyle,
+    val headline1Bold: TextStyle,
+    val headline2Regular: TextStyle,
+    val headline2Medium: TextStyle,
+    val headline2Bold: TextStyle,
+    val headline3Regular: TextStyle,
+    val headline3Medium: TextStyle,
+    val headline3Bold: TextStyle,
+    val headline4Regular: TextStyle,
+    val headline4Medium: TextStyle,
+    val headline4Bold: TextStyle,
+    val headline5Regular: TextStyle,
+    val headline5Medium: TextStyle,
+    val headline5Bold: TextStyle,
+    val body1Regular: TextStyle,
+    val body1Medium: TextStyle,
+    val body1Bold: TextStyle,
+    val body2Regular: TextStyle,
+    val body2Medium: TextStyle,
+    val body2Bold: TextStyle,
+    val caption1Regular: TextStyle,
+    val caption1Medium: TextStyle,
+    val caption1Bold: TextStyle,
+    val caption2Regular: TextStyle,
+    val caption2Medium: TextStyle,
+    val caption2Bold: TextStyle,
 )
 
 val LocalPillinTimeTypography = staticCompositionLocalOf {
     PillinTimeTypography(
-        Logo1_Medium = TextStyle.Default,
-        Logo1_Extra = TextStyle.Default,
-        Logo2_Medium = TextStyle.Default,
-        Logo2_Extra = TextStyle.Default,
-        Logo3_Medium = TextStyle.Default,
-        Logo3_Extra = TextStyle.Default,
-        Logo4_Medium = TextStyle.Default,
-        Logo4_Extra = TextStyle.Default,
-        Logo5_Medium = TextStyle.Default,
-        Logo5_Extra = TextStyle.Default,
-        Headline1_Regular = TextStyle.Default,
-        Headline1_Medium = TextStyle.Default,
-        Headline1_Bold = TextStyle.Default,
-        Headline2_Regular = TextStyle.Default,
-        Headline2_Medium = TextStyle.Default,
-        Headline2_Bold = TextStyle.Default,
-        Headline3_Regular = TextStyle.Default,
-        Headline3_Medium = TextStyle.Default,
-        Headline3_Bold = TextStyle.Default,
-        Headline4_Regular = TextStyle.Default,
-        Headline4_Medium = TextStyle.Default,
-        Headline4_Bold = TextStyle.Default,
-        Headline5_Regular = TextStyle.Default,
-        Headline5_Medium = TextStyle.Default,
-        Headline5_Bold = TextStyle.Default,
-        Body1_Regular = TextStyle.Default,
-        Body1_Medium = TextStyle.Default,
-        Body1_Bold = TextStyle.Default,
-        Body2_Regular = TextStyle.Default,
-        Body2_Medium = TextStyle.Default,
-        Body2_Bold = TextStyle.Default,
-        Caption1_Regular = TextStyle.Default,
-        Caption1_Medium = TextStyle.Default,
-        Caption1_Bold = TextStyle.Default,
-        Caption2_Regular = TextStyle.Default,
-        Caption2_Medium = TextStyle.Default,
-        Caption2_Bold = TextStyle.Default,
+        logo1Medium = TextStyle.Default,
+        logo1Extra = TextStyle.Default,
+        logo2Medium = TextStyle.Default,
+        logo2Extra = TextStyle.Default,
+        logo3Medium = TextStyle.Default,
+        logo3Extra = TextStyle.Default,
+        logo4Medium = TextStyle.Default,
+        logo4Extra = TextStyle.Default,
+        logo5Medium = TextStyle.Default,
+        logo5Extra = TextStyle.Default,
+        headline1Regular = TextStyle.Default,
+        headline1Medium = TextStyle.Default,
+        headline1Bold = TextStyle.Default,
+        headline2Regular = TextStyle.Default,
+        headline2Medium = TextStyle.Default,
+        headline2Bold = TextStyle.Default,
+        headline3Regular = TextStyle.Default,
+        headline3Medium = TextStyle.Default,
+        headline3Bold = TextStyle.Default,
+        headline4Regular = TextStyle.Default,
+        headline4Medium = TextStyle.Default,
+        headline4Bold = TextStyle.Default,
+        headline5Regular = TextStyle.Default,
+        headline5Medium = TextStyle.Default,
+        headline5Bold = TextStyle.Default,
+        body1Regular = TextStyle.Default,
+        body1Medium = TextStyle.Default,
+        body1Bold = TextStyle.Default,
+        body2Regular = TextStyle.Default,
+        body2Medium = TextStyle.Default,
+        body2Bold = TextStyle.Default,
+        caption1Regular = TextStyle.Default,
+        caption1Medium = TextStyle.Default,
+        caption1Bold = TextStyle.Default,
+        caption2Regular = TextStyle.Default,
+        caption2Medium = TextStyle.Default,
+        caption2Bold = TextStyle.Default,
     )
 }
