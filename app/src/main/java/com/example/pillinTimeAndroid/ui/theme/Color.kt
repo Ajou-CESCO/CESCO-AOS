@@ -37,6 +37,9 @@ val Gray10 = Color(0xFFEEEFF1)
 val Gray5 = Color(0xFFF8F8F9)
 
 // System colors
+val White = Color(0xFFFFFFFF)
+val Overay = Color(0x802B2B2E)
+val Linear = Color(0x00FFFFFF)
 val Error90 = Color(0xFFCB3830)
 val Error60 = Color(0xFFD9635D)
 val Error40 = Color(0xFFE0817C)
