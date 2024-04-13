@@ -42,7 +42,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.9.0"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -82,9 +82,9 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Dagger Hilt
-    ksp(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Compose foundation
     implementation(libs.androidx.foundation)
