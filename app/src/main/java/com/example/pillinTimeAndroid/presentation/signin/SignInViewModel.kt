@@ -47,7 +47,7 @@ class SignInViewModel @Inject constructor() : ViewModel() {
 
     fun getKeyboardOptions(): KeyboardOptions {
         return when (currentPageIndex.value) {
-            1 -> KeyboardOptions(keyboardType = KeyboardType.Phone)
+            1 -> KeyboardOptions(keyboardType = KeyboardType.Number)
             2 -> KeyboardOptions(keyboardType = KeyboardType.Number)
             else -> KeyboardOptions.Default
         }
