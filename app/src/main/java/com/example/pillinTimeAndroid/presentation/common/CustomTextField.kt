@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.R
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicSize
+import com.example.pillinTimeAndroid.presentation.Dimens.BasicHeight
 import com.example.pillinTimeAndroid.ui.theme.Error90
 import com.example.pillinTimeAndroid.ui.theme.Gray10
 import com.example.pillinTimeAndroid.ui.theme.Gray5
@@ -59,7 +59,7 @@ fun CustomTextField(
         shape = shapes.small,
         colors = colors,
         modifier = modifier
-            .height(BasicSize)
+            .height(BasicHeight)
             .fillMaxWidth()
             .border(1.dp, borderColor, shapes.small),
         placeholder = {

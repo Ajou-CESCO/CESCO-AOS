@@ -1,6 +1,5 @@
 package com.example.pillinTimeAndroid.presentation.common
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -13,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.R
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicSize
+import com.example.pillinTimeAndroid.presentation.Dimens.BasicHeight
 import com.example.pillinTimeAndroid.ui.theme.Gray5
 import com.example.pillinTimeAndroid.ui.theme.Gray50
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
@@ -21,33 +20,41 @@ import com.example.pillinTimeAndroid.ui.theme.Primary5
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.shapes
 
-// basic next button
+enum class ButtonColor {
+    FILLED, BLANK
+}
+
+enum class ButtonSize {
+    SMALL, MEDIUM
+}
+
 @Composable
-fun BasicButton(
+fun CustomButton(
+    modifier: Modifier,
     enabled: Boolean,
+    filled: ButtonColor,
+    size: ButtonSize,
     text: String,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(BasicSize),
+        modifier = modifier.height(BasicHeight),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (enabled) Primary60 else Gray5,
+            containerColor = if (filled == ButtonColor.FILLED) Primary60 else Gray5,
+            disabledContainerColor = Gray5,
         ),
         shape = shapes.small,
         enabled = enabled
     ) {
         Text(
             text = text,
-            style = PillinTimeTheme.typography.headline5Medium,
-            color = if (enabled) Primary5 else Gray50
+            style = if (size == ButtonSize.MEDIUM) PillinTimeTheme.typography.headline5Medium else PillinTimeTheme.typography.body1Medium,
+            color = if (filled == ButtonColor.FILLED && enabled) Primary5 else Gray50
         )
     }
 }
 
-// back icon button
 @Composable
 fun BackButton(
     onClick: () -> Unit
@@ -57,8 +64,7 @@ fun BackButton(
         modifier = Modifier.size(48.dp)
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_back),
-            contentDescription = "Back"
+            painter = painterResource(id = R.drawable.ic_back), contentDescription = "Back"
         )
     }
 }
