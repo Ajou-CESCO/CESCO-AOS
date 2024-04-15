@@ -4,7 +4,9 @@ import androidx.compose.ui.unit.dp
 
 object Dimens {
     // height for basic button, editText, etc
-    val BasicSize = 64.dp
+    val BasicHeight = 64.dp
+    val BasicWidth = 308.dp
+    val SmallSize = 48.dp
 
     // padding for basic button, editText, etc
     val BasicPadding = 26.dp
@@ -14,4 +16,7 @@ object Dimens {
     val NavIconSize = 28.dp
 
     val TextFieldHorPadding = 22.dp
+
+    val AlertDialogSpacer = 14.dp
+    val AlertDialogPadding = 20.5.dp
 }
