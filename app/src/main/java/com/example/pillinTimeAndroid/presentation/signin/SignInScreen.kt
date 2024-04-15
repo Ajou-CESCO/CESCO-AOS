@@ -17,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.presentation.common.BackButton
-import com.example.pillinTimeAndroid.presentation.common.BasicButton
+import com.example.pillinTimeAndroid.presentation.common.ButtonColor
+import com.example.pillinTimeAndroid.presentation.common.ButtonSize
+import com.example.pillinTimeAndroid.presentation.common.CustomButton
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPage
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 
@@ -60,9 +62,12 @@ fun SignInScreen(
                 .navigationBarsPadding(),
         ) {
 
-            BasicButton(
+            CustomButton(
+                modifier = Modifier.fillMaxWidth(),
                 enabled = viewModel.validateInput() && viewModel.getCurrentInput().isNotEmpty(),
-                text = "다음",
+                filled = ButtonColor.FILLED,
+                size = ButtonSize.MEDIUM,
+                text = if(currentPage == pages[2]) "확인" else "다음",
                 onClick = {
                     if (currentPage == pages[2]) {
                         viewModel.nextPage()
