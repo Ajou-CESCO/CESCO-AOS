@@ -14,8 +14,8 @@ class SignInViewModel @Inject constructor() : ViewModel() {
     private var otp = mutableStateOf("")
     var currentPageIndex = mutableStateOf(0)
 
-    fun getCurrentPage(): Page {
-        return pages.getOrElse(currentPageIndex.value) { pages[0] }
+    fun getCurrentPage(): InPage {
+        return inPages.getOrElse(currentPageIndex.value) { inPages[0] }
     }
 
     fun getCurrentInput(): String {
@@ -54,7 +54,7 @@ class SignInViewModel @Inject constructor() : ViewModel() {
     }
 
     fun nextPage() {
-        if (currentPageIndex.value < pages.size - 1) {
+        if (currentPageIndex.value < inPages.size - 1) {
             currentPageIndex.value += 1
         }
     }

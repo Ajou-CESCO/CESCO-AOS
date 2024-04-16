@@ -48,7 +48,7 @@ fun SignInScreen(
         }
         SignInPage(
             state = viewModel.validateInput(),
-            page = currentPage,
+            inPage = currentPage,
             input = viewModel.getCurrentInput(),
             onInputChanged = viewModel::updateInput,
             keyboardOptions = keyboardOptions
@@ -67,9 +67,9 @@ fun SignInScreen(
                 enabled = viewModel.validateInput() && viewModel.getCurrentInput().isNotEmpty(),
                 filled = ButtonColor.FILLED,
                 size = ButtonSize.MEDIUM,
-                text = if(currentPage == pages[2]) "확인" else "다음",
+                text = if(currentPage == inPages[2]) "확인" else "다음",
                 onClick = {
-                    if (currentPage == pages[2]) {
+                    if (currentPage == inPages[2]) {
                         viewModel.nextPage()
                         // API 호출 (OPT 검증)
                     } else {

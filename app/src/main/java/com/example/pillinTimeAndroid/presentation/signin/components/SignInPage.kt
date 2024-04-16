@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.presentation.common.CustomTextField
-import com.example.pillinTimeAndroid.presentation.signin.Page
-import com.example.pillinTimeAndroid.presentation.signin.pages
+import com.example.pillinTimeAndroid.presentation.signin.InPage
+import com.example.pillinTimeAndroid.presentation.signin.inPages
 import com.example.pillinTimeAndroid.ui.theme.Error90
 import com.example.pillinTimeAndroid.ui.theme.Gray40
 import com.example.pillinTimeAndroid.ui.theme.Gray90
@@ -31,7 +31,7 @@ import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 @Composable
 fun SignInPage(
     state: Boolean,
-    page: Page,
+    inPage: InPage,
     input: String,
     onInputChanged: (String) -> Unit,
     keyboardOptions: KeyboardOptions,
@@ -42,20 +42,20 @@ fun SignInPage(
             .padding(horizontal = BasicPadding),
     ) {
         Text(
-            text = page.title,
+            text = inPage.title,
             style = PillinTimeTheme.typography.logo2Extra,
             color = Gray90
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = page.description,
+            text = inPage.description,
             style = PillinTimeTheme.typography.body1Regular,
             color = Gray90
         )
-        if (page != pages[2]) Spacer(modifier = Modifier.height(31.dp))
+        if (inPage != inPages[2]) Spacer(modifier = Modifier.height(31.dp))
         CustomTextField(
             state = state,
-            hint = page.hint,
+            hint = inPage.hint,
             value = input,
             onValueChange = onInputChanged,
             keyboardOptions = keyboardOptions
@@ -67,14 +67,14 @@ fun SignInPage(
             if (!state) {
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
-                    text = page.error,
+                    text = inPage.error,
                     style = PillinTimeTheme.typography.body1Regular,
                     color = Error90,
                     lineHeight = 26.sp
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            if (page == pages[2]) {
+            if (inPage == inPages[2]) {
                 CompositionLocalProvider(
                     LocalMinimumInteractiveComponentEnforcement provides false,
                 ) {
