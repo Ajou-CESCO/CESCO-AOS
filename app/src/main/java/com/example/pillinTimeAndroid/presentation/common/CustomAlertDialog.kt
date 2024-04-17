@@ -94,7 +94,10 @@ fun CustomAlertDialog(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
 @Composable
 private fun CustomAlertDialogPreview() {
     PillinTimeAndroidTheme {

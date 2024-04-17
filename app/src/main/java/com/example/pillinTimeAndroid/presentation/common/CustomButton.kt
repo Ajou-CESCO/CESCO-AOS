@@ -1,13 +1,16 @@
 package com.example.pillinTimeAndroid.presentation.common
 
+import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -15,6 +18,7 @@ import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.presentation.Dimens.BasicHeight
 import com.example.pillinTimeAndroid.ui.theme.Gray5
 import com.example.pillinTimeAndroid.ui.theme.Gray50
+import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary5
 import com.example.pillinTimeAndroid.ui.theme.Primary60
@@ -55,16 +59,21 @@ fun CustomButton(
     }
 }
 
+@SuppressLint("UnrememberedMutableInteractionSource")
 @Composable
 fun BackButton(
     onClick: () -> Unit
 ) {
-    IconButton(
-        onClick = onClick,
-        modifier = Modifier.size(48.dp)
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_back), contentDescription = "Back"
-        )
-    }
+    Icon(
+        modifier = Modifier
+            .padding(top = 14.dp, start = 16.dp)
+            .clickable(
+                onClick = onClick,
+                indication = null,
+                interactionSource = remember {MutableInteractionSource() }
+            ),
+        painter = painterResource(id = R.drawable.ic_back),
+        tint = Gray90,
+        contentDescription = "Back"
+    )
 }
