@@ -1,25 +1,15 @@
 package com.example.pillinTimeAndroid.presentation.signin
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
-import com.example.pillinTimeAndroid.presentation.common.BackButton
 import com.example.pillinTimeAndroid.presentation.common.ButtonColor
 import com.example.pillinTimeAndroid.presentation.common.ButtonSize
 import com.example.pillinTimeAndroid.presentation.common.CustomButton
+import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPage
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 
@@ -29,45 +19,32 @@ fun SignInScreen(
 ) {
     val currentPage = viewModel.getCurrentPage()
     val keyboardOptions = viewModel.getKeyboardOptions()
-    Column(
-        modifier = Modifier
-            .padding(
-                start = 7.dp, top = 5.dp, bottom = 16.dp
-            )
-            .imePadding()
-            .fillMaxSize()
-            .background(Color.White)
-    ) {
-        if (viewModel.currentPageIndex.value != 0) {
-            BackButton(
-                onClick = {
-                    viewModel.previousPage()
-                })
-        } else {
-            Spacer(modifier = Modifier.padding(24.dp))
-        }
-        SignInPage(
-            state = viewModel.validateInput(),
-            inPage = currentPage,
-            input = viewModel.getCurrentInput(),
-            onInputChanged = viewModel::updateInput,
-            keyboardOptions = keyboardOptions
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = BasicPadding)
-                .padding(bottom = 12.dp)
-                .navigationBarsPadding(),
-        ) {
 
+    GeneralScreen(
+        topBar = {
+            CustomTopBar(
+                showBackButton = currentPage != inPages[0],
+                onBackClicked = { viewModel.previousPage() }
+            )
+        },
+        title = currentPage.title,
+        subtitle = currentPage.subtitle,
+        content = {
+            SignInPage(
+                state = viewModel.validateInput(),
+                inPage = currentPage,
+                input = viewModel.getCurrentInput(),
+                onInputChanged = viewModel::updateInput,
+                keyboardOptions = keyboardOptions
+            )
+        },
+        button = {
             CustomButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = viewModel.validateInput() && viewModel.getCurrentInput().isNotEmpty(),
                 filled = ButtonColor.FILLED,
                 size = ButtonSize.MEDIUM,
-                text = if(currentPage == inPages[2]) "확인" else "다음",
+                text = if (currentPage == inPages[2]) "확인" else "다음",
                 onClick = {
                     if (currentPage == inPages[2]) {
                         viewModel.nextPage()
@@ -78,7 +55,7 @@ fun SignInScreen(
                 }
             )
         }
-    }
+    )
 }
 
 @Preview(
