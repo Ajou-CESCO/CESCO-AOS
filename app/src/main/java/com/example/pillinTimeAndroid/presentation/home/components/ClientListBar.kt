@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -35,8 +36,8 @@ fun ClientListBar() {
 
     LazyRow(
         modifier = Modifier
-            .background(White)
-            .padding(start = BasicPadding)
+            .background(White),
+        contentPadding = PaddingValues(start = BasicPadding, end = 6.dp)
     ) {
         items(profiles.size) { index ->
             val profile = profiles[index]
