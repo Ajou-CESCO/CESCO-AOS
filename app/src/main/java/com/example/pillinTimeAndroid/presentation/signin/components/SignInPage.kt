@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.Text
@@ -15,38 +14,40 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.presentation.common.CustomTextField
-import com.example.pillinTimeAndroid.presentation.signin.InPage
-import com.example.pillinTimeAndroid.presentation.signin.inPages
+import com.example.pillinTimeAndroid.presentation.common.InputType
 import com.example.pillinTimeAndroid.ui.theme.Error90
 import com.example.pillinTimeAndroid.ui.theme.Gray40
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInPage(
     state: Boolean,
-    inPage: InPage,
+    pageList: SignInPageList,
     input: String,
     onInputChanged: (String) -> Unit,
-    keyboardOptions: KeyboardOptions,
+    visualTransformation: VisualTransformation,
+    inputType: InputType
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        if (inPage != inPages[2]) Spacer(modifier = Modifier.height(31.dp))
+        if (pageList == signInPages[0] || pageList == signInPages[2]) Spacer(modifier = Modifier.height(14.dp))
         CustomTextField(
             state = state,
-            hint = inPage.hint,
+            hint = pageList.hint,
             value = input,
             onValueChange = onInputChanged,
-            keyboardOptions = keyboardOptions
+            trailIcon = R.drawable.ic_cancel,
+            visualTransformation = visualTransformation,
+            inputType = inputType
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -55,14 +56,14 @@ fun SignInPage(
             if (!state) {
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
-                    text = inPage.error,
+                    text = pageList.error,
                     style = PillinTimeTheme.typography.body1Regular,
                     color = Error90,
                     lineHeight = 26.sp
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            if (inPage == inPages[2]) {
+            if (pageList == signInPages[1]) {
                 CompositionLocalProvider(
                     LocalMinimumInteractiveComponentEnforcement provides false,
                 ) {
@@ -82,22 +83,5 @@ fun SignInPage(
                 }
             }
         }
-    }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-private fun SignInPagePreview() {
-    PillinTimeAndroidTheme {
-        SignInPage(
-            state = true,
-            inPage = inPages[2],
-            input = "viewModel.getCurrentInput()",
-            onInputChanged = {},
-            keyboardOptions = KeyboardOptions.Default
-        )
     }
 }
