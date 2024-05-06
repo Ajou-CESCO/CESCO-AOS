@@ -12,7 +12,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +21,6 @@ import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomNavigationBar
 import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomNavigationItem
 import com.example.pillinTimeAndroid.presentation.home.HomeScreen
-import com.example.pillinTimeAndroid.presentation.home.HomeViewModel
 import com.example.pillinTimeAndroid.presentation.mypage.MyPageScreen
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
@@ -60,7 +58,9 @@ fun BottomNavigator() {
             )
         }
     ) {
-        Crossfade(targetState = selectedItem) { selectedIndex ->
+        Crossfade(
+            targetState = selectedItem,
+        ) { selectedIndex ->
             NavHost(
                 navController = navController,
                 startDestination = Route.HomeScreen.route,
@@ -73,7 +73,7 @@ fun BottomNavigator() {
                     if (selectedIndex == 0) ScheduleScreen()
                 }
                 composable(route = Route.MyPageScreen.route) {
-                    if (selectedIndex == 2) MyPageScreen()
+                    if (selectedIndex == 2) MyPageScreen(1, "kim")
                 }
             }
         }

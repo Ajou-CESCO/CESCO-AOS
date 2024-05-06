@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +27,9 @@ fun CustomTopBar(
     progress: Float = 0f,
     onBackClicked: () -> Unit = { },
     showBackButton: Boolean = false,
-    title: String? = null
+    title: String? = null,
+    showDeleteButton: Boolean = false,
+    onDeleteClicked: () -> Unit = { }
 ) {
     Box(
         modifier = Modifier
@@ -58,6 +61,16 @@ fun CustomTopBar(
                 style = PillinTimeTheme.typography.body1Medium
             )
         }
+        if (showDeleteButton) {
+            TextButton(
+                onClick = onDeleteClicked
+            ) {
+                Text(
+                    text = "삭제",
+                    modifier = Modifier
+                )
+            }
+        }
     }
 }
 
@@ -71,7 +84,8 @@ fun ExampleScreen() {
                 progress = 1 / 3f,
                 showBackButton = true,
                 onBackClicked = { },
-                title = "전체 기능 포함"
+                title = "전체 기능 포함",
+                showDeleteButton = true
             )
         }
     }

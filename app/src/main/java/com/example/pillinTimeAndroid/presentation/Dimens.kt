@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 object Dimens {
     // height for basic button, editText, etc
+    val ProgressBarHeight = 6.dp
     val BasicHeight = 64.dp
     val BasicWidth = 308.dp
     val SmallSize = 48.dp
@@ -12,6 +13,7 @@ object Dimens {
     val BasicPadding = 26.dp
     val BasicTopPadding = 43.dp
 
+    val TopBarSize = 44.dp
     val BottomNavSize = 56.dp
     val NavIconSize = 28.dp
 

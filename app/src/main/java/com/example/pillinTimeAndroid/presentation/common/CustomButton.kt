@@ -10,7 +10,10 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -23,6 +26,10 @@ import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary5
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.shapes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 enum class ButtonColor {
     FILLED, BLANK
@@ -39,11 +46,12 @@ fun CustomButton(
     filled: ButtonColor,
     size: ButtonSize,
     text: String,
-    onClick: () -> Unit
+    onClick:  () -> Unit
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(BasicHeight),
+        modifier = modifier
+            .height(BasicHeight),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (filled == ButtonColor.FILLED) Primary60 else Gray5,
             disabledContainerColor = Gray5,
@@ -64,13 +72,24 @@ fun CustomButton(
 fun BackButton(
     onClick: () -> Unit
 ) {
+    var isClickable by remember { mutableStateOf(true) }
     Icon(
         modifier = Modifier
             .padding(top = 14.dp, start = 16.dp)
             .clickable(
-                onClick = onClick,
+                enabled = isClickable,
+                onClick = {
+                    if (isClickable) {
+                        isClickable = false
+                        onClick()
+                        CoroutineScope(Dispatchers.Main).launch {
+                            delay(500)
+                            isClickable = true
+                        }
+                    }
+                },
                 indication = null,
-                interactionSource = remember {MutableInteractionSource() }
+                interactionSource = remember { MutableInteractionSource() }
             ),
         painter = painterResource(id = R.drawable.ic_back),
         tint = Gray90,
