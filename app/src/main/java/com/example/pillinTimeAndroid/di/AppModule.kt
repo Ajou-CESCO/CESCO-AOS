@@ -3,6 +3,7 @@ package com.example.pillinTimeAndroid.di
 import android.content.Context
 import com.example.pillinTimeAndroid.BuildConfig.BASE_URL
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
+import com.example.pillinTimeAndroid.data.remote.UserService
 import com.example.pillinTimeAndroid.data.repository.UserRepositoryImpl
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import dagger.Module
@@ -36,7 +37,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(localDataSource: LocalUserDataSource): UserRepository {
-        return UserRepositoryImpl(localDataSource)
+    fun provideUserRepository(localDataSource: LocalUserDataSource, userService: UserService): UserRepository {
+        return UserRepositoryImpl(localDataSource, userService)
     }
 }
