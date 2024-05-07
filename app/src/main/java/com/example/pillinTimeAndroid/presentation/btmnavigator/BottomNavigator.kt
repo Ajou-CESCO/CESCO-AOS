@@ -1,27 +1,31 @@
 package com.example.pillinTimeAndroid.presentation.btmnavigator
 
-import androidx.compose.animation.Crossfade
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomNavigationBar
 import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomNavigationItem
 import com.example.pillinTimeAndroid.presentation.home.HomeScreen
 import com.example.pillinTimeAndroid.presentation.mypage.MyPageScreen
+import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
+import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
@@ -37,48 +41,77 @@ fun BottomNavigator() {
     }
     val navController = rememberNavController()
     val backstackState = navController.currentBackStackEntryAsState().value
-    var selectedItem by rememberSaveable {
-        mutableStateOf(1)
-    }
+    val currentState = backstackState?.destination?.route
+    var selectedItem by rememberSaveable { mutableIntStateOf(1) }
 
-    selectedItem = when (backstackState?.destination?.route) {
+    Log.d("BottomNAv: ", "$selectedItem")
+    selectedItem = when (currentState) {
         Route.ScheduleScreen.route -> 0
         Route.HomeScreen.route -> 1
         Route.MyPageScreen.route -> 2
-        else -> 0
+        else -> selectedItem
     }
+
+    val isMainTab = currentState in listOf(
+        Route.ScheduleScreen.route,
+        Route.HomeScreen.route,
+        Route.MyPageScreen.route
+    )
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            BottomNavigationBar(
-                items = bottomNavigationItems,
-                selected = selectedItem,
-                onItemClick = { index -> navigateTab(navController, index) }
-            )
+            if (isMainTab) {
+                BottomNavigationBar(
+                    items = bottomNavigationItems,
+                    selected = selectedItem,
+                    onItemClick = { index -> navigateTab(navController, index) }
+                )
+            }
         }
     ) {
-        Crossfade(
-            targetState = selectedItem,
-        ) { selectedIndex ->
-            NavHost(
-                navController = navController,
-                startDestination = Route.HomeScreen.route,
-                modifier = Modifier.padding(bottom = it.calculateBottomPadding())
+        NavHost(
+            navController = navController,
+            startDestination = Route.HomeScreen.route,
+            modifier = Modifier.padding(bottom = it.calculateBottomPadding())
+        ) {
+            composable(route = Route.HomeScreen.route) {
+                HomeScreen(navController = navController)
+            }
+            composable(route = Route.ScheduleScreen.route) {
+                ScheduleScreen(navController = navController)
+            }
+            composable(route = Route.MyPageScreen.route) {
+                MyPageScreen(hiltViewModel(), navController)
+            }
+//            composable(route = Route.EditInfoScreen.route) {
+//                EditInfoScreen(navController = navController)
+//            }
+//            composable(route = Route.ServiceScreen.route) {
+////                    ServiceScreen()
+//            }
+//            composable(route = Route.WithdrawalScreen.route) {
+//                WithdrawalScreen(navController = navController)
+//            }
+            navigation(
+                route = Route.MyPageScreenNavigation.route,
+                startDestination = Route.MyPageScreen.route
             ) {
-                composable(route = Route.HomeScreen.route) {
-                    if (selectedIndex == 1) HomeScreen()
+                composable(route = Route.EditInfoScreen.route) {
+                    EditInfoScreen(navController = navController)
                 }
-                composable(route = Route.ScheduleScreen.route) {
-                    if (selectedIndex == 0) ScheduleScreen()
+                composable(route = Route.ServiceScreen.route) {
+//                    ServiceScreen()
                 }
-                composable(route = Route.MyPageScreen.route) {
-                    if (selectedIndex == 2) MyPageScreen(1, "kim")
+                composable(route = Route.WithdrawalScreen.route) {
+                    WithdrawalScreen(navController = navController)
                 }
             }
         }
     }
 }
+
 
 fun navigateTab(navController: NavController, index: Int) {
     val route = when (index) {
@@ -90,10 +123,16 @@ fun navigateTab(navController: NavController, index: Int) {
     navController.navigate(route) {
         navController.graph.startDestinationRoute?.let { screenRoute ->
             popUpTo(screenRoute) { saveState = true }
-            restoreState = true
             launchSingleTop = true
+            restoreState = true
         }
     }
+//    if (navController.currentDestination?.route != route) {
+//        navController.navigate(route) {
+//            launchSingleTop = true
+//            restoreState = true
+//        }
+//    }
 }
 
 @Preview(showSystemUi = true, showBackground = true)
