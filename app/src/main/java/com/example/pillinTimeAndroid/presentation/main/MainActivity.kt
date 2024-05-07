@@ -31,7 +31,11 @@ class MainActivity : ComponentActivity() {
 
                 SideEffect {
                     systemUiColor.setSystemBarsColor(
-                        color = Color.White,
+                        color = Color.Transparent,
+                        darkIcons = true
+                    )
+                    systemUiColor.setNavigationBarColor(
+                        color = White
                     )
                 }
                 Box(
