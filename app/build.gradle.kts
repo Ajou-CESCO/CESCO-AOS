@@ -1,9 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.ksp)
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.kotlinParcelize)
+}
+
+val properties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { input ->
+        properties.load(input)
+    }
 }
 
 android {
@@ -21,6 +31,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "BASE_URL", "${properties["BASE_URL"]}")
+
     }
 
     buildTypes {
@@ -40,9 +53,10 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.9.0"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
         resources {
@@ -50,6 +64,7 @@ android {
         }
     }
 }
+
 
 dependencies {
 
@@ -82,9 +97,9 @@ dependencies {
     implementation(libs.coil.compose)
 
     // Dagger Hilt
-    ksp(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Compose foundation
     implementation(libs.androidx.foundation)
@@ -99,4 +114,7 @@ dependencies {
     // Paging3
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
+
+    // Lottie Animation
+    implementation(libs.lottie)
 }

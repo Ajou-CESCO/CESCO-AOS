@@ -43,7 +43,7 @@ internal val Typography = PillinTimeTypography(
     ),
     logo3Medium = TextStyle(
         fontFamily = OAGothic,
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.Medium,
         fontSize = 20.sp,
     ),
     logo3Extra = TextStyle(
@@ -53,7 +53,7 @@ internal val Typography = PillinTimeTypography(
     ),
     logo4Medium = TextStyle(
         fontFamily = OAGothic,
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
     ),
     logo4Extra = TextStyle(
@@ -63,7 +63,7 @@ internal val Typography = PillinTimeTypography(
     ),
     logo5Medium = TextStyle(
         fontFamily = OAGothic,
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
     ),
     logo5Extra = TextStyle(
