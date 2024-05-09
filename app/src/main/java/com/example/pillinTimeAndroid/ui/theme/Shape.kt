@@ -7,4 +7,5 @@ import androidx.compose.ui.unit.dp
 val shapes = Shapes(
     small = RoundedCornerShape(8.dp),
     medium = RoundedCornerShape(12.dp),
+    large = RoundedCornerShape(37.dp),
 )
