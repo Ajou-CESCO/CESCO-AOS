@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,8 +29,11 @@ import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.White
 
 @Composable
-fun ClientListBar() {
-    val profiles = listOf("User1", "User2", "User3", "User4", "User5", "User6", "User7", "User8")
+fun ClientListBar(
+    profiles: List<String>,
+    selectedIndex: Int,
+    onProfileSelected: (Int) -> Unit
+) {
     var selectedProfile by remember { mutableStateOf<String?>(profiles[0]) }
 
     LazyRow(
@@ -41,16 +43,20 @@ fun ClientListBar() {
     ) {
         items(profiles.size) { index ->
             val profile = profiles[index]
+            val isSelected = index == selectedIndex
             val selectedType =
-                if (profile == selectedProfile) PillinTimeTheme.typography.caption2Bold else PillinTimeTheme.typography.caption2Regular
+                if (isSelected) PillinTimeTheme.typography.caption2Bold else PillinTimeTheme.typography.caption2Regular
             val selectedIcon =
-                if (profile == selectedProfile) R.drawable.ic_client_filled else R.drawable.ic_client_unfilled
+                if (isSelected) R.drawable.ic_client_filled else R.drawable.ic_client_unfilled
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .clickable(
-                        onClick = { selectedProfile = profile },
+                        onClick = {
+                            selectedProfile = profile
+                            onProfileSelected(index)
+                        },
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     )
@@ -84,6 +90,6 @@ fun ClientListBar() {
 @Composable
 fun ClientListBarPreview() {
     PillinTimeAndroidTheme {
-        ClientListBar()
+//        ClientListBar()
     }
 }

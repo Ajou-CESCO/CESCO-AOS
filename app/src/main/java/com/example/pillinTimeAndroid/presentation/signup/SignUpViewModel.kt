@@ -49,7 +49,7 @@ class SignUpViewModel @Inject constructor(
 
 
     init {
-        fetchManagerRequests()
+//        fetchManagerRequests()
     }
 
     fun signUp(navController: NavController, role: Int) {

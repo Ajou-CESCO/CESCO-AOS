@@ -22,6 +22,13 @@ class HomeViewModel @Inject constructor(
     private val _userDetails = MutableStateFlow<UserDTO?>(null)
     val userDetails = _userDetails.asStateFlow()
 
+    val userList = listOf("김종명", "노수인", "심재민", "이재현", "김학준", "김종명", "노수인", "심재민")
+    private val selectedIndex = MutableStateFlow(0)
+
+    fun selectUser(index: Int) {
+        selectedIndex.value = index
+    }
+
     init {
         getUserInfo()
         getClientList()
@@ -42,7 +49,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getClientList() {
-        if(_userDetails.value?.inManager != true) {
+        if(_userDetails.value?.isManager != true) {
             viewModelScope.launch {
                 val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
                 val result = relationRepository.getRelations("Bearer $accessToken")

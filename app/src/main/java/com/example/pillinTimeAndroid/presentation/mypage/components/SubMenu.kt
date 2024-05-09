@@ -31,17 +31,24 @@ import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 
 @Composable
 fun SubMenu(
-    Role: Int
+    isManager: Boolean,
+    onItemClick: (destination: String) -> Unit
 ) {
-    val manage = if (Role == 0) "피보호자 관리" else "보호자 관리"
+    val manage = if (isManager) "피보호자 관리" else "보호자 관리"
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        SubMenuItem(R.drawable.ic_manage, manage)
-        SubMenuItem(R.drawable.ic_manage, "연결된 기기")
-        SubMenuItem(R.drawable.ic_calendar, "복약 일정 관리")
+        SubMenuItem(R.drawable.ic_manage, manage) {
+            onItemClick("relationManageScreen")
+        }
+        SubMenuItem(R.drawable.ic_manage, "연결된 기기") {
+            onItemClick("deviceManageScreen")
+        }
+        SubMenuItem(R.drawable.ic_calendar, "복약 일정 관리") {
+            onItemClick("doseScheduleManageScreen")
+        }
     }
 }
 
@@ -49,6 +56,7 @@ fun SubMenu(
 fun SubMenuItem(
     @DrawableRes icon: Int,
     title: String,
+    onClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -63,9 +71,11 @@ fun SubMenuItem(
         ) {
             Icon(
                 modifier = Modifier
-                    .clickable {
-
-                    },
+                    .clickable(
+                        onClick = onClick,
+//                        indication = null,
+//                        interactionSource = remember { MutableInteractionSource() }
+                    ),
                 painter = painterResource(id = icon),
                 contentDescription = null,
                 tint = Color.Unspecified
@@ -88,6 +98,6 @@ fun SubMenuItem(
 @Composable
 private fun SubMenuPreview() {
     PillinTimeAndroidTheme {
-        SubMenu(Role = 1)
+//        SubMenu(isManager = true)
     }
 }

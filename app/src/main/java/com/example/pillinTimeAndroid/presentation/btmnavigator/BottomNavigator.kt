@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -28,7 +27,6 @@ import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
 import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 
 @Composable
 fun BottomNavigator() {
@@ -85,15 +83,6 @@ fun BottomNavigator() {
             composable(route = Route.MyPageScreen.route) {
                 MyPageScreen(hiltViewModel(), navController)
             }
-//            composable(route = Route.EditInfoScreen.route) {
-//                EditInfoScreen(navController = navController)
-//            }
-//            composable(route = Route.ServiceScreen.route) {
-////                    ServiceScreen()
-//            }
-//            composable(route = Route.WithdrawalScreen.route) {
-//                WithdrawalScreen(navController = navController)
-//            }
             navigation(
                 route = Route.MyPageScreenNavigation.route,
                 startDestination = Route.MyPageScreen.route
@@ -126,19 +115,5 @@ fun navigateTab(navController: NavController, index: Int) {
             launchSingleTop = true
             restoreState = true
         }
-    }
-//    if (navController.currentDestination?.route != route) {
-//        navController.navigate(route) {
-//            launchSingleTop = true
-//            restoreState = true
-//        }
-//    }
-}
-
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-private fun BottomNavigatorPreview() {
-    PillinTimeAndroidTheme {
-        BottomNavigator()
     }
 }

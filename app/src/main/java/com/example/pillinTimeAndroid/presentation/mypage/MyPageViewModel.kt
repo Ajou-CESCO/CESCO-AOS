@@ -26,7 +26,6 @@ class MyPageViewModel @Inject constructor(
     init {
         getUserInfo()
     }
-
     private fun getUserInfo() {
         viewModelScope.launch {
             val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
@@ -34,12 +33,14 @@ class MyPageViewModel @Inject constructor(
             val result = userRepository.getUserInfo("Bearer $accessToken")
             result.onSuccess {
                 _userDetails.value = it.result
-                Log.d("HomeViewModel", "Succeeded to fetch: ${it.result}")
+                Log.d("MyPageViewModel", "Succeeded to fetch: ${it.result}")
             }.onFailure {
-                Log.e("HomeViewModel", "Failed to fetch user details: ${it.message}")
+                Log.e("MyPageViewModel", "Failed to fetch user details: ${it.message}")
             }
         }
     }
+
+
 
     fun navigateTo(destination: String) {
         _navigateToScreen.value = destination
