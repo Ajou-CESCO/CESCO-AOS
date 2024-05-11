@@ -14,24 +14,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.ui.theme.Gray5
-import com.example.pillinTimeAndroid.ui.theme.Gray50
 import com.example.pillinTimeAndroid.ui.theme.Gray70
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
+import com.example.pillinTimeAndroid.ui.theme.White
 import com.example.pillinTimeAndroid.ui.theme.shapes
 import java.util.Calendar
 
 @Composable
-fun CustomWeekCalendar() {
+fun CustomWeekCalendar(
+    modifier: Modifier
+) {
     val calendar: Calendar = Calendar.getInstance()
     val today = calendar.get(Calendar.DAY_OF_WEEK) - 1
     val days = listOf("일", "월", "화", "수", "목", "금", "토")
-
     Row(
-        modifier = Modifier
-            .background(Gray50)
+        modifier = modifier
+            .background(Color.Transparent)
             .fillMaxWidth()
             .clickable(
                 onClick = {  },
@@ -41,9 +41,12 @@ fun CustomWeekCalendar() {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         days.forEachIndexed { index, day ->
-            // 오늘인 경우 배경색을 다르게 설정
-            val dayBackground = if (index == today) Primary60 else Gray5
-            CalendarDay(day, dayBackground, {})
+            val (dayBackground, dayText) = if (index == today) {
+                Pair(Primary60, White)
+            } else {
+                Pair(Color.Transparent, Gray70)
+            }
+            CalendarDay(day, dayBackground, dayText, {})
         }
     }
 }
@@ -51,13 +54,14 @@ fun CustomWeekCalendar() {
 @Composable
 fun CalendarDay(
     day: String,
-    color: Color,
+    backgroundColor: Color,
+    textColor: Color,
     onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .clip(shapes.small)
-            .background(color)
+            .background(backgroundColor)
             .padding(horizontal = 12.dp, vertical = 12.dp)
             .clickable(
                 onClick = onClick,
@@ -67,7 +71,7 @@ fun CalendarDay(
     ) {
         Text(
             text = day,
-            color = Gray70,
+            color = textColor,
             style = PillinTimeTheme.typography.body1Regular
         )
     }
@@ -80,6 +84,6 @@ fun CalendarDay(
 @Composable
 private fun CustomWeekCalendarPreview() {
     PillinTimeAndroidTheme {
-        CustomWeekCalendar()
+        CustomWeekCalendar(Modifier)
     }
 }
