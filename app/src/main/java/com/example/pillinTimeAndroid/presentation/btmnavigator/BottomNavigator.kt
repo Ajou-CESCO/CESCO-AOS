@@ -96,6 +96,14 @@ fun BottomNavigator() {
                 composable(route = Route.WithdrawalScreen.route) {
                     WithdrawalScreen(navController = navController)
                 }
+                composable(route = Route.CabinetManageScreen.route) {
+                    CabinetManageScreen(navController = navController) {
+                        navController.navigate("cabinetRegisterScreen")
+                    }
+                }
+                composable(route = Route.CabinetRegisterScreen.route) {
+                    CabinetRegisterScreen(navController = navController)
+                }
             }
         }
     }

@@ -54,6 +54,7 @@ fun CustomTextField(
         InputType.SSN -> Pair(7, KeyboardType.Number)
         InputType.OTP -> Pair(6, KeyboardType.Number)
         InputType.PLAIN -> Pair(20, KeyboardType.Text)
+        InputType.SERIAL -> Pair(16, KeyboardType.Text)
     }
     val (backgroundColor, borderColor) = when {
         value.isNotEmpty() && state -> Pair(White, Primary60)
@@ -121,7 +122,8 @@ enum class InputType(val type: String) {
     PHONE("phone"),
     SSN("ssn"),
     OTP("otp"),
-    PLAIN("plain")
+    PLAIN("plain"),
+    SERIAL("serial")
 }
 
 @Preview(

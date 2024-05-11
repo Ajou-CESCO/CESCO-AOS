@@ -31,7 +31,6 @@ fun MyPageScreen(
 ) {
     val userDetails by viewModel.userDetails.collectAsState()
     val role = if (userDetails?.isManager == true) "보호자" else "피보호자"
-    val userType = userDetails?.userType
     val name = userDetails?.name
 
     val navigateToScreen by viewModel.navigateToScreen.collectAsState()
@@ -69,16 +68,12 @@ fun MyPageScreen(
                 style = PillinTimeTheme.typography.logo2Medium
             )
             Spacer(modifier = Modifier.height(35.dp))
-            if (userType != null) {
-                userDetails?.isManager?.let {
-                    SubMenu(
-                        isManager = it,
-                        onItemClick = {
-                        }
-                    )
+            SubMenu(
+                isManager = userDetails?.isManager == true,
+                onItemClick = { destination ->
+                    viewModel.navigateTo(destination)
                 }
-            }
-
+            )
         }
         Spacer(modifier = Modifier.height(20.dp))
         MainMenu(
