@@ -10,9 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.White
@@ -20,10 +18,11 @@ import com.example.pillinTimeAndroid.ui.theme.shapes
 
 @Composable
 fun ScheduleAddButton(
+    modifier: Modifier,
     onClick: () -> Unit
 ) {
     Button(
-        modifier = Modifier
+        modifier = modifier
             .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp),
         onClick = onClick,
         shape = shapes.large,
@@ -40,16 +39,5 @@ fun ScheduleAddButton(
             color = White,
             style = PillinTimeTheme.typography.body1Bold
         )
-    }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-private fun ScheduleAddButtonPreview() {
-    PillinTimeAndroidTheme {
-        ScheduleAddButton({})
     }
 }
