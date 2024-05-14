@@ -1,8 +1,10 @@
 package com.example.pillinTimeAndroid.di
 
+import com.example.pillinTimeAndroid.data.repository.MedicineRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.RelationRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.SignInRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.SignUpRepositoryImpl
+import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
 import com.example.pillinTimeAndroid.domain.repository.RelationRepository
 import com.example.pillinTimeAndroid.domain.repository.SignInRepository
 import com.example.pillinTimeAndroid.domain.repository.SignUpRepository
@@ -27,4 +29,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindRelationRepository(relationRepositoryImpl: RelationRepositoryImpl): RelationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMedicineRepository(medicineRepositoryImpl: MedicineRepositoryImpl): MedicineRepository
 }
