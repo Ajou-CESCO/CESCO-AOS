@@ -32,15 +32,16 @@ import com.example.pillinTimeAndroid.ui.theme.shapes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomAlertDialog(
+    modifier: Modifier = Modifier,
     title: String,
     description: String,
     confirmText: String,
-    dismissText: String? = null,
+    dismissText: String = "",
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     BasicAlertDialog(
-        modifier = Modifier.padding(horizontal = BasicPadding),
+        modifier = modifier.padding(horizontal = BasicPadding),
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnBackPress = true,
@@ -75,7 +76,7 @@ fun CustomAlertDialog(
                 modifier = Modifier.padding(horizontal = AlertDialogPadding, vertical = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                if (dismissText != null) {
+                if (dismissText.isNotBlank()) {
                     CustomButton(
                         modifier = Modifier
                             .weight(1f)
@@ -90,7 +91,7 @@ fun CustomAlertDialog(
                 CustomButton(
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = if (dismissText != null) 7.dp else 0.dp),
+                        .padding(start = if (dismissText.isNotBlank()) 7.dp else 0.dp),
                     enabled = true,
                     filled = ButtonColor.FILLED,
                     size = ButtonSize.MEDIUM,

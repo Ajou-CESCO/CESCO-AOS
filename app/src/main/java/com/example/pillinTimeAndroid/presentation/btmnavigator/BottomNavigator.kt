@@ -23,9 +23,12 @@ import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomN
 import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomNavigationItem
 import com.example.pillinTimeAndroid.presentation.home.HomeScreen
 import com.example.pillinTimeAndroid.presentation.mypage.MyPageScreen
+import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetManageScreen
+import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetRegisterScreen
 import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
 import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
+import com.example.pillinTimeAndroid.presentation.schedule.ScheduleAddScreen
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
 
 @Composable
@@ -78,7 +81,15 @@ fun BottomNavigator() {
                 HomeScreen(navController = navController)
             }
             composable(route = Route.ScheduleScreen.route) {
-                ScheduleScreen(navController = navController)
+                ScheduleScreen(hiltViewModel(), navController = navController)
+            }
+            navigation(
+                route = Route.ScheduleScreenNavigation.route,
+                startDestination = Route.ScheduleScreen.route
+            ) {
+                composable(route = Route.ScheduleAddScreen.route) {
+                    ScheduleAddScreen(hiltViewModel(), navController = navController)
+                }
             }
             composable(route = Route.MyPageScreen.route) {
                 MyPageScreen(hiltViewModel(), navController)

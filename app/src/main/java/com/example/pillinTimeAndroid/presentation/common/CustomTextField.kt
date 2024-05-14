@@ -31,6 +31,7 @@ import com.example.pillinTimeAndroid.ui.theme.Error90
 import com.example.pillinTimeAndroid.ui.theme.Gray10
 import com.example.pillinTimeAndroid.ui.theme.Gray30
 import com.example.pillinTimeAndroid.ui.theme.Gray5
+import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
@@ -61,6 +62,14 @@ fun CustomTextField(
         value.isNotEmpty() && !state -> Pair(White, Error90)
         else -> Pair(Gray5, Gray10)
     }
+
+    val (trailButton, trailIconSize) = when (trailIcon) {
+        R.drawable.ic_cancel -> Pair(value.isNotEmpty(), 14.dp)
+        R.drawable.ic_search -> Pair(true, 30.dp)
+        else -> Pair(false, 30.dp)
+    }
+
+    val isCancelButton = trailIcon == R.drawable.ic_cancel
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     BasicTextField(
@@ -90,17 +99,24 @@ fun CustomTextField(
                     .padding(horizontal = 22.dp, vertical = 17.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
-                if (value.isNotEmpty() && trailIcon != null) {
+                if (trailButton && trailIcon != null) {
                     IconButton(
-                        onClick = { onValueChange("") },
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .size(14.dp),
+                            .size(trailIconSize),
+                        onClick = {
+                            if (isCancelButton) onValueChange("")
+                        },
+                        enabled = isCancelButton
                     ) {
                         Icon(
                             painter = painterResource(id = trailIcon),
-                            contentDescription = "Clear text",
-                            tint = Color.Unspecified
+                            contentDescription = "",
+                            tint = if (trailIcon == R.drawable.ic_search && value.isNotEmpty()) {
+                                Gray90
+                            } else {
+                                Color.Unspecified
+                            }
                         )
                     }
                 }
