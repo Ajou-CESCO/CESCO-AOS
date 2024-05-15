@@ -3,6 +3,7 @@ package com.example.pillinTimeAndroid.di
 import com.example.pillinTimeAndroid.data.remote.CabinetService
 import com.example.pillinTimeAndroid.data.remote.MedicineService
 import com.example.pillinTimeAndroid.data.remote.RelationService
+import com.example.pillinTimeAndroid.data.remote.ScheduleService
 import com.example.pillinTimeAndroid.data.remote.SignInService
 import com.example.pillinTimeAndroid.data.remote.UserService
 import dagger.Module
@@ -44,5 +45,11 @@ object NetworkModule {
     @Singleton
     fun provideMedicineService(retrofit: Retrofit): MedicineService {
         return retrofit.create(MedicineService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideScheduleService(retrofit: Retrofit): ScheduleService {
+        return retrofit.create(ScheduleService::class.java)
     }
 }
