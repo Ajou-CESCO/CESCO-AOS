@@ -53,7 +53,11 @@ fun ScheduleScreen(
                             selectedUserIndex = index
                         }
                     )
-                    CustomWeekCalendar(modifier = Modifier.background(Gray5))
+                    CustomWeekCalendar(
+                        modifier = Modifier.background(Gray5),
+                        isSelectable = false,
+                        onDaySelected = {}
+                    )
                 }
             }
 

@@ -33,6 +33,7 @@ import com.example.pillinTimeAndroid.ui.theme.shapes
 
 @Composable
 fun MedicineSearchResult(
+    modifier: Modifier = Modifier,
     medicineList: List<MedicineDTO>,
     selectedMedicine: MedicineDTO?,
     onMedicineClick: (MedicineDTO) -> Unit
@@ -40,7 +41,7 @@ fun MedicineSearchResult(
     var localSelectedMedicine by remember { mutableStateOf<MedicineDTO?>(null) }
     val showDialog = remember { mutableStateOf(false) }
 
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
+    LazyColumn(modifier = modifier.padding(16.dp)) {
         items(medicineList) { medicine ->
             MedicineItem(
                 medicine = medicine,

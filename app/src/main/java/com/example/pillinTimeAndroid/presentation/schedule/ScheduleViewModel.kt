@@ -2,12 +2,15 @@ package com.example.pillinTimeAndroid.presentation.schedule
 
 import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.example.pillinTimeAndroid.data.remote.dto.MedicineDTO
+import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.data.remote.dto.UserDTO
+import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import com.example.pillinTimeAndroid.presentation.schedule.components.ScheduleOrderList
@@ -39,7 +42,7 @@ class ScheduleViewModel @Inject constructor(
 
     val userList = listOf("김종명", "노수인", "심재민", "이재현", "김학준", "김종명", "노수인", "심재민")
 
-    private var currentPageIndex = mutableIntStateOf(0)
+    private val currentPageIndex = mutableIntStateOf(0)
     private val _medicineInput = MutableStateFlow("")
     val medicineInput = _medicineInput.asStateFlow()
 
@@ -49,15 +52,17 @@ class ScheduleViewModel @Inject constructor(
     private val _searchStatus = MutableStateFlow(false)
     val searchStatus = _searchStatus.asStateFlow()
 
-//    private val _selectedMedicine = MutableStateFlow<MedicineDTO?>(null)
-//    val selectedMedicine: StateFlow<MedicineDTO?> = _selectedMedicine.asStateFlow()
-    val selectedMedicine = mutableStateOf<MedicineDTO?>(null)
-    val selectedDay = mutableStateOf(emptyList<Int>())
-    val selectedTime = mutableStateOf(emptyList<String>())
+    private val _doseLog = MutableStateFlow<List<ScheduleLogDTO>>(emptyList())
+    val doseLog = _doseLog.asStateFlow()
 
-    val buttonEnabled = mutableStateOf(false)
+    val selectedMedicine = mutableStateOf<MedicineDTO?>(null)
+    val selectedDays = mutableStateListOf<Int>()
+    val selectedTimes = mutableStateListOf<String>()
+    val scheduleStartDate = mutableStateOf("")
+    val scheduleEndDate = mutableStateOf("")
 
     init {
+        getUserDoseLog()
         getUserInfo()
         _medicineInput.debounce(500)
 //            .filter { input -> input.isNotBlank() }
@@ -68,6 +73,18 @@ class ScheduleViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
+    private fun getUserDoseLog() {
+        viewModelScope.launch {
+            val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
+            val result = medicineRepository.getDoseLog("Bearer $accessToken", 2)
+            result.onSuccess {
+                _doseLog.value = it.result
+                Log.e("getUserDoseLog", "Succeeded to fetch: ${it.result}")
+            }.onFailure {
+                Log.e("getUserDoseLog", "Failed to fetch user details: ${it.message}")
+            }
+        }
+    }
     private fun getUserInfo() {
         viewModelScope.launch {
             val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
@@ -98,8 +115,37 @@ class ScheduleViewModel @Inject constructor(
         }
     }
 
+    fun postDoseSchedule() {
+        viewModelScope.launch {
+            val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
+            if (selectedMedicine.value != null) {
+                val scheduleRequest =
+                    ScheduleRequest(
+                        memberId = 2,
+                        medicineId = selectedMedicine.value!!.medicineCode,
+                        weekdayList = selectedDays,
+                        timeList = selectedTimes,
+                        startAt = scheduleStartDate.value,
+                        endAt = scheduleEndDate.value
+                    )
+                val result =
+                    medicineRepository.postDoseSchedule("Bearer $accessToken", scheduleRequest)
+                Log.e("request schedule",scheduleRequest.toString())
+                result.onSuccess {
+                    Log.d("getMedicineInfo", "Succeeded to fetch: ${it.result}")
+                }.onFailure {
+                    Log.e("getMedicineInfo", "Failed to fetch: ${it.message}")
+                }
+            }
+        }
+    }
+
     fun getCurrentPage(): ScheduleOrderList {
         return schedulePages.getOrElse(currentPageIndex.intValue) { schedulePages[0] }
+    }
+
+    fun getCurrentPageIndex(): Int {
+        return currentPageIndex.intValue
     }
 
     fun getProgress(): Float {
@@ -133,20 +179,28 @@ class ScheduleViewModel @Inject constructor(
         selectedMedicine.value = medicine
     }
 
-    fun selectDay(dayList: List<Int>) {
-        selectedDay.value = dayList
+    fun selectDays(dayIndex: Int) {
+        if (selectedDays.contains(dayIndex)) {
+            selectedDays.remove(dayIndex)
+        } else {
+            selectedDays.add(dayIndex)
+        }
     }
 
-    fun selectTime(timeList: List<String>) {
-        selectedTime.value = timeList
+    fun selectTimes(timeIndex: String) {
+        if (selectedTimes.contains(timeIndex)) {
+            selectedTimes.remove(timeIndex)
+        } else {
+            selectedTimes.add(timeIndex)
+        }
     }
 
     fun checkButtonState(): Boolean {
         return when (currentPageIndex.intValue) {
-            0 -> {
-                selectedMedicine.value != null
-            }
-            1 -> selectedMedicine.value != null
+            0 -> selectedMedicine.value != null
+            1 -> selectedDays.isNotEmpty()
+            2 -> selectedDays.isNotEmpty() && selectedTimes.isNotEmpty()
+            3 -> scheduleStartDate.value.isNotEmpty() && scheduleEndDate.value.isNotEmpty()
             else -> true
         }
     }
