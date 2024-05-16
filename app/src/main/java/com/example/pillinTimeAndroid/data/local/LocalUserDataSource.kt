@@ -48,6 +48,12 @@ class LocalUserDataSource @Inject constructor(
         }
     }
 
+    suspend fun deleteAccessToken() {
+        context.dataStore.edit {preferences ->
+            preferences.remove(ACCESS_TOKEN)
+        }
+    }
+
     suspend fun saveUserName(name: String) {
         context.dataStore.edit { preferences ->
             preferences[NAME] = name

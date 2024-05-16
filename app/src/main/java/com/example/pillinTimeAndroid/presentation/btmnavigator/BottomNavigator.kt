@@ -30,6 +30,7 @@ import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalSc
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleAddScreen
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
+import com.example.pillinTimeAndroid.presentation.signin.SignInScreen
 
 @Composable
 fun BottomNavigator() {
@@ -115,6 +116,9 @@ fun BottomNavigator() {
                 composable(route = Route.CabinetRegisterScreen.route) {
                     CabinetRegisterScreen(navController = navController)
                 }
+            }
+            composable(route = Route.SignInScreen.route) {
+                SignInScreen(navController = navController)
             }
         }
     }
