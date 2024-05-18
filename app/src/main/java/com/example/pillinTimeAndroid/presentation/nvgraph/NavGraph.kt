@@ -11,19 +11,16 @@ import com.example.pillinTimeAndroid.presentation.btmnavigator.BottomNavigator
 import com.example.pillinTimeAndroid.presentation.signin.SignInScreen
 import com.example.pillinTimeAndroid.presentation.signup.RoleSelectScreen
 import com.example.pillinTimeAndroid.presentation.signup.SignUpClientScreen
-import com.example.pillinTimeAndroid.presentation.signup.SignUpManagerScreen
-import com.example.pillinTimeAndroid.presentation.signup.SignUpViewModel
 
 @Composable
 fun NavGraph(
-    startDestination: String
+    startDestination: String,
 ) {
     val navController = rememberNavController()
-    val signUpViewModel = hiltViewModel<SignUpViewModel>()
 
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
     ) {
 
         navigation(
@@ -31,20 +28,16 @@ fun NavGraph(
             startDestination = Route.SignInScreen.route
         ) {
             composable(route = Route.SignInScreen.route) {
-                SignInScreen(hiltViewModel(), navController)
+                SignInScreen(navController = navController)
             }
             composable(route = Route.RoleSelectScreen.route)
             {
                 BackHandler(true) {}
-                RoleSelectScreen(signUpViewModel, navController)
-            }
-            composable(route = Route.SignUpManagerScreen.route) {
-                BackHandler(true) {}
-                SignUpManagerScreen(signUpViewModel, navController)
+                RoleSelectScreen(navController = navController)
             }
             composable(route = Route.SignUpClientScreen.route) {
                 BackHandler(true) {}
-                SignUpClientScreen(signUpViewModel, navController)
+                SignUpClientScreen(navController = navController)
             }
         }
 
@@ -52,6 +45,19 @@ fun NavGraph(
             route = Route.BottomNavigation.route,
             startDestination = Route.BottomNavigatorScreen.route
         ) {
+            composable(route = Route.BottomNavigatorScreen.route) {
+                BottomNavigator()
+            }
+        }
+
+        navigation(
+            route = Route.AppStartNavigationV2.route,
+            startDestination = Route.SignUpClientScreen.route
+        ) {
+            composable(route = Route.SignUpClientScreen.route) {
+                BackHandler(true) {}
+                SignUpClientScreen(hiltViewModel(), navController)
+            }
             composable(route = Route.BottomNavigatorScreen.route) {
                 BottomNavigator()
             }
