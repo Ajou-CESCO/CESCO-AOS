@@ -51,9 +51,9 @@ fun CustomTextField(
 ) {
     val (maxLength, keyboardType) = when (inputType) {
         InputType.NAME -> Pair(8, KeyboardType.Text)
-        InputType.PHONE -> Pair(11, KeyboardType.Number)
-        InputType.SSN -> Pair(7, KeyboardType.Number)
-        InputType.OTP -> Pair(6, KeyboardType.Number)
+        InputType.PHONE -> Pair(11, KeyboardType.NumberPassword)
+        InputType.SSN -> Pair(7, KeyboardType.NumberPassword)
+        InputType.OTP -> Pair(6, KeyboardType.NumberPassword)
         InputType.PLAIN -> Pair(20, KeyboardType.Text)
         InputType.SERIAL -> Pair(16, KeyboardType.Text)
     }
