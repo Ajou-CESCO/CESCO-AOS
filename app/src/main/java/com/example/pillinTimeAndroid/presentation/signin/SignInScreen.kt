@@ -3,7 +3,6 @@ package com.example.pillinTimeAndroid.presentation.signin
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.presentation.common.ButtonColor
@@ -13,7 +12,6 @@ import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
 import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPage
 import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 
 @Composable
 fun SignInScreen(
@@ -58,16 +56,5 @@ fun SignInScreen(
                 }
             }
         )
-    }
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-fun SingInScreenPreview() {
-    PillinTimeAndroidTheme {
-//        SignInScreen(SignInViewModel(), rememberNavController())
     }
 }
