@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.data.remote.dto.response
+package com.example.pillinTimeAndroid.data.remote.dto.response.base
 
 data class BaseResponse<T>(
     val status: Int,
