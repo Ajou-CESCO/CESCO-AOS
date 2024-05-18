@@ -6,6 +6,7 @@ import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.example.pillinTimeAndroid.data.remote.CabinetService
 import com.example.pillinTimeAndroid.data.remote.UserService
 import com.example.pillinTimeAndroid.data.repository.UserRepositoryImpl
+import com.example.pillinTimeAndroid.domain.repository.TokenRepository
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -38,7 +39,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(localDataSource: LocalUserDataSource, userService: UserService, cabinetService: CabinetService): UserRepository {
-        return UserRepositoryImpl(localDataSource, userService, cabinetService)
+    fun provideUserRepository(tokenRepository: TokenRepository, userService: UserService, cabinetService: CabinetService): UserRepository {
+        return UserRepositoryImpl(tokenRepository, userService, cabinetService)
     }
 }
