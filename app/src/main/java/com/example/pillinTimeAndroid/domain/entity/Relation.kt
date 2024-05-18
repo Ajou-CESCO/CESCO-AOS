@@ -4,12 +4,11 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class User(
+data class Relation(
+    val id: Int,
     val memberId: Int,
-    val name: String,
-    val ssn: String,
-    val phone: String,
-    val cabinetId: Int,
-    val isManager: Boolean,
-    val isSubscriber: Boolean,
+    val memberName: String,
+    val memberSsn: String,
+    val memberPhone: String,
+    val cabinetId: Int
 ) : Parcelable
