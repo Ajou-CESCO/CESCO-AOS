@@ -54,8 +54,8 @@ fun RoleSelectScreen(
                 size = ButtonSize.MEDIUM,
                 text = "다음",
                 onClick = {
-                    val reverseIndex = 1 - selectedRole!!
-                    viewModel.signUp(navController, reverseIndex)
+                    val isManager = selectedRole == 1
+                    viewModel.signUp(navController, isManager)
                 }
             )
         }

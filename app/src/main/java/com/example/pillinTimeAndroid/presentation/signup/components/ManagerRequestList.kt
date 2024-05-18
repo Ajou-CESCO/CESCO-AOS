@@ -25,7 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
+import com.example.pillinTimeAndroid.data.remote.dto.response.RelationReqResponse
 import com.example.pillinTimeAndroid.presentation.common.CustomAlertDialog
 import com.example.pillinTimeAndroid.ui.theme.Gray70
 import com.example.pillinTimeAndroid.ui.theme.Gray90
@@ -36,11 +36,12 @@ import com.example.pillinTimeAndroid.ui.theme.shapes
 
 @Composable
 fun ManagerRequestList(
-    managers: List<RelationDTO>,
-    onConfirm: () -> Unit
+    managers: List<RelationReqResponse>,
+    onConfirm: (Int) -> Unit
 ) {
     val showDialog = remember { mutableStateOf(false) }
-    var selectedManager by remember { mutableStateOf("") }
+    var selectedManagerName by remember { mutableStateOf("") }
+    var requestId by remember { mutableStateOf(0) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
@@ -55,7 +56,8 @@ fun ManagerRequestList(
                         .background(Primary5)
                         .clickable(
                             onClick = {
-                                selectedManager = manager.senderId.toString()
+                                selectedManagerName = manager.senderName
+                                requestId = manager.id
                                 showDialog.value = true
                             },
                             indication = null,
@@ -66,13 +68,13 @@ fun ManagerRequestList(
                 ) {
                     Text(
                         modifier = Modifier.padding(22.dp),
-                        text = manager.senderId.toString(),
+                        text = manager.senderName,
                         color = Gray90,
                         style = PillinTimeTheme.typography.headline4Bold
                     )
                     Text(
                         modifier = Modifier.padding(end = 22.dp),
-                        text = "1234",
+                        text = manager.senderPhone.substring(9),
                         color = Gray70,
                         style = PillinTimeTheme.typography.headline5Regular
                     )
@@ -81,11 +83,11 @@ fun ManagerRequestList(
         }
         if (showDialog.value) {
             CustomAlertDialog(
-                title = "${selectedManager}님을 보호자로\n수락하시겠어요??",
-                description = "수락을 선택하면 ${selectedManager}님이 회원님의\n약 복용 현황과 건강 상태를 관리할 수 있어요.",
+                title = "${selectedManagerName}님을 보호자로\n수락하시겠어요??",
+                description = "수락을 선택하면 ${selectedManagerName}님이 회원님의\n약 복용 현황과 건강 상태를 관리할 수 있어요.",
                 confirmText = "수락할게요",
                 dismissText = "거절할게요",
-                onConfirm = onConfirm,
+                onConfirm = { onConfirm(requestId) },
                 onDismiss = { showDialog.value = false }
             )
         }
