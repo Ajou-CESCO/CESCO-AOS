@@ -7,18 +7,21 @@ import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
+import com.example.pillinTimeAndroid.domain.repository.TokenRepository
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class MedicineRepositoryImpl @Inject constructor(
     private val medicineService: MedicineService,
-    private val scheduleService: ScheduleService
+    private val scheduleService: ScheduleService,
+    private val tokenRepository: TokenRepository
 ) : MedicineRepository {
     override suspend fun getMedicineInfo(
-        accessToken: String,
         medicineName: String
     ): Result<BaseResponse<List<MedicineDTO>>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = medicineService.getMedicineInfo(accessToken, medicineName)
+            val response = medicineService.getMedicineInfo("Bearer $accessToken", medicineName)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
@@ -26,11 +29,11 @@ class MedicineRepositoryImpl @Inject constructor(
     }
 
     override suspend fun postDoseSchedule(
-        accessToken: String,
         scheduleRequest: ScheduleRequest
     ): Result<BaseResponse<Any>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = scheduleService.postDoseSchedule(accessToken, scheduleRequest)
+            val response = scheduleService.postDoseSchedule("Bearer $accessToken", scheduleRequest)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
@@ -38,11 +41,11 @@ class MedicineRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDoseLog(
-        accessToken: String,
         memberId: Int
     ): Result<BaseResponse<List<ScheduleLogDTO>>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = scheduleService.getScheduleLog(accessToken, memberId)
+            val response = scheduleService.getScheduleLog("Bearer $accessToken", memberId)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
