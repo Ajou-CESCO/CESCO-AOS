@@ -30,8 +30,10 @@ fun CustomWeekCalendar(
     selectedDays: List<Int> = emptyList(),
     onDaySelected: (Int) -> Unit
 ) {
-    val days = listOf("일", "월", "화", "수", "목", "금", "토")
-    val today = Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 1
+    val days = listOf("월", "화", "수", "목", "금", "토", "일")
+    val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+    val today = if (dayOfWeek == Calendar.SUNDAY) 6 else dayOfWeek - 2
+
     Row(
         modifier = modifier
             .background(Color.Transparent)
