@@ -27,7 +27,7 @@ import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetRegister
 import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
 import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
-import com.example.pillinTimeAndroid.presentation.schedule.ScheduleAddScreen
+import com.example.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddScreen
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
 import com.example.pillinTimeAndroid.presentation.signin.SignInScreen
 

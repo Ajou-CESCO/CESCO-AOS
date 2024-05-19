@@ -32,16 +32,18 @@ import com.example.pillinTimeAndroid.ui.theme.shapes
 @Composable
 fun HomeDoseCard(
     cabinetId: Int,
-    onRegisterClick: () -> Unit
+    onRegisterClick: () -> Unit,
+    doseLog: List<ScheduleLogDTO>
 ) {
-    if (cabinetId == 0) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Gray10)
-                .clip(shapes.small),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+    val backgroundColor = if(cabinetId == 0 || doseLog.isEmpty()) Gray10 else White
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(backgroundColor)
+            .clip(shapes.small),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        if (cabinetId == 0) {
             Text(
                 modifier = Modifier.padding(top = 75.dp, bottom = 2.dp),
                 text = "등록된 기기가 없어요",
@@ -71,21 +73,40 @@ fun HomeDoseCard(
                     style = PillinTimeTheme.typography.body1Medium
                 )
             }
-        }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(shapes.small),
-        ) {
-
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(backgroundColor)
+                    .clip(shapes.small)
+                    .padding(bottom = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if(doseLog.isNotEmpty()) {
+                    doseLog.forEach { log ->
+                        DoseItem(doseLog = log)
+                    }
+                } else {
+                    Text(
+                        modifier = Modifier.padding(top = 20.dp, bottom = 2.dp),
+                        text = "오늘 등록된 복약 일정이 없어요",
+                        color = Gray90,
+                        style = PillinTimeTheme.typography.body1Bold
+                    )
+                    Text(
+                        modifier = Modifier.padding(bottom = 33.dp),
+                        text = "복약 일정을 등록하고 알림을 받아보세요",
+                        color = Gray90,
+                        style = PillinTimeTheme.typography.caption1Medium
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
 fun DoseItem(
-    state: Int = 2,
     doseLog: ScheduleLogDTO
 ) {
     val (doseColor, doseStatus) = when (doseLog.takenStatus) {
@@ -117,7 +138,7 @@ fun DoseItem(
                 .weight(.3f)
                 .padding(end = 7.dp),
             textAlign = TextAlign.Center,
-            text = doseLog.plannedAt,
+            text = doseLog.plannedAt.substring(0, 5),
             style = PillinTimeTheme.typography.body2Medium,
             color = Gray70
         )
