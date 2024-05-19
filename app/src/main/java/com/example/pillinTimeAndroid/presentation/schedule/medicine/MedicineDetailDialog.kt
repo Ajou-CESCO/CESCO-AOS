@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.schedule.search
+package com.example.pillinTimeAndroid.presentation.schedule.medicine
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

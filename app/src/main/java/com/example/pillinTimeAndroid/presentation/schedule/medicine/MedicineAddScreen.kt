@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.schedule
+package com.example.pillinTimeAndroid.presentation.schedule.medicine
 
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.presentation.common.ButtonColor
@@ -35,10 +36,10 @@ import com.example.pillinTimeAndroid.presentation.common.CustomTextField
 import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
 import com.example.pillinTimeAndroid.presentation.common.CustomWeekCalendar
 import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
+import com.example.pillinTimeAndroid.presentation.main.MainViewModel
 import com.example.pillinTimeAndroid.presentation.schedule.components.ScheduleDatePicker
 import com.example.pillinTimeAndroid.presentation.schedule.components.ScheduleTimeButton
 import com.example.pillinTimeAndroid.presentation.schedule.components.schedulePages
-import com.example.pillinTimeAndroid.presentation.schedule.search.MedicineSearchResult
 import com.example.pillinTimeAndroid.ui.theme.Gray20
 import com.example.pillinTimeAndroid.ui.theme.Gray40
 import com.example.pillinTimeAndroid.ui.theme.Gray70
@@ -50,8 +51,9 @@ import com.example.pillinTimeAndroid.util.fadeInSlideUpAnimation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleAddScreen(
-    viewModel: ScheduleViewModel,
-    navController: NavController
+    viewModel: MedicineAddViewModel,
+    navController: NavController,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val currentPage = viewModel.getCurrentPage()
     val currentPageIndex = viewModel.getCurrentPageIndex()
@@ -63,6 +65,8 @@ fun ScheduleAddScreen(
     val selectedTime = viewModel.selectedTimes
     val startDate = viewModel.scheduleStartDate
     val endDate = viewModel.scheduleEndDate
+    val userDetails by mainViewModel.userDetails.collectAsState()
+
 
     var showEndDatePicker by remember { mutableStateOf(true) }
 
@@ -236,7 +240,7 @@ fun ScheduleAddScreen(
                 text = "다음",
                 onClick = {
                     if (currentPageIndex == 3) {
-                        viewModel.postDoseSchedule()
+                        userDetails?.memberId?.let { viewModel.postDoseSchedule(it, navController) }
                     } else {
                         viewModel.nextPage()
                     }
