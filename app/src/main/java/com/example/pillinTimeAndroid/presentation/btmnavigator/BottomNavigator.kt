@@ -1,6 +1,5 @@
 package com.example.pillinTimeAndroid.presentation.btmnavigator
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -46,7 +45,6 @@ fun BottomNavigator() {
     val currentState = backstackState?.destination?.route
     var selectedItem by rememberSaveable { mutableIntStateOf(1) }
 
-    Log.d("BottomNAv: ", "$selectedItem")
     selectedItem = when (currentState) {
         Route.ScheduleScreen.route -> 0
         Route.HomeScreen.route -> 1
@@ -59,7 +57,6 @@ fun BottomNavigator() {
         Route.HomeScreen.route,
         Route.MyPageScreen.route
     )
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
