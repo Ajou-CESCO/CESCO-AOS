@@ -1,5 +1,6 @@
 package com.example.pillinTimeAndroid.presentation.signin
 
+import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.AnnotatedString
@@ -10,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.example.pillinTimeAndroid.data.remote.dto.request.SignInRequest
+import com.example.pillinTimeAndroid.data.remote.dto.request.SignInSmsAuthRequest
 import com.example.pillinTimeAndroid.domain.repository.SignInRepository
 import com.example.pillinTimeAndroid.presentation.common.InputType
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPageList
@@ -30,6 +32,7 @@ class SignInViewModel @Inject constructor(
     private var name = mutableStateOf("")
     private var ssn = mutableStateOf("")
     private var currentPageIndex = mutableIntStateOf(0)
+    private var smsAuthCode = mutableStateOf("")
 
     fun signIn(navController: NavController) {
         val formattedPhone = "${phone.value.substring(0, 3)}-${
@@ -50,6 +53,17 @@ class SignInViewModel @Inject constructor(
                     localUserDataSource.saveUserSsn(formattedSsn)
                     navController.navigate("roleSelectScreen")
                 }
+            }
+        }
+    }
+
+    fun postSmsAuth() {
+        viewModelScope.launch {
+            val result = signInRepository.postSmsAuth(SignInSmsAuthRequest(phone.value))
+            result.onSuccess { codeResponse ->
+                smsAuthCode.value = codeResponse.result.code
+            }.onFailure {
+                Log.e("SMS", "failed to call api ${it.message}")
             }
         }
     }
@@ -105,7 +119,7 @@ class SignInViewModel @Inject constructor(
         val ssnRegex = Regex("^[0-9]{6}-?[1-4]$")
         return when (currentPageIndex.intValue) {
             0 -> phone.value.matches(Regex("^01[0-1,7]-?[0-9]{4}-?[0-9]{4}$")) || phone.value.isEmpty()
-            1 -> otp.value.matches(Regex("\\d{6}")) || otp.value.isEmpty()
+            1 -> otp.value == smsAuthCode.value || otp.value.isEmpty()
             2 -> name.value.matches(Regex("^[가-힣a-zA-Z]{1,}$")) || name.value.isEmpty()
             3 -> ssn.value.matches(ssnRegex) || ssn.value.isEmpty()
             else -> false

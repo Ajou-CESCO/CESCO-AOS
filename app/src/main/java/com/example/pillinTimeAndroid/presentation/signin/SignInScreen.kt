@@ -38,7 +38,8 @@ fun SignInScreen(
                 input = viewModel.getCurrentInput(),
                 onInputChanged = viewModel::updateInput,
                 visualTransformation = viewModel.getVisualTransformations(),
-                inputType = inputType
+                inputType = inputType,
+                onSmsAuthClick = { viewModel.postSmsAuth() }
             )
         }
     ) {
