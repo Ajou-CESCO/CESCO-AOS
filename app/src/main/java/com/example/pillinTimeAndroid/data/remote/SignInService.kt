@@ -6,7 +6,6 @@ import com.example.pillinTimeAndroid.data.remote.dto.request.SignInSmsAuthReques
 import com.example.pillinTimeAndroid.data.remote.dto.response.SignInSmsAuthResponse
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface SignInService {
@@ -17,7 +16,6 @@ interface SignInService {
 
     @POST("/api/auth/sms")
     suspend fun postSmsAuth(
-        @Header("Authorization") accessToken: String,
         @Body signInSmsAuthRequest: SignInSmsAuthRequest
     ): BaseResponse<SignInSmsAuthResponse>
 }
