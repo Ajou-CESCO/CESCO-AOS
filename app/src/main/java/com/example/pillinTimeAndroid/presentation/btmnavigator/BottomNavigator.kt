@@ -1,6 +1,5 @@
 package com.example.pillinTimeAndroid.presentation.btmnavigator
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -11,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,10 +21,14 @@ import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomN
 import com.example.pillinTimeAndroid.presentation.btmnavigator.component.BottomNavigationItem
 import com.example.pillinTimeAndroid.presentation.home.HomeScreen
 import com.example.pillinTimeAndroid.presentation.mypage.MyPageScreen
+import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetManageScreen
+import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetRegisterScreen
 import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
 import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
+import com.example.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddScreen
+import com.example.pillinTimeAndroid.presentation.signin.SignInScreen
 
 @Composable
 fun BottomNavigator() {
@@ -42,7 +44,6 @@ fun BottomNavigator() {
     val currentState = backstackState?.destination?.route
     var selectedItem by rememberSaveable { mutableIntStateOf(1) }
 
-    Log.d("BottomNAv: ", "$selectedItem")
     selectedItem = when (currentState) {
         Route.ScheduleScreen.route -> 0
         Route.HomeScreen.route -> 1
@@ -55,7 +56,6 @@ fun BottomNavigator() {
         Route.HomeScreen.route,
         Route.MyPageScreen.route
     )
-
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -80,8 +80,16 @@ fun BottomNavigator() {
             composable(route = Route.ScheduleScreen.route) {
                 ScheduleScreen(navController = navController)
             }
+            navigation(
+                route = Route.ScheduleScreenNavigation.route,
+                startDestination = Route.ScheduleScreen.route
+            ) {
+                composable(route = Route.ScheduleAddScreen.route) {
+                    ScheduleAddScreen(navController = navController)
+                }
+            }
             composable(route = Route.MyPageScreen.route) {
-                MyPageScreen(hiltViewModel(), navController)
+                MyPageScreen(navController = navController)
             }
             navigation(
                 route = Route.MyPageScreenNavigation.route,
@@ -96,6 +104,17 @@ fun BottomNavigator() {
                 composable(route = Route.WithdrawalScreen.route) {
                     WithdrawalScreen(navController = navController)
                 }
+                composable(route = Route.CabinetManageScreen.route) {
+                    CabinetManageScreen(navController = navController) {
+                        navController.navigate("cabinetRegisterScreen")
+                    }
+                }
+                composable(route = Route.CabinetRegisterScreen.route) {
+                    CabinetRegisterScreen(navController = navController)
+                }
+            }
+            composable(route = Route.SignInScreen.route) {
+                SignInScreen(navController = navController)
             }
         }
     }

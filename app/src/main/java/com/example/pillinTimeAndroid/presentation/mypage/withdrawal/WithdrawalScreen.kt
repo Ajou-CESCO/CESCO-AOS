@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.presentation.common.ButtonColor
@@ -28,6 +29,7 @@ import com.example.pillinTimeAndroid.ui.theme.White
 
 @Composable
 fun WithdrawalScreen(
+    viewModel: WithdrawalViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val showDialog = remember { mutableStateOf(false) }
@@ -83,7 +85,12 @@ fun WithdrawalScreen(
             confirmText = "삭제할래요",
             dismissText = "취소할래요",
             onConfirm = {
-                // TODO: Withdrawal API
+                viewModel.deleteUserInfo()
+                navController.navigate("signInScreen") {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
             },
             onDismiss = { showDialog.value = false }
         )

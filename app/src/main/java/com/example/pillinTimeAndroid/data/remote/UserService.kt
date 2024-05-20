@@ -1,5 +1,6 @@
 package com.example.pillinTimeAndroid.data.remote
 
+import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
 import com.example.pillinTimeAndroid.data.remote.dto.TokenDTO
 import com.example.pillinTimeAndroid.data.remote.dto.UserDTO
 import com.example.pillinTimeAndroid.data.remote.dto.request.SignInRequest
@@ -13,6 +14,12 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 
 interface UserService {
+
+    @GET("/api/init")
+    suspend fun initClient(
+        @Header("Authorization") accessToken: String
+    ): BaseResponse<UserDTO<List<RelationDTO>>>
+
     @POST("/api/user")
     suspend fun postUser(
         @Body signUpRequest: SignUpRequest
@@ -21,15 +28,15 @@ interface UserService {
     @GET("/api/user")
     suspend fun getUserInfo(
         @Header("Authorization") accessToken: String
-    ): BaseResponse<UserDTO>
+    ): BaseResponse<UserDTO<Any>>
     @DELETE("/api/user")
     suspend fun deleteUserInfo(
         @Header("Authorization") accessToken: String
-    ): BaseResponse<TokenDTO>
+    ): BaseResponse<Any>
 
     @PATCH("/api/user")
     suspend fun patchUserInfo(
         @Header("Authorization") accessToken: String,
         @Body signInRequest: SignInRequest
-    ): BaseResponse<UserDTO>
+    ): BaseResponse<UserDTO<Any>>
 }

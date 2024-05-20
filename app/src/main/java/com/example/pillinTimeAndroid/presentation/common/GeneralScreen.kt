@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -20,6 +21,7 @@ import com.example.pillinTimeAndroid.ui.theme.Gray100
 import com.example.pillinTimeAndroid.ui.theme.Gray70
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.example.pillinTimeAndroid.util.fadeInEffect
 
 @Composable
 fun GeneralScreen(
@@ -31,9 +33,10 @@ fun GeneralScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier
+        modifier = Modifier.fadeInEffect(1000)
             .clickable(
                 onClick = {
                     focusManager.clearFocus()
@@ -47,8 +50,9 @@ fun GeneralScreen(
         Spacer(modifier = Modifier.height(26.dp))
         Column(
             modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
                 .padding(horizontal = BasicPadding)
-
         ) {
             Text(
                 text = title,
@@ -66,6 +70,10 @@ fun GeneralScreen(
             Spacer(modifier = Modifier.height(33.dp))
             content()
             Spacer(modifier = Modifier.weight(1f))
+        }
+        Column(
+            modifier = Modifier.padding(horizontal = BasicPadding)
+        ) {
             button()
         }
     }

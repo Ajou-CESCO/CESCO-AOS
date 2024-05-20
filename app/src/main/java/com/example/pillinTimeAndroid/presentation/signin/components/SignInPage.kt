@@ -13,6 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
@@ -28,15 +32,17 @@ import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInPage(
+    modifier: Modifier,
     state: Boolean,
     pageList: SignInPageList,
     input: String,
     onInputChanged: (String) -> Unit,
+    onSmsAuthClick: () -> Unit,
     visualTransformation: VisualTransformation,
     inputType: InputType
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         if (pageList == signInPages[0] || pageList == signInPages[2]) Spacer(modifier = Modifier.height(14.dp))
@@ -67,13 +73,16 @@ fun SignInPage(
                 CompositionLocalProvider(
                     LocalMinimumInteractiveComponentEnforcement provides false,
                 ) {
+                    var smsState by remember { mutableStateOf(false) }
                     TextButton(
                         modifier = Modifier.padding(top = 3.dp),
-                        onClick = { /*TODO*/ }
-                        // otp 재인증 API 호출 필요
+                        onClick = {
+                            onSmsAuthClick()
+                            smsState = true
+                        }
                     ) {
                         Text(
-                            text = "재전송",
+                            text = if(smsState)"재전송" else "인증번호 전송",
                             style = PillinTimeTheme.typography.body1Regular.copy(
                                 color = Gray40,
                                 textDecoration = TextDecoration.Underline

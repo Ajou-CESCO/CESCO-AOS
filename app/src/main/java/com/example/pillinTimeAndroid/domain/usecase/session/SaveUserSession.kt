@@ -1,10 +1,11 @@
 package com.example.pillinTimeAndroid.domain.usecase.session
 
-import com.example.pillinTimeAndroid.domain.entity.User
-import com.example.pillinTimeAndroid.domain.repository.UserRepository
+import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 
-class SaveUserSession(private val userRepository: UserRepository) {
-    suspend operator fun invoke(user: User) {
-        userRepository.saveUserSession(user)
+class SaveUserSession(
+    private val localUserDataSource: LocalUserDataSource
+) {
+    suspend operator fun invoke(accessToken: String) {
+        localUserDataSource.saveAccessToken(accessToken)
     }
 }

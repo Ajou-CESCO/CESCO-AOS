@@ -3,8 +3,10 @@ package com.example.pillinTimeAndroid.di
 import android.content.Context
 import com.example.pillinTimeAndroid.BuildConfig.BASE_URL
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
+import com.example.pillinTimeAndroid.data.remote.CabinetService
 import com.example.pillinTimeAndroid.data.remote.UserService
 import com.example.pillinTimeAndroid.data.repository.UserRepositoryImpl
+import com.example.pillinTimeAndroid.domain.repository.TokenRepository
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -37,7 +39,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(localDataSource: LocalUserDataSource, userService: UserService): UserRepository {
-        return UserRepositoryImpl(localDataSource, userService)
+    fun provideUserRepository(tokenRepository: TokenRepository, userService: UserService, cabinetService: CabinetService): UserRepository {
+        return UserRepositoryImpl(tokenRepository, userService, cabinetService)
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideMainViewModel(
+//        readUserSession: ReadUserSession,
+//        userRepository: UserRepository,
+//        medicineRepository: MedicineRepository,
+//        relationRepository: RelationRepository
+//    ): MainViewModel {
+//        return MainViewModel(readUserSession, userRepository, medicineRepository, relationRepository)
+//    }
 }

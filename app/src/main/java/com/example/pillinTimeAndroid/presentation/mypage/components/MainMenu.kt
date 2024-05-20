@@ -46,6 +46,9 @@ fun MainMenu(
             MainMenuItem("고객 센터") {
                 onItemClick("serviceScreen")
             }
+            MainMenuItem("로그아웃") {
+
+            }
             MainMenuItem("회원 탈퇴") {
                 onItemClick("withdrawalScreen")
             }

@@ -19,7 +19,7 @@ class EditInfoViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val localUserDataSource: LocalUserDataSource,
     ) : ViewModel() {
-    private val _userDetails = MutableStateFlow<UserDTO?>(null)
+    private val _userDetails = MutableStateFlow<UserDTO<Any>?>(null)
     val userDetails = _userDetails.asStateFlow()
 
     init {
@@ -28,7 +28,7 @@ class EditInfoViewModel @Inject constructor(
     private fun getUserInfo() {
         viewModelScope.launch {
             val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
-            val result = userRepository.getUserInfo("Bearer $accessToken")
+            val result = userRepository.getUserInfo()
             result.onSuccess {
                 _userDetails.value = it.result
                 Log.d("EditInfoViewModel", "Succeeded to fetch: ${it.result}")

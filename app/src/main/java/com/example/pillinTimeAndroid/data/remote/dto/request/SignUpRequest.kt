@@ -4,5 +4,5 @@ data class SignUpRequest(
     val ssn: String,
     val name: String,
     val phone: String,
-    val userType: Int
+    val isManager: Boolean
 )

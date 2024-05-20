@@ -11,9 +11,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.example.pillinTimeAndroid.data.remote.dto.request.SignInRequest
-import com.example.pillinTimeAndroid.domain.entity.User
+import com.example.pillinTimeAndroid.data.remote.dto.request.SignInSmsAuthRequest
 import com.example.pillinTimeAndroid.domain.repository.SignInRepository
-import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import com.example.pillinTimeAndroid.presentation.common.InputType
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPageList
 import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
@@ -26,7 +25,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val signInRepository: SignInRepository,
-    private val userRepository: UserRepository,
     private val localUserDataSource: LocalUserDataSource,
 ) : ViewModel() {
     private var phone = mutableStateOf("")
@@ -34,36 +32,41 @@ class SignInViewModel @Inject constructor(
     private var name = mutableStateOf("")
     private var ssn = mutableStateOf("")
     private var currentPageIndex = mutableIntStateOf(0)
+    private var smsAuthCode = mutableStateOf("")
 
     fun signIn(navController: NavController) {
-        val formattedPhone = "${phone.value.substring(0, 3)}-${phone.value.substring(3, 7)}-${phone.value.substring(7, 11)}"
+        val formattedPhone = "${phone.value.substring(0, 3)}-${
+            phone.value.substring(3, 7)
+        }-${phone.value.substring(7, 11)}"
         val formattedSsn = "${ssn.value.substring(0, 6)}-${ssn.value.substring(6)}"
 
         viewModelScope.launch {
-            val result = signInRepository.signIn(
-                SignInRequest(name.value, formattedPhone, formattedSsn)
-            )
+            val signInRequest = SignInRequest(name.value, formattedPhone, formattedSsn)
+            val result = signInRepository.signIn(signInRequest)
             result.onSuccess { authenticateResponse ->
-                val user = User(accessToken = authenticateResponse.result.accessToken)
-                viewModelScope.launch {
-                    userRepository.saveUserSession(user)
-                    navController.navigate("bottomNavigation")
-                }
-                Log.d("Login Success", "accessToken: , ${authenticateResponse.result.accessToken}")
+                Log.e("login", "succeed to call api ${authenticateResponse.message}")
+                localUserDataSource.saveAccessToken(authenticateResponse.result.accessToken)
+                navController.navigate("bottomNavigation")
             }.onFailure {
-                val user = User(name = name.value, phone = formattedPhone, ssn = formattedSsn)
+                Log.e("login", "failed to call api ${it.message}")
+
                 viewModelScope.launch {
-                    userRepository.saveUserSession(user)
-//                    localUserDataSource.getUserName().collect { userName ->
-//                        localUserDataSource.getUserPhone().collect { userPhone ->
-//                            localUserDataSource.getUserSsn().collect { userSsn ->
-//                                Log.d("User Info", "Name: $userName, Phone: $userPhone, SSN: $userSsn")
-//                            }
-//                        }
-//                    }
-                    Log.d("Login Fail: ", name.value + formattedPhone + result.toString())
+                    localUserDataSource.saveUserName(name.value)
+                    localUserDataSource.saveUserPhone(formattedPhone)
+                    localUserDataSource.saveUserSsn(formattedSsn)
                     navController.navigate("roleSelectScreen")
                 }
+            }
+        }
+    }
+
+    fun postSmsAuth() {
+        viewModelScope.launch {
+            val result = signInRepository.postSmsAuth(SignInSmsAuthRequest(phone.value))
+            result.onSuccess { codeResponse ->
+                smsAuthCode.value = codeResponse.result.code
+            }.onFailure {
+                Log.e("SMS", "failed to call api ${it.message}")
             }
         }
     }
@@ -108,10 +111,10 @@ class SignInViewModel @Inject constructor(
 
     fun updateInput(input: String) {
         when (currentPageIndex.intValue) {
-            0 -> phone.value = input
+            0 -> phone.value = input.filter { it.isDigit() }
             1 -> otp.value = input
             2 -> name.value = input
-            3 -> ssn.value = input
+            3 -> ssn.value = input.filter { it.isDigit() }
         }
     }
 
@@ -119,7 +122,8 @@ class SignInViewModel @Inject constructor(
         val ssnRegex = Regex("^[0-9]{6}-?[1-4]$")
         return when (currentPageIndex.intValue) {
             0 -> phone.value.matches(Regex("^01[0-1,7]-?[0-9]{4}-?[0-9]{4}$")) || phone.value.isEmpty()
-            1 -> otp.value.matches(Regex("\\d{6}")) || otp.value.isEmpty()
+//            1 -> otp.value == smsAuthCode.value || otp.value.isEmpty()
+            1 -> otp.value.isEmpty()
             2 -> name.value.matches(Regex("^[가-힣a-zA-Z]{1,}$")) || name.value.isEmpty()
             3 -> ssn.value.matches(ssnRegex) || ssn.value.isEmpty()
             else -> false

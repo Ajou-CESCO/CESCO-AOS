@@ -7,7 +7,7 @@ object Dimens {
     val ProgressBarHeight = 6.dp
     val BasicHeight = 64.dp
     val BasicWidth = 308.dp
-    val SmallSize = 48.dp
+    val SmallSize = 56.dp
 
     // padding for basic button, editText, etc
     val BasicPadding = 26.dp
