@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
             if (hasToken) {
                 val result = userRepository.initClient()
                 result.onSuccess { response ->
-                    Log.d("MainViewModel", "succeed to init: ${response.message}")
+                    Log.d("MainViewModelREAAAAAL MAAAAIN", "succeed to init: ${response.message}")
                     _userDetails.value = User(
                         memberId = response.result.memberId,
                         name = response.result.name,

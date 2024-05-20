@@ -12,6 +12,7 @@ import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
 import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPage
 import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
+import com.example.pillinTimeAndroid.util.fadeInEffect
 
 @Composable
 fun SignInScreen(
@@ -33,6 +34,7 @@ fun SignInScreen(
         subtitle = currentPage.subtitle,
         content = {
             SignInPage(
+                modifier = Modifier.fadeInEffect(delayMillis = 1000),
                 state = viewModel.isValidateInput(),
                 pageList = currentPage,
                 input = viewModel.getCurrentInput(),

@@ -30,7 +30,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MedicineAddViewModel @Inject constructor(
     private val medicineRepository: MedicineRepository
-
 ) : ViewModel() {
     private val currentPageIndex = mutableIntStateOf(0)
     private val _medicineInfo = MutableStateFlow<List<MedicineDTO>>(emptyList())

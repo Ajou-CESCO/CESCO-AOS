@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.example.pillinTimeAndroid.presentation.main.MainViewModel
 import com.example.pillinTimeAndroid.presentation.mypage.components.MainMenu
 import com.example.pillinTimeAndroid.presentation.mypage.components.SubMenu
 import com.example.pillinTimeAndroid.ui.theme.Gray5
@@ -27,9 +28,10 @@ import com.example.pillinTimeAndroid.ui.theme.White
 @Composable
 fun MyPageScreen(
     viewModel: MyPageViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val userDetails by viewModel.userDetails.collectAsState()
+    val userDetails by mainViewModel.userDetails.collectAsState()
     val role = if (userDetails?.isManager == true) "보호자" else "피보호자"
     val name = userDetails?.name
 

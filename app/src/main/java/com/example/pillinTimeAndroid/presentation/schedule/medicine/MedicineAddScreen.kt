@@ -48,10 +48,9 @@ import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.util.fadeInSlideUpAnimation
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScheduleAddScreen(
-    viewModel: MedicineAddViewModel,
+    viewModel: MedicineAddViewModel = hiltViewModel(),
     navController: NavController,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {

@@ -1,6 +1,7 @@
 package com.example.pillinTimeAndroid.presentation.common
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -30,16 +31,16 @@ fun LottieView(modifier: Modifier) {
         iterations = 1,
         isPlaying = true
     )
-    Box(modifier = modifier) {
-        LottieAnimation(
-            composition = preloaderLottieCompositionV2,
-            progress = {preloaderProgressV2},
-            modifier = modifier
-        )
+    Box(modifier = modifier.fillMaxSize()) {
+//        LottieAnimation(
+//            composition = preloaderLottieCompositionV2,
+//            progress = {preloaderProgressV2},
+//            modifier = modifier.fillMaxSize()
+//        )
         LottieAnimation(
             composition = preloaderLottieCompositionV1,
             progress = {preloaderProgressV1},
-            modifier = modifier
+            modifier = modifier.fillMaxSize()
         )
     }
 }
@@ -47,7 +48,7 @@ fun LottieView(modifier: Modifier) {
 @Composable
 fun LottieViewV2(modifier: Modifier) {
     val preloaderLottieComposition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.signup)
+        LottieCompositionSpec.RawRes(R.raw.background)
     )
     val preloaderProgress by animateLottieCompositionAsState(
         preloaderLottieComposition,

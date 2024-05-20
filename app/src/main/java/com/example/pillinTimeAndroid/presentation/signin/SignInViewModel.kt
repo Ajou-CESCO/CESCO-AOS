@@ -44,9 +44,12 @@ class SignInViewModel @Inject constructor(
             val signInRequest = SignInRequest(name.value, formattedPhone, formattedSsn)
             val result = signInRepository.signIn(signInRequest)
             result.onSuccess { authenticateResponse ->
+                Log.e("login", "succeed to call api ${authenticateResponse.message}")
                 localUserDataSource.saveAccessToken(authenticateResponse.result.accessToken)
                 navController.navigate("bottomNavigation")
             }.onFailure {
+                Log.e("login", "failed to call api ${it.message}")
+
                 viewModelScope.launch {
                     localUserDataSource.saveUserName(name.value)
                     localUserDataSource.saveUserPhone(formattedPhone)
@@ -119,7 +122,8 @@ class SignInViewModel @Inject constructor(
         val ssnRegex = Regex("^[0-9]{6}-?[1-4]$")
         return when (currentPageIndex.intValue) {
             0 -> phone.value.matches(Regex("^01[0-1,7]-?[0-9]{4}-?[0-9]{4}$")) || phone.value.isEmpty()
-            1 -> otp.value == smsAuthCode.value || otp.value.isEmpty()
+//            1 -> otp.value == smsAuthCode.value || otp.value.isEmpty()
+            1 -> otp.value.isEmpty()
             2 -> name.value.matches(Regex("^[가-힣a-zA-Z]{1,}$")) || name.value.isEmpty()
             3 -> ssn.value.matches(ssnRegex) || ssn.value.isEmpty()
             else -> false

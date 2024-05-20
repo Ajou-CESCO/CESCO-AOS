@@ -42,4 +42,15 @@ object AppModule {
     fun provideUserRepository(tokenRepository: TokenRepository, userService: UserService, cabinetService: CabinetService): UserRepository {
         return UserRepositoryImpl(tokenRepository, userService, cabinetService)
     }
+
+//    @Provides
+//    @Singleton
+//    fun provideMainViewModel(
+//        readUserSession: ReadUserSession,
+//        userRepository: UserRepository,
+//        medicineRepository: MedicineRepository,
+//        relationRepository: RelationRepository
+//    ): MainViewModel {
+//        return MainViewModel(readUserSession, userRepository, medicineRepository, relationRepository)
+//    }
 }

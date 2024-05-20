@@ -32,6 +32,7 @@ import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInPage(
+    modifier: Modifier,
     state: Boolean,
     pageList: SignInPageList,
     input: String,
@@ -41,7 +42,7 @@ fun SignInPage(
     inputType: InputType
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
     ) {
         if (pageList == signInPages[0] || pageList == signInPages[2]) Spacer(modifier = Modifier.height(14.dp))

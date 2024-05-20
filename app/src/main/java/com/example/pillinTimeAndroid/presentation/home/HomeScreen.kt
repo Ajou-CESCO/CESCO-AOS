@@ -63,6 +63,7 @@ fun HomeScreen(
                 scope.launch {
                     isRefreshing = true
                     userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) }
+                    mainViewModel.getInitData()
                     delay(1000)
                     isRefreshing = false
                 }

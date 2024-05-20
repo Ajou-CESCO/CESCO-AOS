@@ -18,7 +18,7 @@ class MyPageViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val localUserDataSource: LocalUserDataSource,
 ) : ViewModel() {
-    private val _userDetails = MutableStateFlow<UserDTO?>(null)
+    private val _userDetails = MutableStateFlow<UserDTO<Any>?>(null)
     val userDetails = _userDetails.asStateFlow()
 
     private val _navigateToScreen = MutableStateFlow<String?>(null)
@@ -30,7 +30,7 @@ class MyPageViewModel @Inject constructor(
         viewModelScope.launch {
             val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
             Log.d("HomeViewModel", "Access Token: $accessToken")
-            val result = userRepository.getUserInfo("Bearer $accessToken")
+            val result = userRepository.getUserInfo()
             result.onSuccess {
                 _userDetails.value = it.result
                 Log.d("MyPageViewModel", "Succeeded to fetch: ${it.result}")

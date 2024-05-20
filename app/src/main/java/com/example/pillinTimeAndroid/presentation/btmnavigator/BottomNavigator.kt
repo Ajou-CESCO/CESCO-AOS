@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,8 +26,8 @@ import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetRegister
 import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
 import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
-import com.example.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddScreen
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
+import com.example.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddScreen
 import com.example.pillinTimeAndroid.presentation.signin.SignInScreen
 
 @Composable
@@ -79,18 +78,18 @@ fun BottomNavigator() {
                 HomeScreen(navController = navController)
             }
             composable(route = Route.ScheduleScreen.route) {
-                ScheduleScreen(hiltViewModel(), navController = navController)
+                ScheduleScreen(navController = navController)
             }
             navigation(
                 route = Route.ScheduleScreenNavigation.route,
                 startDestination = Route.ScheduleScreen.route
             ) {
                 composable(route = Route.ScheduleAddScreen.route) {
-                    ScheduleAddScreen(hiltViewModel(), navController = navController)
+                    ScheduleAddScreen(navController = navController)
                 }
             }
             composable(route = Route.MyPageScreen.route) {
-                MyPageScreen(hiltViewModel(), navController)
+                MyPageScreen(navController = navController)
             }
             navigation(
                 route = Route.MyPageScreenNavigation.route,
