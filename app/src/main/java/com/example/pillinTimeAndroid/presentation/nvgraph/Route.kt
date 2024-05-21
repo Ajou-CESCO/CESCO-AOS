@@ -3,16 +3,11 @@ package com.example.pillinTimeAndroid.presentation.nvgraph
 sealed class Route(
     val route: String
 ) {
-    // SignIn & SignUp
     object SignInScreen : Route(route = "signinScreen")
     object RoleSelectScreen : Route(route = "roleSelectScreen")
     object SignUpClientScreen : Route(route = "signupClientScreen")
-    object SignUpLoadingScreen : Route(route = "signupLoadingScreen")
 
-    object AppStartNavigation : Route(route = "appStartNavigation")
-    object AppStartNavigationV2 : Route(route = "appStartNavigationV2")
-    object BottomNavigation : Route(route = "bottomNavigation")
-    object BottomNavigatorScreen : Route(route = "bottomNavigator")
+    object BottomNavigatorScreen : Route(route = "bottomNavigatorScreen")
     object HomeScreen : Route(route = "homeScreen")
     object ScheduleScreen : Route(route = "scheduleScreen")
     object ScheduleScreenNavigation : Route(route = "scheduleScreenNavigation")

@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.btmnavigator.component
+package com.example.pillinTimeAndroid.presentation.nvgraph
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
