@@ -46,7 +46,11 @@ class SignInViewModel @Inject constructor(
             result.onSuccess { authenticateResponse ->
                 Log.e("login", "succeed to call api ${authenticateResponse.message}")
                 localUserDataSource.saveAccessToken(authenticateResponse.result.accessToken)
-                navController.navigate("bottomNavigation")
+                navController.navigate("bottomNavigationScreen") {
+                    popUpTo(navController.graph.id) {
+                        inclusive = true
+                    }
+                }
             }.onFailure {
                 Log.e("login", "failed to call api ${it.message}")
 
@@ -123,7 +127,7 @@ class SignInViewModel @Inject constructor(
         return when (currentPageIndex.intValue) {
             0 -> phone.value.matches(Regex("^01[0-1,7]-?[0-9]{4}-?[0-9]{4}$")) || phone.value.isEmpty()
 //            1 -> otp.value == smsAuthCode.value || otp.value.isEmpty()
-            1 -> otp.value.isEmpty()
+            1 -> true
             2 -> name.value.matches(Regex("^[가-힣a-zA-Z]{1,}$")) || name.value.isEmpty()
             3 -> ssn.value.matches(ssnRegex) || ssn.value.isEmpty()
             else -> false

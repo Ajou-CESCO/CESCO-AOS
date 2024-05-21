@@ -62,7 +62,7 @@ class SignUpViewModel @Inject constructor(
             response.onSuccess { authenticateResponse ->
                 Log.e("SignUp", "Succeed to sign up: ${authenticateResponse.status}")
                 localUserDataSource.saveAccessToken(authenticateResponse.result.accessToken)
-                val destination = if (isManager) "bottomNavigator" else "signupClientScreen"
+                val destination = if (isManager) "homeScreen" else "signupClientScreen"
                 _isLoading.value = true
                 delay(3000)
                 navController.navigate(destination)
@@ -86,7 +86,7 @@ class SignUpViewModel @Inject constructor(
             val response = relationRepository.postRelation(requestId)
             response.onSuccess {
                 Log.e("post relation", "succeed to make relation: ${it.message}")
-                navController.navigate("bottomNavigator") {
+                navController.navigate("bottomNavigatorScreen") {
                     popUpTo(navController.graph.id) {
                         inclusive = true
                     }
