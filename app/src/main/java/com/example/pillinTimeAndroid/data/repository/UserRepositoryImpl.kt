@@ -51,11 +51,10 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteUserInfo(
-        accessToken: String
-    ): Result<BaseResponse<Any>> {
+    override suspend fun deleteUserInfo(): Result<BaseResponse<Any>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = userService.deleteUserInfo(accessToken)
+            val response = userService.deleteUserInfo("Bearer $accessToken")
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

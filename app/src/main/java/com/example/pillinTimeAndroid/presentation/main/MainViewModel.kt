@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
 
-    private val _startDestination = mutableStateOf(Route.AppStartNavigation.route)
+    private val _startDestination = mutableStateOf(Route.SignInScreen.route)
     val startDestination: State<String> = _startDestination
 
     private val _userDetails = MutableStateFlow<User?>(null)
@@ -62,15 +62,15 @@ class MainViewModel @Inject constructor(
                     )
                     _relationInfoList.value = response.result.relationList
                     if (!response.result.isManager && response.result.relationList.isEmpty()) {
-                        _startDestination.value = Route.AppStartNavigationV2.route
+                        _startDestination.value = Route.SignUpClientScreen.route
                     } else if (response.result.isManager || response.result.relationList.isNotEmpty()) {
-                        _startDestination.value = Route.BottomNavigation.route
+                        _startDestination.value = Route.BottomNavigatorScreen.route
                     }
                 }.onFailure {
                     Log.d("MainViewModel", "failed to init: ${it.cause}")
                 }
             } else {
-                _startDestination.value = Route.AppStartNavigation.route
+                _startDestination.value = Route.SignInScreen.route
             }
             delay(300)
             _splashCondition.value = false

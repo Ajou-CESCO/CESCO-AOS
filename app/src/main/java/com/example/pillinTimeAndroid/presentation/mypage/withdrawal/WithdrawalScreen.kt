@@ -84,14 +84,7 @@ fun WithdrawalScreen(
             description = "굿",
             confirmText = "삭제할래요",
             dismissText = "취소할래요",
-            onConfirm = {
-                viewModel.deleteUserInfo()
-                navController.navigate("signInScreen") {
-                    popUpTo(navController.graph.id) {
-                        inclusive = true
-                    }
-                }
-            },
+            onConfirm = { viewModel.deleteUserInfo(navController) },
             onDismiss = { showDialog.value = false }
         )
     }

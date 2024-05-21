@@ -11,6 +11,6 @@ interface UserRepository {
     suspend fun initClient(): Result<BaseResponse<UserDTO<List<RelationDTO>>>>
     suspend fun getUserInfo(): Result<BaseResponse<UserDTO<Any>>>
     suspend fun patchUserInfo(accessToken: String, signInRequest: SignInRequest): Result<BaseResponse<UserDTO<Any>>>
-    suspend fun deleteUserInfo(accessToken: String): Result<BaseResponse<Any>>
+    suspend fun deleteUserInfo(): Result<BaseResponse<Any>>
     suspend fun postRegisterCabinet(accessToken: String, cabinetRequest: CabinetRequest): Result<BaseResponse<Objects>>
 }
