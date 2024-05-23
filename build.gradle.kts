@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlinParcelize) apply false
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.googleService) apply false
 }
 allprojects {
     apply {
