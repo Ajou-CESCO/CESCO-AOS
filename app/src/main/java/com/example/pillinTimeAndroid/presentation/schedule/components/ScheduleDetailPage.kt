@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
+import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.presentation.common.CustomWeekCalendar
 import com.example.pillinTimeAndroid.ui.theme.Gray5
 import com.example.pillinTimeAndroid.ui.theme.White
@@ -22,7 +23,7 @@ fun ScheduleDetailPage(
     isRefreshing: Boolean,
 ) {
     val groupedDoseLogs = userDoseLog.groupBy { it.takenStatus }
-    val (backgroundColor, height) = if(isManager) Pair(White, 48.dp) else Pair(Gray5, 64.dp)
+    val (backgroundColor, height) = if(!isManager) Pair(White, 54.dp) else Pair(Gray5, 64.dp)
     PullToRefreshLazyColumn(
         modifier = modifier,
         onPullRefresh = onPullRefresh,
@@ -34,14 +35,20 @@ fun ScheduleDetailPage(
             ) {
                 CustomWeekCalendar(
                     modifier = Modifier
-                        .height(height)
-                        .background(backgroundColor),
+                        .padding(bottom = 15.dp)
+                        .background(backgroundColor)
+                        .height(height),
                     isSelectable = false,
                     onDaySelected = {}
                 )
-                ScheduleCard(status = 0, doseLog = groupedDoseLogs[0] ?: emptyList())
-                ScheduleCard(status = 1, doseLog = groupedDoseLogs[1] ?: emptyList())
-                ScheduleCard(status = 2, doseLog = groupedDoseLogs[2] ?: emptyList())
+                Column (
+                    modifier = Modifier.padding(horizontal = BasicPadding)
+                ) {
+                    ScheduleCard(status = 0, doseLog = groupedDoseLogs[0] ?: emptyList())
+                    ScheduleCard(status = 1, doseLog = groupedDoseLogs[1] ?: emptyList())
+                    ScheduleCard(status = 2, doseLog = groupedDoseLogs[2] ?: emptyList())
+                }
+
             }
         }
     )

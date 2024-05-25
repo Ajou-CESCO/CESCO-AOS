@@ -3,7 +3,6 @@ package com.example.pillinTimeAndroid.util
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -15,7 +14,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.example.pillinTimeAndroid.presentation.Dimens
 import com.example.pillinTimeAndroid.ui.theme.Gray5
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.White
@@ -34,8 +32,7 @@ fun PullToRefreshLazyColumn(
     Box(
         modifier = modifier
             .nestedScroll(pullToRefreshState.nestedScrollConnection)
-            .background(Gray5)
-            .padding(horizontal = Dimens.BasicPadding),
+            .background(Gray5),
     ) {
         LazyColumn(
             state = lazyListState,
