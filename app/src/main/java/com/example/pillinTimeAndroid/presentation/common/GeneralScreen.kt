@@ -21,7 +21,7 @@ import com.example.pillinTimeAndroid.ui.theme.Gray100
 import com.example.pillinTimeAndroid.ui.theme.Gray70
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.util.fadeInEffect
+import com.example.pillinTimeAndroid.util.fadeInSlideEffect
 
 @Composable
 fun GeneralScreen(
@@ -36,7 +36,7 @@ fun GeneralScreen(
     val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier.fadeInEffect(1000)
+        modifier = Modifier.fadeInSlideEffect(1000)
             .clickable(
                 onClick = {
                     focusManager.clearFocus()
