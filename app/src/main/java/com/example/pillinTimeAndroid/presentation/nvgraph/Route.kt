@@ -9,6 +9,8 @@ sealed class Route(
 
     object BottomNavigatorScreen : Route(route = "bottomNavigatorScreen")
     object HomeScreen : Route(route = "homeScreen")
+    object HealthScreen : Route(route = "healthScreen")
+
     object ScheduleScreen : Route(route = "scheduleScreen")
     object ScheduleScreenNavigation : Route(route = "scheduleScreenNavigation")
     object ScheduleAddScreen : Route(route = "scheduleAddScreen")
@@ -22,4 +24,5 @@ sealed class Route(
     object SubscribeScreen : Route(route = "subscribeScreen")
     object CabinetManageScreen : Route(route = "cabinetManageScreen")
     object CabinetRegisterScreen : Route(route = "cabinetRegisterScreen")
+    object RelationManageScreen : Route(route = "relationManageScreen")
 }

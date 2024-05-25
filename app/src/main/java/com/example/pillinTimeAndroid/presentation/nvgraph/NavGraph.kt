@@ -23,6 +23,7 @@ import com.example.pillinTimeAndroid.presentation.mypage.MyPageScreen
 import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetManageScreen
 import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetRegisterScreen
 import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
+import com.example.pillinTimeAndroid.presentation.mypage.relation.RelationManageScreen
 import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
 import com.example.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddScreen
@@ -127,6 +128,9 @@ fun NavGraph(
                     }
                     composable(route = Route.CabinetRegisterScreen.route) {
                         CabinetRegisterScreen(navController = navController)
+                    }
+                    composable(route = Route.RelationManageScreen.route) {
+                        RelationManageScreen(navController = navController)
                     }
                 }
                 composable(route = Route.SignInScreen.route) {
