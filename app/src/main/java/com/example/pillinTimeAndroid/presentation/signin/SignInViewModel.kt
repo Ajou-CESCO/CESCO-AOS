@@ -19,6 +19,10 @@ import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
 import com.example.pillinTimeAndroid.util.PhoneVisualTransformation
 import com.example.pillinTimeAndroid.util.SsnVisualTransformation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,10 +33,12 @@ class SignInViewModel @Inject constructor(
 ) : ViewModel() {
     private var phone = mutableStateOf("")
     private var otp = mutableStateOf("")
-    private var name = mutableStateOf("")
+    var name = mutableStateOf("")
     private var ssn = mutableStateOf("")
     private var currentPageIndex = mutableIntStateOf(0)
     private var smsAuthCode = mutableStateOf("")
+    private val _isLoading = MutableStateFlow(false)
+    var isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     fun signIn(navController: NavController) {
         val formattedPhone = "${phone.value.substring(0, 3)}-${
@@ -46,7 +52,9 @@ class SignInViewModel @Inject constructor(
             result.onSuccess { authenticateResponse ->
                 Log.e("login", "succeed to call api ${authenticateResponse.message}")
                 localUserDataSource.saveAccessToken(authenticateResponse.result.accessToken)
-                navController.navigate("bottomNavigationScreen") {
+                _isLoading.value = true
+                delay(3000)
+                navController.navigate("bottomNavigatorScreen") {
                     popUpTo(navController.graph.id) {
                         inclusive = true
                     }

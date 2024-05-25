@@ -83,7 +83,7 @@ fun ManagerRequestList(
         }
         if (showDialog.value) {
             CustomAlertDialog(
-                title = "${selectedManagerName}님을 보호자로\n수락하시겠어요??",
+                title = "${selectedManagerName}님을 보호자로\n수락하시겠어요?",
                 description = "수락을 선택하면 ${selectedManagerName}님이 회원님의\n약 복용 현황과 건강 상태를 관리할 수 있어요.",
                 confirmText = "수락할게요",
                 dismissText = "거절할게요",

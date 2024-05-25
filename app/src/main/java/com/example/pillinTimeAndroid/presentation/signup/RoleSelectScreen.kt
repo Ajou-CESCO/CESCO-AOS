@@ -15,8 +15,8 @@ import com.example.pillinTimeAndroid.presentation.common.ButtonSize
 import com.example.pillinTimeAndroid.presentation.common.CustomButton
 import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
 import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
+import com.example.pillinTimeAndroid.presentation.common.LoadingScreen
 import com.example.pillinTimeAndroid.presentation.signup.components.RoleSelector
-import com.example.pillinTimeAndroid.presentation.signup.components.SignUpLoadingScreen
 
 @Composable
 fun RoleSelectScreen(
@@ -28,7 +28,7 @@ fun RoleSelectScreen(
     val userName by viewModel.userName.collectAsState()
 
     if (isLoading) {
-        SignUpLoadingScreen(userName)
+        LoadingScreen(userName, "회원가입")
     } else {
         GeneralScreen(
             topBar = {

@@ -57,6 +57,10 @@ fun SignUpClientScreen(
             state.endRefresh()
         }
     }
+    LaunchedEffect(true) {
+        viewModel.getManagerRequest()
+        delay(1500)
+    }
     GeneralScreen(
         topBar = {
             CustomTopBar()

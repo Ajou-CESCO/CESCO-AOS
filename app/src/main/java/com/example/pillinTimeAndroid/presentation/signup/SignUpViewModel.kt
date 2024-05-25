@@ -36,7 +36,6 @@ class SignUpViewModel @Inject constructor(
 
 
     init {
-        getManagerRequest()
         viewModelScope.launch {
             _userName.value = localUserDataSource.getUserName().firstOrNull().orEmpty()
         }
