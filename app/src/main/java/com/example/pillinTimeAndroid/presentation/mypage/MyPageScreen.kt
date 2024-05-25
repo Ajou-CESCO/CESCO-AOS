@@ -82,7 +82,8 @@ fun MyPageScreen(
             isManager = userDetails?.isManager == true,
             onItemClick = { destination ->
                 viewModel.navigateTo(destination)
-            }
+            },
+            onLogoutClick = { viewModel.signOut(navController) }
         )
     }
 }
