@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.kotlinParcelize)
+    alias(libs.plugins.googleService)
 }
 
 val properties = Properties()
@@ -22,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.pillinTimeAndroid"
-        minSdk = 31
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -106,6 +107,8 @@ dependencies {
 
     // Accompanist
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.permissions)
+
 
     // Retrofit
     implementation(libs.retrofit)
@@ -117,4 +120,12 @@ dependencies {
 
     // Lottie Animation
     implementation(libs.lottie)
+
+    // Google Health Connect
+    implementation(libs.androidx.connect.client)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
 }
