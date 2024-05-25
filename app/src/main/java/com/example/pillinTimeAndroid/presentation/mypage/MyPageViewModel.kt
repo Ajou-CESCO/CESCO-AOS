@@ -42,6 +42,7 @@ class MyPageViewModel @Inject constructor(
     fun signOut(navController: NavController) {
         viewModelScope.launch {
             localUserDataSource.deleteAccessToken()
+            localUserDataSource.saveUserName("")
             navController.navigate(Route.SignInScreen.route) {
                 popUpTo(navController.graph.startDestinationId) {
                     inclusive = true

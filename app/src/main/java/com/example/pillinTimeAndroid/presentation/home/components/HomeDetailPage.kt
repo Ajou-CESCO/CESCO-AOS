@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.domain.entity.User
+import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
@@ -40,55 +41,67 @@ fun HomeDetailPage(
     isRefreshing: Boolean,
 ) {
     val textStyle = PillinTimeTheme.typography.logo3Medium.copy(color = Gray90)
-    val greetingText = buildAnnotatedString {
+    val managerGreetingText = buildAnnotatedString {
+        append("오늘 ")
+        withStyle(style = textStyle.toSpanStyle().copy(color = Primary60)) {
+            append(userDetail?.name.toString())
+        }
+        append("님의 ")
+        withStyle(style = textStyle.toSpanStyle().copy(color = Primary60)) {
+            append("약")
+        }
+        append("속시간은?")
+    }
+    val clientGreetingText = buildAnnotatedString {
         withStyle(style = textStyle.toSpanStyle().copy(color = Primary60)) {
             append(userDetail?.name.toString())
         }
         append("님,\n오늘 하루도 화이팅이에요!")
     }
+    val greetingText =
+        if (userDetail?.isManager == true) managerGreetingText else clientGreetingText
     PullToRefreshLazyColumn(
         modifier = modifier,
         onPullRefresh = onPullRefresh,
         isRefreshing = isRefreshing,
         content = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 25.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = greetingText,
-                    style = textStyle,
-                )
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_alert_off),
-                    contentDescription = null,
-                    tint = Color.Unspecified
-                )
-            }
-
-            Spacer(modifier = Modifier.height(17.dp))
-            Column(
-                modifier = Modifier
-                    .clip(shapes.small)
-                    .background(White)
-            ) {
-                userDetail?.cabinetId?.let {
-                    HomeDoseCard(
-                        cabinetId = it,
-                        onRegisterClick = { navController.navigate("cabinetRegisterScreen") },
-                        doseLog = userDoseLog
+            Column (modifier = Modifier.padding(horizontal = BasicPadding)){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 25.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = greetingText,
+                        style = textStyle,
                     )
+                    if (userDetail?.isManager == false) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_alert_off),
+                            contentDescription = null,
+                            tint = Color.Unspecified
+                        )
+                    }
                 }
-            }
-            Spacer(modifier = Modifier.height(23.dp))
-            Column(
-                modifier = Modifier
-                    .clip(shapes.small)
-                    .background(White)
-            ) {
+                Spacer(modifier = Modifier.height(17.dp))
+                Column(
+                    modifier = Modifier
+                        .clip(shapes.small)
+                        .background(White)
+                ) {
+                    userDetail?.cabinetId?.let {
+                        HomeDoseCard(
+                            cabinetId = it,
+                            onRegisterClick = { navController.navigate("cabinetRegisterScreen") },
+                            doseLog = userDoseLog
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(23.dp))
+                HealthStatisticCard()
+                Spacer(modifier = Modifier.height(12.dp))
                 HealthCard()
             }
         }

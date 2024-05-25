@@ -36,7 +36,7 @@ fun SubMenu(
     isManager: Boolean,
     onItemClick: (destination: String) -> Unit
 ) {
-    val manage = if (isManager) "피보호자 관리" else "보호자 관리"
+    val manage = if (isManager) "피보호자 관리" else "보호관계 관리"
     Row(
         modifier = Modifier
             .fillMaxWidth(),
