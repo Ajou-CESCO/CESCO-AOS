@@ -5,20 +5,25 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
 import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.domain.entity.User
+import com.example.pillinTimeAndroid.domain.repository.FcmRepository
 import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
 import com.example.pillinTimeAndroid.domain.repository.RelationRepository
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import com.example.pillinTimeAndroid.domain.usecase.session.ReadUserSession
 import com.example.pillinTimeAndroid.presentation.nvgraph.Route
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
@@ -27,7 +32,8 @@ class MainViewModel @Inject constructor(
     private val readUserSession: ReadUserSession,
     private val userRepository: UserRepository,
     private val medicineRepository: MedicineRepository,
-    private val relationRepository: RelationRepository
+    private val relationRepository: RelationRepository,
+    private val fcmRepository: FcmRepository
 ) : ViewModel() {
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
@@ -45,6 +51,7 @@ class MainViewModel @Inject constructor(
     val userDoseLog: StateFlow<List<ScheduleLogDTO>> = _userDoseLog
 
     init {
+        postFcmToken()
         viewModelScope.launch {
             val hasToken = readUserSession().firstOrNull().orEmpty().isNotEmpty()
             if (hasToken) {
@@ -74,6 +81,18 @@ class MainViewModel @Inject constructor(
             }
             delay(300)
             _splashCondition.value = false
+        }
+    }
+    private fun postFcmToken() {
+        viewModelScope.launch {
+            val token = Firebase.messaging.token.await()
+            Log.d("FCM token:", token)
+            val result = fcmRepository.postFcmToken(FCMTokenDTO(token))
+            result.onSuccess {
+                Log.e("MainViewModel FCM Token", "succeeded to post FCM Token: ${it.message}")
+            }.onFailure {
+                Log.e("MainViewModel FCM Token", "failed to post FCM Token: ${it.cause}")
+            }
         }
     }
 
@@ -118,4 +137,7 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-}
+
+    fun removeRelation(relation: RelationDTO) {
+        _relationInfoList.value = _relationInfoList.value.toMutableList().apply { remove(relation) }
+    }}
