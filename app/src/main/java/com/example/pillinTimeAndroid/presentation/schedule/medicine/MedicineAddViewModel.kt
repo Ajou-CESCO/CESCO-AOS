@@ -12,7 +12,6 @@ import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
 import com.example.pillinTimeAndroid.presentation.schedule.components.ScheduleOrderList
 import com.example.pillinTimeAndroid.presentation.schedule.components.schedulePages
-import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -44,6 +43,7 @@ class MedicineAddViewModel @Inject constructor(
     val selectedTimes = mutableStateListOf<String>()
     val scheduleStartDate = mutableStateOf("")
     val scheduleEndDate = mutableStateOf("")
+    val selectedIndex = mutableIntStateOf(0)
 
     init {
         _medicineInput
@@ -85,6 +85,7 @@ class MedicineAddViewModel @Inject constructor(
                     ScheduleRequest(
                         memberId = memberId,
                         medicineId = selectedMedicine.value!!.medicineCode,
+                        cabinetIndex = selectedIndex.intValue,
                         weekdayList = selectedDays.map { it + 1},
                         timeList = selectedTimes,
                         startAt = scheduleStartDate.value,
@@ -94,14 +95,14 @@ class MedicineAddViewModel @Inject constructor(
                     medicineRepository.postDoseSchedule(scheduleRequest)
                 Log.e("request schedule", scheduleRequest.toString())
                 result.onSuccess {
-                    Log.d("getMedicineInfo", "Succeeded to fetch: ${it.result}")
+                    Log.d("getMedicineInfo", "Succeeded to post schedule: ${it.result}")
                     navController.navigate("scheduleScreen") {
                         popUpTo("scheduleScreen") {
                             inclusive = true
                         }
                     }
                 }.onFailure {
-                    Log.e("getMedicineInfo", "Failed to fetch: ${it.message}")
+                    Log.e("getMedicineInfo", "Failed to post schedule: ${it.message}")
                 }
             }
         }
@@ -127,7 +128,7 @@ class MedicineAddViewModel @Inject constructor(
     }
 
     fun nextPage() {
-        if (currentPageIndex.intValue < signInPages.size - 1) {
+        if (currentPageIndex.intValue < schedulePages.size - 1) {
             currentPageIndex.intValue++
         }
     }
@@ -164,6 +165,7 @@ class MedicineAddViewModel @Inject constructor(
             1 -> selectedDays.isNotEmpty()
             2 -> selectedDays.isNotEmpty() && selectedTimes.isNotEmpty()
             3 -> scheduleStartDate.value.isNotEmpty() && scheduleEndDate.value.isNotEmpty()
+            4 -> selectedIndex.intValue != null
             else -> true
         }
     }

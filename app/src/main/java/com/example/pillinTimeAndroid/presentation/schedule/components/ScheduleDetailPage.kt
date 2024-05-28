@@ -29,10 +29,7 @@ fun ScheduleDetailPage(
         onPullRefresh = onPullRefresh,
         isRefreshing = isRefreshing,
         content = {
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 15.dp),
-            ) {
+            Column {
                 CustomWeekCalendar(
                     modifier = Modifier
                         .padding(bottom = 15.dp)

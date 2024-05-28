@@ -109,6 +109,7 @@ fun MedicineItem(
                 )
         ) {
             Text(
+                modifier = Modifier.padding(bottom = 4.dp),
                 text = medicine.medicineName,
                 color = Gray90,
                 style = PillinTimeTheme.typography.headline5Bold
