@@ -1,5 +1,6 @@
 package com.example.pillinTimeAndroid.presentation.common
 
+import androidx.annotation.RawRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,12 +13,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.pillinTimeAndroid.R
 
 @Composable
-fun LottieView(
+fun LoadingLottieView(
     modifier: Modifier,
     block: @Composable () -> Unit
 ) {
@@ -58,4 +60,27 @@ fun LottieView(
             block()
         }
     }
+}
+
+@Composable
+fun CustomLottieView(
+    modifier: Modifier = Modifier,
+    @RawRes lottieAnim: Int
+) {
+    val preloaderLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(lottieAnim)
+    )
+    val preloaderProgress by animateLottieCompositionAsState(
+        preloaderLottieComposition,
+        speed = 1f,
+        iterations = LottieConstants.IterateForever,
+        isPlaying = true,
+        restartOnPlay = true
+    )
+    LottieAnimation(
+        composition = preloaderLottieComposition,
+        progress = { preloaderProgress },
+        modifier = modifier,
+        contentScale = ContentScale.Fit
+    )
 }
