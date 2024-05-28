@@ -1,5 +1,6 @@
 package com.example.pillinTimeAndroid.presentation.signup
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,6 +46,7 @@ fun SignUpClientScreen(
 ) {
     val managerRequest by viewModel.managerRequest.collectAsState()
     val userName by viewModel.userName.collectAsState()
+    Log.e("username", "$userName")
     val title =
         if (managerRequest.isNotEmpty()) "보호자들이\n${userName}님을 기다리고 있어요" else "${userName}님을 케어할 수 있는\n보호자를 기다리고 있어요"
     val subtitle =
@@ -100,29 +102,27 @@ fun SignUpClientScreen(
             }
         },
         button = {
-            if (managerRequest.isEmpty()) {
-                Button(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(BasicHeight),
-                    onClick = { state.startRefresh() },
-                    colors = ButtonDefaults.buttonColors().copy(
-                        containerColor = Primary60
-                    ),
-                    shape = shapes.small
-                ) {
-                    Text(
-                        text = "새로고침",
-                        color = White,
-                        style = PillinTimeTheme.typography.body1Bold
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        Icons.Filled.Refresh,
-                        "Trigger Refresh",
-                        tint = White
-                    )
-                }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(BasicHeight),
+                onClick = { state.startRefresh() },
+                colors = ButtonDefaults.buttonColors().copy(
+                    containerColor = Primary60
+                ),
+                shape = shapes.small
+            ) {
+                Text(
+                    text = "새로고침",
+                    color = White,
+                    style = PillinTimeTheme.typography.body1Bold
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    Icons.Filled.Refresh,
+                    "Trigger Refresh",
+                    tint = White
+                )
             }
         }
     )
