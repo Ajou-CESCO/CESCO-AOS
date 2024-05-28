@@ -1,9 +1,14 @@
 package com.example.pillinTimeAndroid.presentation.mypage.cabinet
 
+import android.Manifest
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -18,14 +23,22 @@ import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
 import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
 import com.example.pillinTimeAndroid.presentation.common.InputType
 import com.example.pillinTimeAndroid.ui.theme.Error90
+import com.example.pillinTimeAndroid.ui.theme.Gray40
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CabinetRegisterScreen(
     viewModel: CabinetViewModel = hiltViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    ownerId: Int?,
 ) {
+    val cameraPermissionState = rememberPermissionState(permission = Manifest.permission.CAMERA)
     val isValidInput = viewModel.isValidateInput()
+    val showCamera = remember { mutableStateOf(false) }
+
     GeneralScreen(
         topBar = {
             CustomTopBar(
@@ -53,6 +66,18 @@ fun CabinetRegisterScreen(
                     lineHeight = 26.sp
                 )
             }
+            Text(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clickable(
+                        onClick = { showCamera.value = true },
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ),
+                text = "QR코드로 등록하기",
+                color = Gray40,
+                style = PillinTimeTheme.typography.body1Regular
+            )
         },
         button = {
             CustomButton(
@@ -62,9 +87,21 @@ fun CabinetRegisterScreen(
                 size = ButtonSize.MEDIUM,
                 text = "확인",
                 onClick = {
-                    viewModel.postRegisterCabinet()
+                    if (ownerId != null) {
+                        viewModel.postRegisterCabinet(ownerId)
+                    }
                 }
             )
         }
     )
+    if(showCamera.value) {
+        QrCodeReaderScreen(
+            cameraPermissionState = cameraPermissionState,
+            onDismiss = { showCamera.value = false },
+            onQrCodeScanned = { qrCode ->
+                viewModel.updateInput(qrCode)
+                showCamera.value = false
+            }
+        )
+    }
 }

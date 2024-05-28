@@ -4,30 +4,25 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.example.pillinTimeAndroid.data.remote.dto.request.CabinetRequest
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CabinetViewModel @Inject constructor(
-    private val localUserDataSource: LocalUserDataSource,
     private val userRepository: UserRepository
-
 ) : ViewModel() {
     private var serialNumber = mutableStateOf("")
 
-    fun postRegisterCabinet() {
+    fun postRegisterCabinet(ownerId: Int) {
         viewModelScope.launch {
-            val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
             val cabinetInfo = CabinetRequest(
                 serial = serialNumber.value,
-                ownerId = 1
+                ownerId = ownerId
             )
-            val result = userRepository.postRegisterCabinet("Bearer $accessToken", cabinetInfo)
+            val result = userRepository.postRegisterCabinet(cabinetInfo)
             result.onSuccess {
                 Log.d("CabinetViewModel", "Succeeded to register: ${it.result}")
             }.onFailure {
