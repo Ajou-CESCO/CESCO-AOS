@@ -61,12 +61,10 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun postRegisterCabinet(
-        accessToken: String,
-        cabinetRequest: CabinetRequest
-    ): Result<BaseResponse<Objects>> {
+    override suspend fun postRegisterCabinet(cabinetRequest: CabinetRequest): Result<BaseResponse<Objects>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = cabinetService.postRegisterCabinet(accessToken, cabinetRequest)
+            val response = cabinetService.postRegisterCabinet("Bearer $accessToken", cabinetRequest)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
