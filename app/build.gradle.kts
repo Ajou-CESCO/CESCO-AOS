@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.kotlinParcelize)
     alias(libs.plugins.googleService)
+    alias(libs.plugins.firebaseCrashlytics)
 }
 
 val properties = Properties()
@@ -110,9 +111,10 @@ dependencies {
     implementation(libs.accompanist.permissions)
 
 
-    // Retrofit
+    // Retrofit & OkHttp3
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.okhttp)
 
     // Paging3
     implementation(libs.androidx.paging.runtime)
@@ -128,4 +130,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }
