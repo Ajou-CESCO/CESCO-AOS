@@ -1,4 +1,4 @@
-## 💊 PillinTime-iOS
+## 💊 PillinTime-Android
 
 ![title-Image](https://github.com/Ajou-CESCO/PillinTime-iOS/assets/79050615/0ed6c4a6-2f21-4a56-97af-5930ac05a048)   
 
