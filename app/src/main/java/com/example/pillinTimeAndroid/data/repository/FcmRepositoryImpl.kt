@@ -22,7 +22,7 @@ class FcmRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
-    
+
     override suspend fun postFcmPushNotification(fcmPushNotificationRequest: FcmPushNotificationRequest): Result<BaseResponse<Any>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {

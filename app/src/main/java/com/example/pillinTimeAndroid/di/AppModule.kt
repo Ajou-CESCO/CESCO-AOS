@@ -2,6 +2,7 @@ package com.example.pillinTimeAndroid.di
 
 import android.content.Context
 import com.example.pillinTimeAndroid.BuildConfig.BASE_URL
+import com.example.pillinTimeAndroid.data.local.LocalHealthConnectManager
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.example.pillinTimeAndroid.data.remote.CabinetService
 import com.example.pillinTimeAndroid.data.remote.UserService
@@ -30,11 +31,16 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
     @Provides
     @Singleton
     fun provideUserLocalDataSource(@ApplicationContext context: Context): LocalUserDataSource {
         return LocalUserDataSource(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocalHealthConnectManager(@ApplicationContext context: Context): LocalHealthConnectManager {
+        return LocalHealthConnectManager(context)
     }
 
     @Provides
@@ -49,8 +55,10 @@ object AppModule {
 //        readUserSession: ReadUserSession,
 //        userRepository: UserRepository,
 //        medicineRepository: MedicineRepository,
-//        relationRepository: RelationRepository
+//        relationRepository: RelationRepository,
+//        fcmRepository: FcmRepository,
+//        localUserDataSource: LocalUserDataSource
 //    ): MainViewModel {
-//        return MainViewModel(readUserSession, userRepository, medicineRepository, relationRepository)
+//        return MainViewModel(readUserSession, userRepository, medicineRepository, relationRepository, fcmRepository, localUserDataSource)
 //    }
 }
