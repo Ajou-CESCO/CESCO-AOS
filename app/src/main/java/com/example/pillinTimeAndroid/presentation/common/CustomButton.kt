@@ -41,7 +41,7 @@ enum class ButtonSize {
 
 @Composable
 fun CustomButton(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     enabled: Boolean,
     filled: ButtonColor,
     size: ButtonSize,

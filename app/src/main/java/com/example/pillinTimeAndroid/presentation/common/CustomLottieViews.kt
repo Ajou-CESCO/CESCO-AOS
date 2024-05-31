@@ -6,7 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -77,6 +81,34 @@ fun CustomLottieView(
         isPlaying = true,
         restartOnPlay = true
     )
+    LottieAnimation(
+        composition = preloaderLottieComposition,
+        progress = { preloaderProgress },
+        modifier = modifier,
+        contentScale = ContentScale.Fit
+    )
+}
+
+@Composable
+fun CustomLottieViewV2(
+    modifier: Modifier = Modifier,
+    @RawRes lottieAnim: Int
+) {
+    val preloaderLottieComposition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(lottieAnim)
+    )
+    var isPlaying by remember { mutableStateOf(true) }
+    val preloaderProgress by animateLottieCompositionAsState(
+        preloaderLottieComposition,
+        speed = .5f,
+        iterations = 1,
+        isPlaying = isPlaying,
+    )
+    LaunchedEffect(preloaderProgress) {
+        if (preloaderProgress >= .6f) {
+            isPlaying = false
+        }
+    }
     LottieAnimation(
         composition = preloaderLottieComposition,
         progress = { preloaderProgress },

@@ -24,7 +24,7 @@ fun LoadingScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.TopCenter
     ) {
-        LottieView(
+        LoadingLottieView(
             modifier = Modifier
                 .fillMaxSize(),
             block = {

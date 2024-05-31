@@ -6,23 +6,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.ui.theme.Gray100
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary5
 import com.example.pillinTimeAndroid.ui.theme.shapes
+import com.example.pillinTimeAndroid.util.fadeInEffect
 
 @Composable
 fun CustomToast(
-    text: String
+    text: String,
+    duration: Long = 2000L,
+    onDismiss: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        kotlinx.coroutines.delay(duration)
+        onDismiss()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .fadeInEffect()
+            .padding(horizontal = BasicPadding)
             .clip(shapes.small)
             .background(Gray100)
     ) {
@@ -37,13 +47,16 @@ fun CustomToast(
     }
 }
 
-@Preview(
-    showSystemUi = true,
-    showBackground = true
-)
 @Composable
-private fun CustomToastPreview() {
-    PillinTimeAndroidTheme {
-        CustomToast("정보 수정이 완료되었어요.")
+fun CustomToastHost(
+    message: String,
+    showToast: Boolean,
+    onToastDismiss: () -> Unit
+) {
+    if (showToast) {
+        CustomToast(
+            text = message,
+            onDismiss = onToastDismiss
+        )
     }
 }

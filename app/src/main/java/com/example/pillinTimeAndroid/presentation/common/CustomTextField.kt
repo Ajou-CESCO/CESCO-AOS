@@ -73,7 +73,7 @@ fun CustomTextField(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     BasicTextField(
-        modifier = Modifier
+        modifier = modifier
             .clip(shapes.small)
             .border(1.dp, borderColor, shapes.small)
             .fillMaxWidth()

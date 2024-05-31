@@ -1,5 +1,6 @@
 package com.example.pillinTimeAndroid.presentation.common
 
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -98,7 +99,7 @@ fun CustomSwipeCard(
                         .height(70.dp)
                         .background(iconsBackgroundColor)
                         .align(Alignment.CenterEnd)
-                        .clickable (
+                        .clickable(
                             onClick = { onRemove(relation) },
 //                            indication = null,
 //                            interactionSource = remember { MutableInteractionSource() }
@@ -126,7 +127,16 @@ fun CustomSwipeCard(
                     .background(White)
                     .padding(start = 32.dp)
                     .clickable(
-                        onClick = { scope.launch { state.animateTo(HorizontalDragValue.Settled) } },
+                        onClick = {
+                            if(state.currentValue == HorizontalDragValue.Settled) {
+                                Log.e("relationCard", "it is settled")
+                            } else {
+                                scope.launch {
+                                    state.animateTo(HorizontalDragValue.Settled)
+                                    Log.e("relationCard", "it is ended")
+                                }
+                            }
+                        },
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     )
