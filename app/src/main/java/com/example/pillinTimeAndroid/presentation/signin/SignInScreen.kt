@@ -1,5 +1,8 @@
 package com.example.pillinTimeAndroid.presentation.signin
 
+import android.Manifest
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,9 +16,15 @@ import com.example.pillinTimeAndroid.presentation.common.CustomButton
 import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
 import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
 import com.example.pillinTimeAndroid.presentation.common.LoadingScreen
+import com.example.pillinTimeAndroid.presentation.common.PermissionDialog
+import com.example.pillinTimeAndroid.presentation.common.RationaleDialog
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPage
 import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
 import com.example.pillinTimeAndroid.util.fadeInSlideEffect
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 
 @Composable
 fun SignInScreen(
@@ -27,6 +36,10 @@ fun SignInScreen(
     val inputType = viewModel.getInputType()
     val isLoading by viewModel.isLoading.collectAsState()
     val userName = viewModel.name.value
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RequestNotificationPermissionDialog()
+    }
 
     if (isLoading) {
         LoadingScreen(userName, "로그인")
@@ -70,3 +83,17 @@ fun SignInScreen(
         }
     }
 }
+
+@OptIn(ExperimentalPermissionsApi::class)
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Composable
+fun RequestNotificationPermissionDialog() {
+    val permissionState =
+        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
+
+    if (!permissionState.status.isGranted) {
+        if (permissionState.status.shouldShowRationale) RationaleDialog()
+        else PermissionDialog { permissionState.launchPermissionRequest() }
+    }
+}
+

@@ -10,26 +10,32 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
+import com.example.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
 import com.example.pillinTimeAndroid.data.remote.dto.request.SignInRequest
 import com.example.pillinTimeAndroid.data.remote.dto.request.SignInSmsAuthRequest
+import com.example.pillinTimeAndroid.domain.repository.FcmRepository
 import com.example.pillinTimeAndroid.domain.repository.SignInRepository
 import com.example.pillinTimeAndroid.presentation.common.InputType
 import com.example.pillinTimeAndroid.presentation.signin.components.SignInPageList
 import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
 import com.example.pillinTimeAndroid.util.PhoneVisualTransformation
 import com.example.pillinTimeAndroid.util.SsnVisualTransformation
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val signInRepository: SignInRepository,
     private val localUserDataSource: LocalUserDataSource,
+    private val fcmRepository: FcmRepository
 ) : ViewModel() {
     private var phone = mutableStateOf("")
     private var otp = mutableStateOf("")
@@ -52,7 +58,9 @@ class SignInViewModel @Inject constructor(
             result.onSuccess { authenticateResponse ->
                 Log.e("login", "succeed to call api ${authenticateResponse.message}")
                 localUserDataSource.saveAccessToken(authenticateResponse.result.accessToken)
+                localUserDataSource.saveUserName(name.value)
                 _isLoading.value = true
+                postFcmToken()
                 delay(3000)
                 navController.navigate("bottomNavigatorScreen") {
                     popUpTo(navController.graph.id) {
@@ -61,13 +69,11 @@ class SignInViewModel @Inject constructor(
                 }
             }.onFailure {
                 Log.e("login", "failed to call api ${it.message}")
-
-                viewModelScope.launch {
-                    localUserDataSource.saveUserName(name.value)
-                    localUserDataSource.saveUserPhone(formattedPhone)
-                    localUserDataSource.saveUserSsn(formattedSsn)
-                    navController.navigate("roleSelectScreen")
-                }
+                localUserDataSource.saveUserName(name.value)
+                localUserDataSource.saveUserPhone(formattedPhone)
+                localUserDataSource.saveUserSsn(formattedSsn)
+                delay(1000)
+                navController.navigate("roleSelectScreen")
             }
         }
     }
@@ -79,6 +85,18 @@ class SignInViewModel @Inject constructor(
                 smsAuthCode.value = codeResponse.result.code
             }.onFailure {
                 Log.e("SMS", "failed to call api ${it.message}")
+            }
+        }
+    }
+    private fun postFcmToken() {
+        viewModelScope.launch {
+            val token = Firebase.messaging.token.await()
+            Log.e("FCM token:", token)
+            val result = fcmRepository.postFcmToken(FCMTokenDTO(token))
+            result.onSuccess {
+                Log.e("SignInViewModel FCM Token", "succeeded to post FCM Token: ${it.status}")
+            }.onFailure {
+                Log.e("SignInViewModel FCM Token", "failed to post FCM Token: ${it.cause}")
             }
         }
     }
