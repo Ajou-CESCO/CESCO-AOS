@@ -12,19 +12,23 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.presentation.home.HomeScreen
+import com.example.pillinTimeAndroid.presentation.home.health.HealthScreen
 import com.example.pillinTimeAndroid.presentation.mypage.MyPageScreen
-import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetManageScreen
 import com.example.pillinTimeAndroid.presentation.mypage.cabinet.CabinetRegisterScreen
 import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
+import com.example.pillinTimeAndroid.presentation.mypage.editschedule.EditScheduleScreen
 import com.example.pillinTimeAndroid.presentation.mypage.relation.RelationManageScreen
 import com.example.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
+import com.example.pillinTimeAndroid.presentation.onboarding.OnBoardingScreen
 import com.example.pillinTimeAndroid.presentation.schedule.ScheduleScreen
 import com.example.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddScreen
 import com.example.pillinTimeAndroid.presentation.signin.SignInScreen
@@ -34,6 +38,7 @@ import com.example.pillinTimeAndroid.presentation.signup.SignUpClientScreen
 @Composable
 fun NavGraph(
     startDestination: String,
+    appEntry: Boolean
 ) {
     val navController = rememberNavController()
     val bottomNavigationItems = remember {
@@ -71,9 +76,9 @@ fun NavGraph(
         }
     ) {
         NavHost(
+            modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
             navController = navController,
             startDestination = startDestination,
-            modifier = Modifier.padding(bottom = it.calculateBottomPadding())
         ) {
             composable(route = Route.SignInScreen.route) {
                 SignInScreen(navController = navController)
@@ -87,12 +92,37 @@ fun NavGraph(
                 BackHandler(true) {}
                 SignUpClientScreen(navController = navController)
             }
+            composable(route = Route.OnBoardingScreen.route) {
+                BackHandler(true) {}
+                OnBoardingScreen(navController = navController)
+            }
             navigation(
                 route = Route.BottomNavigatorScreen.route,
+//                startDestination = if(appEntry) Route.HomeScreen.route else Route.OnBoardingScreen.route
                 startDestination = Route.HomeScreen.route
             ) {
+                composable(route = Route.OnBoardingScreen.route) {
+                    OnBoardingScreen(navController = navController)
+                }
                 composable(route = Route.HomeScreen.route) {
                     HomeScreen(navController = navController)
+                }
+                composable(route = Route.HealthScreen.route) {
+                    HealthScreen(navController = navController)
+                }
+                composable(
+                    route = "${Route.CabinetRegisterScreen.route}/{memberId}",
+                    arguments = listOf(
+                        navArgument("memberId") {
+                            type = NavType.IntType
+                        }
+                    )
+                ) { entry ->
+                    val memberId = entry.arguments?.getInt("memberId")
+                    CabinetRegisterScreen(
+                        navController = navController,
+                        ownerId = memberId
+                    )
                 }
                 composable(route = Route.ScheduleScreen.route) {
                     ScheduleScreen(navController = navController)
@@ -101,8 +131,16 @@ fun NavGraph(
                     route = Route.ScheduleScreenNavigation.route,
                     startDestination = Route.ScheduleScreen.route
                 ) {
-                    composable(route = Route.ScheduleAddScreen.route) {
-                        ScheduleAddScreen(navController = navController)
+                    composable(
+                        route = "${Route.ScheduleAddScreen.route}/{memberId}",
+                        arguments = listOf(
+                            navArgument("memberId") {
+                                type = NavType.IntType
+                            }
+                        )
+                    ) { entry ->
+                        val memberId = entry.arguments?.getInt("memberId")
+                        ScheduleAddScreen(navController = navController, memberId = memberId)
                     }
                 }
                 composable(route = Route.MyPageScreen.route) {
@@ -121,16 +159,21 @@ fun NavGraph(
                     composable(route = Route.WithdrawalScreen.route) {
                         WithdrawalScreen(navController = navController)
                     }
-                    composable(route = Route.CabinetManageScreen.route) {
-                        CabinetManageScreen(navController = navController) {
-                            navController.navigate("cabinetRegisterScreen")
-                        }
+                    composable(
+                        route = "${Route.RelationManageScreen.route}/{title}",
+                        arguments = listOf(
+                            navArgument("title") {
+                                type = NavType.StringType
+                            }
+                        )
+                    ) { entry ->
+                        val title = entry.arguments?.getString("title")
+                        RelationManageScreen(navController = navController, title = title)
                     }
-                    composable(route = Route.CabinetRegisterScreen.route) {
-                        CabinetRegisterScreen(navController = navController)
-                    }
-                    composable(route = Route.RelationManageScreen.route) {
-                        RelationManageScreen(navController = navController)
+                    composable(
+                        route = Route.EditScheduleScreen.route
+                    ) {
+                        EditScheduleScreen(navController = navController)
                     }
                 }
                 composable(route = Route.SignInScreen.route) {
@@ -140,6 +183,7 @@ fun NavGraph(
         }
     }
 }
+
 fun navigateTab(navController: NavController, index: Int) {
     val route = when (index) {
         0 -> Route.ScheduleScreen.route
