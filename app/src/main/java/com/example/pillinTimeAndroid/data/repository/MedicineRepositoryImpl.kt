@@ -3,6 +3,7 @@ package com.example.pillinTimeAndroid.data.repository
 import com.example.pillinTimeAndroid.data.remote.MedicineService
 import com.example.pillinTimeAndroid.data.remote.ScheduleService
 import com.example.pillinTimeAndroid.data.remote.dto.MedicineDTO
+import com.example.pillinTimeAndroid.data.remote.dto.ScheduleDTO
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
@@ -34,6 +35,20 @@ class MedicineRepositoryImpl @Inject constructor(
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
             val response = scheduleService.postDoseSchedule("Bearer $accessToken", scheduleRequest)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getDoseSchedule(
+        memberId: Int,
+        medicineId: String,
+        cabinetIndex: Int
+    ): Result<BaseResponse<List<ScheduleDTO>>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
+        return try {
+            val response = scheduleService.getDoseSchedule("Bearer $accessToken", memberId, medicineId, cabinetIndex)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
