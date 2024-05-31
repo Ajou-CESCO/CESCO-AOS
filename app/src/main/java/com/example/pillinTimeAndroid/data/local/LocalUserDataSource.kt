@@ -1,6 +1,7 @@
 package com.example.pillinTimeAndroid.data.local
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -15,10 +16,21 @@ class LocalUserDataSource @Inject constructor(
     companion object {
         private val Context.dataStore by preferencesDataStore(name = "user_preferences")
         private val ACCESS_TOKEN = stringPreferencesKey("access_token")
-        private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        private val FCM_TOKEN = stringPreferencesKey("fcm_token")
         private val NAME = stringPreferencesKey("name")
         private val PHONE = stringPreferencesKey("phone")
         private val SSN = stringPreferencesKey("ssn")
+        private val APP_ENTRY = booleanPreferencesKey("app_entry")
+    }
+
+    val appEntry: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[APP_ENTRY] ?: false
+    }
+
+    suspend fun saveAppEntry() {
+        context.dataStore.edit { preferences ->
+            preferences[APP_ENTRY] = true
+        }
     }
 
     suspend fun saveAccessToken(accessToken: String) {
@@ -28,7 +40,7 @@ class LocalUserDataSource @Inject constructor(
     }
 
     suspend fun deleteAccessToken() {
-        context.dataStore.edit {preferences ->
+        context.dataStore.edit { preferences ->
             preferences.remove(ACCESS_TOKEN)
         }
     }
