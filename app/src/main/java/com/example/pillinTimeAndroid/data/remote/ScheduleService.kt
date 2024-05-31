@@ -2,7 +2,6 @@ package com.example.pillinTimeAndroid.data.remote
 
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleDTO
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleGetRequest
 import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 import retrofit2.http.Body
@@ -15,7 +14,9 @@ interface ScheduleService {
     @GET("/api/dose/plan")
     suspend fun getDoseSchedule(
         @Header("Authorization") accessToken: String,
-        @Body scheduleGetRequest: ScheduleGetRequest
+        @Query("memberId") memberId: Int,
+        @Query("medicineId") medicineId: String,
+        @Query("cabinetIndex") cabinetIndex: Int
     ) : BaseResponse<List<ScheduleDTO>>
 
     @POST("/api/dose/plan")

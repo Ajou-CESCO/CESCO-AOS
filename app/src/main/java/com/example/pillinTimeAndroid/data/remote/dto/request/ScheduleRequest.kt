@@ -9,7 +9,3 @@ data class ScheduleRequest (
     val startAt: String,
     val endAt: String
 )
-
-data class ScheduleGetRequest (
-    val memberId: Int
-)
