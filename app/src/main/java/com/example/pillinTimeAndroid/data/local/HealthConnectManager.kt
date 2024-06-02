@@ -11,9 +11,11 @@ import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
+import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
 
@@ -55,7 +57,25 @@ class LocalHealthConnectManager @Inject constructor(
         )
         return healthConnectClient.readRecords(request).records
     }
-
+    suspend fun aggregateSleepSessions(
+        healthConnectClient: HealthConnectClient,
+        start: Instant,
+        end: Instant
+    ): Duration? {
+        return try {
+            val response =
+                healthConnectClient.aggregate(
+                    AggregateRequest(
+                        setOf(SleepSessionRecord.SLEEP_DURATION_TOTAL),
+                        timeRangeFilter = TimeRangeFilter.between(start, end)
+                    )
+                )
+            response[SleepSessionRecord.SLEEP_DURATION_TOTAL]
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
     suspend fun readSteps(start: Instant, end: Instant): List<StepsRecord> {
         val request = ReadRecordsRequest(
             recordType = StepsRecord::class,
@@ -71,7 +91,25 @@ class LocalHealthConnectManager @Inject constructor(
         )
         return healthConnectClient.readRecords(request).records
     }
-
+    suspend fun aggregateHeartRate(
+        healthConnectClient: HealthConnectClient,
+        start: Instant,
+        end: Instant
+    ): Long? {
+        return try {
+            val response =
+                healthConnectClient.aggregate(
+                    AggregateRequest(
+                        setOf(HeartRateRecord.BPM_MAX, HeartRateRecord.BPM_MIN),
+                        timeRangeFilter = TimeRangeFilter.between(start, end)
+                    )
+                )
+            response[HeartRateRecord.BPM_AVG]
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
     suspend fun readTotalCaloriesBurned(start: Instant, end: Instant): List<TotalCaloriesBurnedRecord> {
         val request = ReadRecordsRequest(
             recordType = TotalCaloriesBurnedRecord::class,
