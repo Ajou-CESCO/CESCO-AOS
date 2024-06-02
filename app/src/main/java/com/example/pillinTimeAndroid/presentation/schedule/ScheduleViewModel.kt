@@ -8,6 +8,5 @@ import javax.inject.Inject
 class ScheduleViewModel @Inject constructor(
 
 ) : ViewModel() {
-    val userList = listOf("김종명", "노수인", "심재민", "이재현", "김학준", "김종명", "노수인", "심재민")
 
 }
