@@ -17,8 +17,8 @@ val signInPages = listOf(
     SignInPageList(
         title = "문자로 발송된\n인증번호를 입력해 주세요",
         subtitle = "",
-        hint = "인증번호 입력",
-        error = "인증에 실패했어요.\n입력한 정보를 다시 확인해주세요."
+        hint = "인증번호 입력 (ex. 000000)",
+        error = "인증에 실패했어요. 인증번호를 다시 확인해주세요."
     ),
     SignInPageList(
         title = "이름은 무엇인가요?",
