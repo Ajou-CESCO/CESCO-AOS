@@ -80,16 +80,15 @@ fun ScheduleTimeButton(
                 .background(Gray5)
                 .height(height)
                 .border(2.dp, Gray10, shapes.small)
-                .padding(16.dp)
+                .padding(12.dp)
+                .padding(top = 4.dp)
                 .onSizeChanged { newSize ->
                     parentHeight = newSize.height.dp
                 }
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
-                ) {
-                    expanded = !expanded
-                },
+                ) { expanded = !expanded },
         ) {
             Row(
                 modifier = Modifier
@@ -145,8 +144,7 @@ fun TimeSelectGrid(
         times.chunked(3).forEach { rowTimes ->
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
                 rowTimes.forEach { time ->
@@ -243,7 +241,7 @@ fun ScheduleDatePickerDialog(
     onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState()
-    val remoteFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    val remoteFormatter = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
     val selectedDate = datePickerState.selectedDateMillis?.let {
         remoteFormatter.format(Date(it))
     } ?: remoteFormatter.format(Date())
@@ -289,10 +287,7 @@ fun ScheduleDatePickerDialog(
                 )
             }
         },
-        colors = DatePickerDefaults.colors().copy(
-            containerColor = White,
-
-            )
+        colors = DatePickerDefaults.colors().copy(containerColor = White)
     ) {
         DatePicker(
             state = datePickerState,

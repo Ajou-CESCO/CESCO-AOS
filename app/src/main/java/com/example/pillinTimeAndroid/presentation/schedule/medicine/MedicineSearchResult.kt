@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.data.remote.dto.MedicineDTO
 import com.example.pillinTimeAndroid.ui.theme.Gray10
@@ -29,6 +31,9 @@ import com.example.pillinTimeAndroid.ui.theme.Gray80
 import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
+import com.example.pillinTimeAndroid.ui.theme.Success60
+import com.example.pillinTimeAndroid.ui.theme.Warning60
+import com.example.pillinTimeAndroid.ui.theme.White
 import com.example.pillinTimeAndroid.ui.theme.shapes
 
 @Composable
@@ -51,6 +56,7 @@ fun MedicineSearchResult(
                     localSelectedMedicine = medicine
                 }
             )
+            HorizontalDivider(color = Gray10)
         }
     }
     if (showDialog.value) {
@@ -77,15 +83,19 @@ fun MedicineItem(
 ) {
     val lazyListState = rememberLazyListState()
     val effects = medicine.medicineEffect.split(",").map { it.trim() }
-
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(
+            onClick = onClick,
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() }
+        )
     ) {
         RadioButton(
             modifier = Modifier
                 .clickable(
-                    enabled = false,
-                    onClick = { },
+                    onClick = onClick,
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() }
                 )
@@ -102,11 +112,6 @@ fun MedicineItem(
                 .align(Alignment.TopStart)
                 .fillMaxWidth(.8f)
                 .padding(vertical = 8.dp)
-                .clickable(
-                    onClick = onClick,
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() }
-                )
         ) {
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
@@ -117,6 +122,17 @@ fun MedicineItem(
             LazyRow(
                 state = lazyListState,
             ) {
+                item {
+                    val (sideEffects, backgroundColor) =
+                        if (medicine.medicineAdverse?.dosageCaution != null ||
+                            medicine.medicineAdverse?.ageSpecificContraindication != null ||
+                            medicine.medicineAdverse?.elderlyCaution != null ||
+                            medicine.medicineAdverse?.administrationPeriodCaution != null ||
+                            medicine.medicineAdverse?.pregnancyContraindication != null ||
+                            medicine.medicineAdverse?.duplicateEfficacyGroup != null)
+                            Pair("부작용 주의", Warning60) else Pair("부작용 안전", Success60)
+                    MedicineEffectChip(effect = sideEffects, backgroundColor = backgroundColor, textColor = White)
+                }
                 items(effects) { effect ->
                     MedicineEffectChip(effect)
                 }
@@ -126,16 +142,20 @@ fun MedicineItem(
 }
 
 @Composable
-fun MedicineEffectChip(effect: String) {
+fun MedicineEffectChip(
+    effect: String,
+    backgroundColor: Color = Gray10,
+    textColor: Color = Gray80
+) {
     Box(
         modifier = Modifier.padding(end = 6.dp)
     ) {
         Text(
             modifier = Modifier
-                .background(Gray10, shape = shapes.extraSmall)
+                .background(backgroundColor, shape = shapes.extraSmall)
                 .padding(horizontal = 8.dp, vertical = 3.dp),
             text = effect,
-            color = Gray80,
+            color = textColor,
             style = PillinTimeTheme.typography.caption2Medium
         )
     }

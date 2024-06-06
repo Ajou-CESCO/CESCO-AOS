@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.data.remote.dto.request.CabinetRequest
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,15 +17,17 @@ class CabinetViewModel @Inject constructor(
 ) : ViewModel() {
     private var serialNumber = mutableStateOf("")
 
-    fun postRegisterCabinet(ownerId: Int) {
+    fun postRegisterCabinet(ownerId: Int, navController: NavController) {
         viewModelScope.launch {
             val cabinetInfo = CabinetRequest(
                 serial = serialNumber.value,
                 ownerId = ownerId
             )
             val result = userRepository.postRegisterCabinet(cabinetInfo)
+            Log.e("CabinetViewModel", "$cabinetInfo")
             result.onSuccess {
                 Log.d("CabinetViewModel", "Succeeded to register: ${it.result}")
+                navController.popBackStack()
             }.onFailure {
                 Log.e("CabinetViewModel", "Failed to register: ${it.message}")
             }

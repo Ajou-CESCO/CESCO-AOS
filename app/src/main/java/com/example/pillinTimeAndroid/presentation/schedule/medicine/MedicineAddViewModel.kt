@@ -1,12 +1,14 @@
 package com.example.pillinTimeAndroid.presentation.schedule.medicine
 
 import android.util.Log
+import androidx.collection.mutableIntListOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.pillinTimeAndroid.data.remote.dto.MedicineAdverse
 import com.example.pillinTimeAndroid.data.remote.dto.MedicineDTO
 import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
@@ -17,12 +19,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -37,37 +36,41 @@ class MedicineAddViewModel @Inject constructor(
     val medicineInput = _medicineInput.asStateFlow()
     private val _searchStatus = MutableStateFlow(false)
     val searchStatus = _searchStatus.asStateFlow()
+    val initStatus = mutableStateOf(false)
 
     val selectedMedicine = mutableStateOf<MedicineDTO?>(null)
     val selectedDays = mutableStateListOf<Int>()
     val selectedTimes = mutableStateListOf<String>()
     val scheduleStartDate = mutableStateOf("")
     val scheduleEndDate = mutableStateOf("")
-    val selectedIndex = mutableIntStateOf(0)
+    val selectedIndex = mutableIntStateOf(-1)
+    val currentUsedIndex = mutableIntListOf()
+    private val _memberId = mutableIntStateOf(-1)
 
-    init {
-        _medicineInput
-            .debounce(500)
-            .distinctUntilChanged()
-            .flatMapLatest { medicineName ->
-                if (medicineName.isNotEmpty()) {
-                    flow {
-                        val result = getMedicineInfo(medicineName)
-                        emit(result)
-                    }
-                } else {
-                    flow {
-                        emit(emptyList<MedicineDTO>())
-                    }
-                }
-            }.launchIn(viewModelScope)
+    fun setMemberId(memberId: Int) {
+        _memberId.intValue = memberId
     }
 
-    private fun getMedicineInfo(medicineName: String) {
+    fun getUsingCabinetIndex(memberId: Int) {
         viewModelScope.launch {
+            val result = medicineRepository.getDoseSchedule(memberId)
+            result.onSuccess { scheduleList ->
+                Log.d("getDoseSchedule", "Succeeded to fetch: ${scheduleList.result}")
+                scheduleList.result.forEach { schedule ->
+                    currentUsedIndex.add(schedule.cabinetIndex)
+                }
+            }.onFailure {
+                Log.d("getDoseSchedule", "failed to fetch: ${it.message}")
+            }
+        }
+    }
+
+    fun getMedicineInfo(memberId: Int, medicineName: String) {
+        viewModelScope.launch {
+            _searchStatus.value = true
             val trimmedName = medicineName.trim().replace(" ", "")
-            val result = medicineRepository.getMedicineInfo(trimmedName)
-            _searchStatus.value = medicineName.isNotEmpty()
+            val result = medicineRepository.getMedicineInfo(memberId, trimmedName)
+            Log.d("getDoseSchedule", "trying to fetch: ${memberId}")
             result.onSuccess {
                 Log.d("getMedicineInfo", "Succeeded to fetch: ${it.result}")
                 _medicineInfo.value = it.result
@@ -75,24 +78,36 @@ class MedicineAddViewModel @Inject constructor(
                 Log.e("getMedicineInfo", "Failed to fetch: ${it.message}")
                 _medicineInfo.value = emptyList()
             }
+            initStatus.value = true
+            _searchStatus.value = false
         }
     }
 
     fun postDoseSchedule(memberId: Int, navController: NavController) {
+        val scheduleStartDateFormatted =
+            formatDateString(scheduleStartDate.value, "yyyy년 MM월 dd일", "yyyy-MM-dd")
+        val scheduleEndDateFormatted =
+            formatDateString(scheduleEndDate.value, "yyyy년 MM월 dd일", "yyyy-MM-dd")
+
         viewModelScope.launch {
             if (selectedMedicine.value != null) {
+                val medicineAdverse = selectedMedicine.value?.medicineAdverse
+
                 val scheduleRequest =
                     ScheduleRequest(
                         memberId = memberId,
                         medicineId = selectedMedicine.value!!.medicineCode,
+                        medicineName = selectedMedicine.value!!.medicineName,
+                        medicineSeries = selectedMedicine.value!!.medicineSeries,
+                        medicineAdverse = if(medicineAdverse != null)
+                            selectedMedicine.value?.medicineAdverse else MedicineAdverse(),
                         cabinetIndex = selectedIndex.intValue,
-                        weekdayList = selectedDays.map { it + 1},
+                        weekdayList = selectedDays.map { it + 1 },
                         timeList = selectedTimes,
-                        startAt = scheduleStartDate.value,
-                        endAt = scheduleEndDate.value,
+                        startAt = scheduleStartDateFormatted,
+                        endAt = scheduleEndDateFormatted,
                     )
-                val result =
-                    medicineRepository.postDoseSchedule(scheduleRequest)
+                val result = medicineRepository.postDoseSchedule(scheduleRequest)
                 Log.e("request schedule", scheduleRequest.toString())
                 result.onSuccess {
                     Log.d("getMedicineInfo", "Succeeded to post schedule: ${it.result}")
@@ -165,8 +180,20 @@ class MedicineAddViewModel @Inject constructor(
             1 -> selectedDays.isNotEmpty()
             2 -> selectedDays.isNotEmpty() && selectedTimes.isNotEmpty()
             3 -> scheduleStartDate.value.isNotEmpty() && scheduleEndDate.value.isNotEmpty()
-            4 -> selectedIndex.intValue != null
+                && scheduleStartDate.value <= scheduleEndDate.value
+            4 -> selectedIndex.intValue > 0 && !currentUsedIndex.contains(selectedIndex.intValue)
             else -> true
         }
+    }
+
+    private fun formatDateString(
+        dateString: String,
+        fromPattern: String,
+        toPattern: String
+    ): String {
+        val fromFormatter = DateTimeFormatter.ofPattern(fromPattern)
+        val toFormatter = DateTimeFormatter.ofPattern(toPattern)
+        val date = LocalDate.parse(dateString, fromFormatter)
+        return date.format(toFormatter)
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.ui.theme.Error60
@@ -28,6 +29,8 @@ import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.Primary90
 import com.example.pillinTimeAndroid.ui.theme.White
 import com.example.pillinTimeAndroid.ui.theme.shapes
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeDoseCard(
@@ -80,7 +83,7 @@ fun HomeDoseCard(
                     .background(backgroundColor)
                     .clip(shapes.small)
                     .padding(bottom = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if(doseLog.isNotEmpty()) {
                     doseLog.forEach { log ->
@@ -88,13 +91,13 @@ fun HomeDoseCard(
                     }
                 } else {
                     Text(
-                        modifier = Modifier.padding(top = 20.dp, bottom = 2.dp),
+                        modifier = Modifier.padding(top = 32.dp, bottom = 2.dp),
                         text = "오늘 등록된 복약 일정이 없어요",
                         color = Gray90,
                         style = PillinTimeTheme.typography.body1Bold
                     )
                     Text(
-                        modifier = Modifier.padding(bottom = 33.dp),
+                        modifier = Modifier.padding(bottom = 32.dp),
                         text = "복약 일정을 등록하고 알림을 받아보세요",
                         color = Gray90,
                         style = PillinTimeTheme.typography.caption1Medium
@@ -126,30 +129,38 @@ fun DoseItem(
     ) {
         Text(
             modifier = Modifier
-                .weight(1f)
+                .weight(.5f)
                 .padding(vertical = 10.5.dp)
                 .padding(start = 12.dp),
             text = doseLog.medicineName,
             style = PillinTimeTheme.typography.headline5Bold,
-            color = Gray90
+            color = Gray90,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+
         )
         Text(
             modifier = Modifier
-                .weight(.3f)
-                .padding(end = 7.dp),
+                .weight(.3f),
             textAlign = TextAlign.Center,
-            text = doseLog.plannedAt.substring(0, 5),
+            text = convertToAmPm(doseLog.plannedAt.substring(0, 5)),
             style = PillinTimeTheme.typography.body2Medium,
             color = Gray70
         )
         Text(
-            modifier = Modifier
-                .weight(.3f)
-                .padding(end = 7.dp),
+            modifier = Modifier.weight(.2f),
             textAlign = TextAlign.Center,
             text = doseStatus,
             style = PillinTimeTheme.typography.logo4Extra,
             color = doseColor
         )
     }
+}
+fun convertToAmPm(time: String): String {
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    val parsedTime = LocalTime.parse(time, formatter)
+    val hour = if (parsedTime.hour % 12 == 0) 12 else parsedTime.hour % 12
+    val amPm = if (parsedTime.hour < 12) "오전" else "오후"
+    val minutes = if (parsedTime.minute == 0) "" else "${parsedTime.minute.toString().padStart(2, '0')}분"
+    return "$amPm ${hour}시 ${minutes}"
 }

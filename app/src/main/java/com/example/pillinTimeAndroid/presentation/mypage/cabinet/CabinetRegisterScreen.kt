@@ -88,7 +88,7 @@ fun CabinetRegisterScreen(
                 text = "확인",
                 onClick = {
                     if (ownerId != null) {
-                        viewModel.postRegisterCabinet(ownerId)
+                        viewModel.postRegisterCabinet(ownerId, navController = navController)
                     }
                 }
             )
