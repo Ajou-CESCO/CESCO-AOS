@@ -52,3 +52,5 @@ val Success90 = Color(0xFF5FB84F)
 val Success60 = Color(0xFF83C877)
 val Success40 = Color(0xFFABDAA3)
 val Success20 = Color(0xFFD1EBCD)
+
+val Purple60 = Color(0XFF7D5DD9)
