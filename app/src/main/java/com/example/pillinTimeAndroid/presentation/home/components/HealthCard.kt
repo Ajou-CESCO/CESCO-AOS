@@ -1,6 +1,6 @@
 package com.example.pillinTimeAndroid.presentation.home.components
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,37 +16,46 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.domain.entity.HealthData
+import com.example.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary40
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.White
 import com.example.pillinTimeAndroid.ui.theme.shapes
+import com.google.gson.Gson
 import java.time.Duration
 import kotlin.math.roundToInt
 
 @Composable
 fun HealthCard(
-    healthData: HealthData?,
-    onCardClick: () -> Unit
+    healthData: HealthStatDTO?,
+    onCardClick: (String) -> Unit
 ) {
-    val expandedHeight by animateDpAsState(targetValue = if (healthData?.totalSteps == 0) 100.dp else 120.dp)
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(expandedHeight)
             .clip(shape = shapes.small)
             .background(Primary60)
-            .padding(12.dp)
+            .padding(16.dp)
+            .clickable(
+                onClick = {
+                    healthData?.let {
+                        val healthDataJson = Gson().toJson(it)
+                        onCardClick(healthDataJson)
+                    }
+                },
+                enabled = healthData?.steps != 0,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            )
+            .animateContentSize()
     ) {
-        if (healthData?.totalSteps == 0) {
+        if (healthData?.steps == 0) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -70,11 +79,7 @@ fun HealthCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 12.dp)
-                    .clickable(
-                        onClick = onCardClick,
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ),
+                    ,
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -92,10 +97,10 @@ fun HealthCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                HealthItem(healthData?.totalSteps, "걸음 수", "보")
-                HealthItem(healthData?.totalSleepTime, "수면", "시간")
-                HealthItem(healthData?.avgHeartRate, "심장박동수", "BPM")
-                HealthItem(healthData?.totalCaloriesBurned, "활동량", "kcal")
+                HealthItem(healthData?.steps, "걸음 수", "보")
+                HealthItem(healthData?.sleepTime, "수면", "시간")
+                HealthItem(healthData?.heartRate, "심장박동수", "BPM")
+                HealthItem(healthData?.calorie, "활동량", "kcal")
             }
         }
     }

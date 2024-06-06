@@ -14,7 +14,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.domain.entity.HealthData
+import com.example.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
 import com.example.pillinTimeAndroid.domain.entity.HomeUser
 import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.ui.theme.Gray90
@@ -32,7 +32,8 @@ fun HomeDetailPage(
     userDoseLog: List<ScheduleLogDTO>,
     onPullRefresh: () -> Unit,
     isRefreshing: Boolean,
-    healthData: HealthData? = null
+//    healthData: HealthData? = null
+    healthData: HealthStatDTO? = null
 ) {
     val textStyle = PillinTimeTheme.typography.logo3Medium.copy(color = Gray90)
     val managerGreetingText = buildAnnotatedString {
@@ -81,11 +82,11 @@ fun HomeDetailPage(
                     }
                 }
                 Spacer(modifier = Modifier.height(23.dp))
-                Spacer(modifier = Modifier.height(12.dp))
                 HealthCard(
                     healthData = healthData,
-                    onCardClick =
-                    { navController.navigate("healthScreen/${userDetail?.name}/${userDetail?.memberId}/${userDetail?.isManager}")
+                    onCardClick = {healthDataJson ->
+//                        navController.navigate("healthScreen/${userDetail?.name}/${userDetail?.memberId}/${userDetail?.isManager}")
+                        navController.navigate("healthScreen/${userDetail?.name}/${healthDataJson}")
                     }
                 )
             }

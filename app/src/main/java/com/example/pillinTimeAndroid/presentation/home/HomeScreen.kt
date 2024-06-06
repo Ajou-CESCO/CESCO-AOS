@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.domain.entity.HealthData
 import com.example.pillinTimeAndroid.domain.entity.HomeUser
 import com.example.pillinTimeAndroid.presentation.common.ClientListBar
 import com.example.pillinTimeAndroid.presentation.common.ManagerEmptyView
@@ -148,12 +147,7 @@ fun HomeScreen(
                     },
                     isRefreshing = isRefreshing,
                     userDoseLog = userDoseLog,
-                    healthData = HealthData(
-                        totalSteps = remoteHealthData?.steps,
-                        totalCaloriesBurned = remoteHealthData?.calorie,
-                        totalSleepTime = remoteHealthData?.sleepTime,
-                        avgHeartRate = remoteHealthData?.heartRate
-                    )
+                    healthData = remoteHealthData
                 )
             }
         }

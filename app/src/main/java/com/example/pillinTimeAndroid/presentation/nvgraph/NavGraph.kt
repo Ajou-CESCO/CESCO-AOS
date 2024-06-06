@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.pillinTimeAndroid.R
+import com.example.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
 import com.example.pillinTimeAndroid.presentation.home.HomeScreen
 import com.example.pillinTimeAndroid.presentation.home.health.HealthScreen
 import com.example.pillinTimeAndroid.presentation.mypage.MyPageScreen
@@ -37,6 +38,7 @@ import com.example.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddS
 import com.example.pillinTimeAndroid.presentation.signin.SignInScreen
 import com.example.pillinTimeAndroid.presentation.signup.RoleSelectScreen
 import com.example.pillinTimeAndroid.presentation.signup.SignUpClientScreen
+import com.google.gson.Gson
 
 @Composable
 fun NavGraph(
@@ -107,7 +109,6 @@ fun NavGraph(
             }
             navigation(
                 route = Route.BottomNavigatorScreen.route,
-//                startDestination = if(appEntry) Route.HomeScreen.route else Route.OnBoardingScreen.route
                 startDestination = Route.HomeScreen.route
             ) {
                 composable(route = Route.OnBoardingScreen.route) {
@@ -117,27 +118,23 @@ fun NavGraph(
                     HomeScreen(navController = navController)
                 }
                 composable(
-                    route = "${Route.HealthScreen.route}/{memberName}/{memberId}/{isManager}",
+                    route = "${Route.HealthScreen.route}/{memberName}/{healthData}",
                     arguments = listOf(
                         navArgument("memberName") {
                             type = NavType.StringType
                         },
-                        navArgument("memberId") {
-                            type = NavType.IntType
-                        },
-                        navArgument("isManager") {
-                            type = NavType.BoolType
+                        navArgument("healthData") {
+                            type = NavType.StringType
                         }
                     )
                 ) {entry ->
                     val memberName = entry.arguments?.getString("memberName")
-                    val memberId = entry.arguments?.getInt("memberId")
-                    val isManager = entry.arguments?.getBoolean("isManager")
+                    val healthDataJson = entry.arguments?.getString("healthData")
+                    val healthData = Gson().fromJson(healthDataJson, HealthStatDTO::class.java)
                     HealthScreen(
                         navController = navController,
                         memberName = memberName,
-                        memberId = memberId,
-                        isManager = isManager
+                        healthData = healthData
                     )
                 }
                 composable(
