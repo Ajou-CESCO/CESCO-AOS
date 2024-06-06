@@ -1,13 +1,18 @@
 package com.example.pillinTimeAndroid.presentation.home.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -22,11 +27,15 @@ import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.ui.theme.Error60
 import com.example.pillinTimeAndroid.ui.theme.Gray10
 import com.example.pillinTimeAndroid.ui.theme.Gray30
+import com.example.pillinTimeAndroid.ui.theme.Gray60
 import com.example.pillinTimeAndroid.ui.theme.Gray70
 import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.Primary90
+import com.example.pillinTimeAndroid.ui.theme.Purple60
+import com.example.pillinTimeAndroid.ui.theme.Success60
+import com.example.pillinTimeAndroid.ui.theme.Warning60
 import com.example.pillinTimeAndroid.ui.theme.White
 import com.example.pillinTimeAndroid.ui.theme.shapes
 import java.time.LocalTime
@@ -39,10 +48,13 @@ fun HomeDoseCard(
     doseLog: List<ScheduleLogDTO>
 ) {
     val backgroundColor = if(cabinetId == 0 || doseLog.isEmpty()) Gray10 else White
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(backgroundColor)
+            .animateContentSize()
             .clip(shapes.small),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -81,8 +93,9 @@ fun HomeDoseCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(backgroundColor)
-                    .clip(shapes.small)
-                    .padding(bottom = 10.dp),
+                    .heightIn(max = 300.dp)
+                    .verticalScroll(scrollState)
+                    .clip(shapes.small) ,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if(doseLog.isNotEmpty()) {
@@ -117,6 +130,11 @@ fun DoseItem(
         2 -> Pair(Error60, "미완료")
         else -> Pair(Gray30, "예정")
     }
+    val indexColor = listOf(Error60, Warning60, Success60, Primary60, Purple60)
+    val cabinetColor =
+        if (doseLog.cabinetIndex in 1..5) indexColor[doseLog.cabinetIndex - 1]
+        else Gray60 // index out of range 방지
+
     Row(
         modifier = Modifier
             .padding(
@@ -127,6 +145,14 @@ fun DoseItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Canvas(modifier = Modifier
+            .weight(.1f)
+            .size(20.dp)) {
+            drawCircle(
+                color = cabinetColor,
+                radius = size.minDimension / 2
+            )
+        }
         Text(
             modifier = Modifier
                 .weight(.5f)
@@ -137,11 +163,9 @@ fun DoseItem(
             color = Gray90,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
-
         )
         Text(
-            modifier = Modifier
-                .weight(.3f),
+            modifier = Modifier.weight(.3f),
             textAlign = TextAlign.Center,
             text = convertToAmPm(doseLog.plannedAt.substring(0, 5)),
             style = PillinTimeTheme.typography.body2Medium,

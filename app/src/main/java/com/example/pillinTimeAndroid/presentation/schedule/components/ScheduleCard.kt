@@ -1,5 +1,6 @@
 package com.example.pillinTimeAndroid.presentation.schedule.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,6 +45,8 @@ fun ScheduleCard(
             .fillMaxWidth()
             .background(Color.Transparent)
             .padding(bottom = 16.dp)
+            .animateContentSize()
+
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -91,8 +94,8 @@ fun ScheduleCard(
                     .clip(shapes.small)
                     .background(White)
             ) {
-                doseLog.forEach {
-                    DoseItem(doseLog = it)
+                doseLog.forEach { log ->
+                    DoseItem(doseLog = log)
                 }
             }
         }
