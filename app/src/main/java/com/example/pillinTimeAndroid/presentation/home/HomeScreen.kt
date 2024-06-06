@@ -1,12 +1,11 @@
 package com.example.pillinTimeAndroid.presentation.home
 
-import android.Manifest
-import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,16 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.pillinTimeAndroid.domain.entity.HealthData
+import com.example.pillinTimeAndroid.domain.entity.HomeUser
 import com.example.pillinTimeAndroid.presentation.common.ClientListBar
 import com.example.pillinTimeAndroid.presentation.common.ManagerEmptyView
-import com.example.pillinTimeAndroid.presentation.common.PermissionDialog
-import com.example.pillinTimeAndroid.presentation.common.RationaleDialog
 import com.example.pillinTimeAndroid.presentation.home.components.HomeDetailPage
 import com.example.pillinTimeAndroid.presentation.main.MainViewModel
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,32 +36,68 @@ fun HomeScreen(
     mainViewModel: MainViewModel = hiltViewModel(),
     navController: NavController
 ) {
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        RequestNotificationPermissionDialog()
-    }
-
     val userDetails by mainViewModel.userDetails.collectAsState()
     val userDoseLog by mainViewModel.userDoseLog.collectAsState()
     val relationInfoList by mainViewModel.relationInfoList.collectAsState()
+    val totalSteps by viewModel.stepsData.collectAsState()
+    val totalSleep by viewModel.sleepData.collectAsState()
+    val avgHeartRate by viewModel.heartRateData.collectAsState()
+    val totalCalories by viewModel.totalCaloriesData.collectAsState()
     val relationUserNames = relationInfoList.map { it.memberName }
-    var selectedUser by remember { mutableStateOf<String?>(null) }
-//    val relationInfoList by mainViewModel.relationInfoList
-//    val userDetails by viewModel.userDetails.collectAsState()
-//    val userDetailsV2 = viewModel.userInfo
-    var isRefreshing by remember { mutableStateOf(false) }
-    val pagerState = rememberPagerState(pageCount = { relationUserNames.size })
-    var selectedUserIndex by remember { mutableIntStateOf(0) }
-    var isPageChanging by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+    val remoteHealthData by viewModel.remoteHealthData.collectAsState()
 
+    val pagerState = rememberPagerState(
+        pageCount = {
+            if (userDetails?.isManager == true) {
+                relationInfoList.size
+            } else 1
+        }
+    )
+    val scope = rememberCoroutineScope()
+    var selectedUserIndex by remember { mutableIntStateOf(0) }
+    var isRefreshing by remember { mutableStateOf(false) }
+    var hasPermissions by remember { mutableStateOf(false) }
     val permissionsLauncher =
         rememberLauncherForActivityResult(viewModel.permissionsLauncher) {
-            viewModel.fetchHealthData()
+//            viewModel.fetchLocalHealthData()
+            hasPermissions = true
         }
-
-    LaunchedEffect(true) {
+    // 피보호자일때만 권한 체크
+    LaunchedEffect(userDetails?.isManager == false) {
         permissionsLauncher.launch(viewModel.permissions)
+        Log.d("permission", "permission launched")
+    }
+
+    val homeUser = if (userDetails?.isManager == true) {
+        if(relationInfoList.isNotEmpty()) {
+            HomeUser(
+                memberId = relationInfoList[selectedUserIndex].memberId,
+                name = relationInfoList[selectedUserIndex].memberName,
+                cabinetId = relationInfoList[selectedUserIndex].cabinetId,
+                isManager = false
+            )
+        } else {
+            null
+        }
+    } else {
+        userDetails?.let {
+            HomeUser(
+                memberId = it.memberId,
+                name = it.name,
+                cabinetId = it.cabinetId,
+                isManager = it.isManager
+            )
+        }
+    }
+
+    LaunchedEffect(homeUser) {
+        homeUser?.memberId.let {
+            if (it != null) {
+                mainViewModel.getUserDoseLog(it)
+                homeUser?.isManager?.let { it1 -> viewModel.getRemoteHealthData(it, it1) }
+                Log.e("homeScreen health", "$it, ${homeUser?.isManager}")
+            }
+        }
     }
 
     Column(
@@ -81,62 +112,59 @@ fun HomeScreen(
                 selectedIndex = selectedUserIndex,
                 onProfileSelected = { index ->
                     selectedUserIndex = index
+                    scope.launch {
+                        pagerState.scrollToPage(selectedUserIndex)
+                    }
                 }
             )
         }
-        if(userDetails?.isManager == true && relationInfoList.isEmpty()) {
+        if (userDetails?.isManager == true && relationInfoList.isEmpty()) {
             ManagerEmptyView(navController)
         } else {
-            HomeDetailPage(
-                modifier = Modifier.zIndex(-1f),
-                navController = navController,
-                userDetail = userDetails,
-                onPullRefresh = {
-                    scope.launch {
-                        isRefreshing = true
-                        userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) }
-                        mainViewModel.getInitData()
-                        delay(1000)
-                        isRefreshing = false
-                    }
-                },
-                isRefreshing = isRefreshing,
-                userDoseLog = userDoseLog,
-            )
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                HomeDetailPage(
+                    modifier = Modifier.zIndex(-1f),
+                    navController = navController,
+                    userDetail = homeUser,
+                    onPullRefresh = {
+                        scope.launch {
+                            isRefreshing = true
+                            homeUser?.memberId?.let { it1 -> viewModel.getRemoteHealthData(it1, true) }
+                            if (userDetails?.isManager == true) {
+                                mainViewModel.getUserDoseLog(relationInfoList[selectedUserIndex].memberId)
+                                Log.d("homedose", "${relationInfoList[selectedUserIndex].memberId}")
+                            } else {
+                                userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) }
+                            }
+                            mainViewModel.getInitData()
+                            delay(1000)
+                            isRefreshing = false
+                        }
+                    },
+                    isRefreshing = isRefreshing,
+                    userDoseLog = userDoseLog,
+                    healthData = HealthData(
+                        totalSteps = remoteHealthData?.steps,
+                        totalCaloriesBurned = remoteHealthData?.calorie,
+                        totalSleepTime = remoteHealthData?.sleepTime,
+                        avgHeartRate = remoteHealthData?.heartRate
+                    )
+                )
+            }
         }
     }
+    LaunchedEffect(pagerState.currentPage) { selectedUserIndex = pagerState.currentPage }
 
-    LaunchedEffect(userDetails) {
-        userDetails?.let {
-            mainViewModel.getUserDoseLog(it.memberId)
-        }
-    }
-
-    LaunchedEffect(selectedUserIndex) {
-        pagerState.animateScrollToPage(selectedUserIndex)
-    }
-    LaunchedEffect(pagerState.currentPage) {
-        selectedUserIndex = pagerState.currentPage
-    }
-    LaunchedEffect(selectedUserIndex) {
-        if (!isPageChanging) {
-            isPageChanging = true
-            pagerState.animateScrollToPage(selectedUserIndex)
-            isPageChanging = false
+    // when refreshed, there is no relation
+    LaunchedEffect(relationInfoList, userDetails) {
+        if (relationInfoList.isEmpty() && userDetails?.isManager == false) {
+            navController.navigate("signupClientScreen") {
+                popUpTo(navController.graph.startDestinationId)
+                launchSingleTop = true
+            }
         }
     }
 }
-
-@OptIn(ExperimentalPermissionsApi::class)
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Composable
-fun RequestNotificationPermissionDialog() {
-    val permissionState =
-        rememberPermissionState(permission = Manifest.permission.POST_NOTIFICATIONS)
-
-    if (!permissionState.status.isGranted) {
-        if (permissionState.status.shouldShowRationale) RationaleDialog()
-        else PermissionDialog { permissionState.launchPermissionRequest() }
-    }
-}
-

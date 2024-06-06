@@ -16,19 +16,25 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -41,6 +47,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
+import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.example.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoBeforeItem
 import com.example.pillinTimeAndroid.ui.theme.Error60
 import com.example.pillinTimeAndroid.ui.theme.Gray10
 import com.example.pillinTimeAndroid.ui.theme.Gray70
@@ -53,14 +61,79 @@ import kotlin.math.roundToInt
 
 private enum class HorizontalDragValue { Settled, EndToStart }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CustomSwipeCard(
     isManager: Boolean? = true,
     relationList: List<RelationDTO>,
-    onRemove: (RelationDTO) -> Unit = {}
-) {
+    onRemove: (RelationDTO) -> Unit = {},
+    onDisconnect: (Int) -> Unit = {},
 
+) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    var selectedRelation by remember { mutableStateOf<RelationDTO?>(null) }
+    val showCabinetDialog = remember { mutableStateOf(false) }
+    val showRelationDialog = remember { mutableStateOf(false) }
+    if (showBottomSheet && isManager == true) {
+        ModalBottomSheet(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = BasicPadding),
+            onDismissRequest = {
+                showBottomSheet = false
+            },
+            sheetState = sheetState,
+            containerColor = White
+        ) {
+            Column(
+                modifier = Modifier.padding(BasicPadding)
+            ) {
+                selectedRelation?.let { relation ->
+                    Text(
+                        text = "기본 정보",
+                        color = Gray90,
+                        style = PillinTimeTheme.typography.headline5Bold
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    EditInfoBeforeItem("성명", relation.memberName)
+                    EditInfoBeforeItem("휴대폰 번호", relation.memberPhone)
+                    EditInfoBeforeItem("주민등록번호", "${relation.memberSsn}●●●●●●")
+                    if(relation.cabinetId != 0) {
+                        Spacer(modifier = Modifier.weight(1f))
+                        CustomButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(BasicPadding),
+                            enabled = true,
+                            filled = ButtonColor.BLANK,
+                            size = ButtonSize.MEDIUM,
+                            text = "약통 해제",
+                            onClick = {
+                                showCabinetDialog.value = true
+                            }
+                        )
+                    }
+                    if(showCabinetDialog.value) {
+                        CustomAlertDialog(
+                            title = "약통의 연결을 해제하시겠습니까?",
+                            description = "약통의 연결을 해제하시게 되면 더 이상 복용 스케쥴을\n추가하실 수 없게 됩니다.",
+                            confirmText = "해제하기",
+                            dismissText = "취소하기",
+                            onConfirm = {
+                                onDisconnect(relation.cabinetId)
+                                showCabinetDialog.value = false
+                            },
+                            onDismiss = { showCabinetDialog.value = false }
+                        )
+                    }
+                }
+
+            }
+        }
+    }
     LazyColumn {
         items(
             items = relationList,
@@ -93,6 +166,19 @@ fun CustomSwipeCard(
                     .fillMaxWidth()
                     .animateItemPlacement()
             ) {
+                if(showRelationDialog.value) {
+                    CustomAlertDialog(
+                        title = "${relation.memberName}님과의 연결을 해제하시겠습니까?",
+                        description = "보호관계 연결을 해제하시게 되면 더 이상 해당 사용자를\n관리하실 수 없게 됩니다.",
+                        confirmText = "해제하기",
+                        dismissText = "취소하기",
+                        onConfirm = {
+                            onRemove(relation)
+                            showRelationDialog.value = false
+                        },
+                        onDismiss = { showRelationDialog.value = false }
+                    )
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.2f)
@@ -100,7 +186,7 @@ fun CustomSwipeCard(
                         .background(iconsBackgroundColor)
                         .align(Alignment.CenterEnd)
                         .clickable(
-                            onClick = { onRemove(relation) },
+                            onClick = { showRelationDialog.value = true },
 //                            indication = null,
 //                            interactionSource = remember { MutableInteractionSource() }
                         ),
@@ -128,7 +214,9 @@ fun CustomSwipeCard(
                     .padding(start = 32.dp)
                     .clickable(
                         onClick = {
-                            if(state.currentValue == HorizontalDragValue.Settled) {
+                            if (state.currentValue == HorizontalDragValue.Settled) {
+                                selectedRelation = relation
+                                showBottomSheet = true
                                 Log.e("relationCard", "it is settled")
                             } else {
                                 scope.launch {

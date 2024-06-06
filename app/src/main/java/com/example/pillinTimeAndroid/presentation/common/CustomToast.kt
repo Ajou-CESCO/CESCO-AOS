@@ -19,6 +19,7 @@ import com.example.pillinTimeAndroid.util.fadeInEffect
 
 @Composable
 fun CustomToast(
+    modifier: Modifier = Modifier,
     text: String,
     duration: Long = 2000L,
     onDismiss: () -> Unit
@@ -29,7 +30,7 @@ fun CustomToast(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .fadeInEffect()
             .padding(horizontal = BasicPadding)

@@ -13,3 +13,10 @@ data class User(
     val isManager: Boolean,
     val isSubscriber: Boolean,
 ) : Parcelable
+
+data class HomeUser(
+    val memberId: Int,
+    val name: String,
+    val cabinetId: Int,
+    val isManager: Boolean
+)

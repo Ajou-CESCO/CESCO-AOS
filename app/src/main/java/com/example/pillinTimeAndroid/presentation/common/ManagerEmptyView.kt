@@ -24,7 +24,9 @@ import com.example.pillinTimeAndroid.ui.theme.White
 import com.example.pillinTimeAndroid.ui.theme.shapes
 
 @Composable
-fun ManagerEmptyView(navController: NavController) {
+fun ManagerEmptyView(
+    navController: NavController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -45,11 +47,13 @@ fun ManagerEmptyView(navController: NavController) {
             style = PillinTimeTheme.typography.caption1Regular,
             textAlign = TextAlign.Center
         )
+        val title = "피보호자 관리"
+
         Button(
             modifier = Modifier
                 .padding(bottom = 9.dp)
                 .size(238.dp, 48.dp),
-            onClick = { navController.navigate("") },
+            onClick = { navController.navigate("relationManageScreen/${title}") },
             colors = ButtonDefaults.buttonColors().copy(
                 containerColor = White,
                 contentColor = Primary90
@@ -65,7 +69,7 @@ fun ManagerEmptyView(navController: NavController) {
             modifier = Modifier
                 .padding(bottom = 9.dp)
                 .size(238.dp, 48.dp),
-            onClick = { navController.navigate("") },
+            onClick = { navController.navigate("relationManageScreen/${title}") },
             colors = ButtonDefaults.buttonColors().copy(
                 containerColor = White,
                 contentColor = Primary90
