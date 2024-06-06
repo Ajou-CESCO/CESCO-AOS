@@ -6,15 +6,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -25,27 +31,40 @@ import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.example.pillinTimeAndroid.presentation.common.CustomSwipeCard
 import com.example.pillinTimeAndroid.presentation.common.CustomTextField
 import com.example.pillinTimeAndroid.presentation.common.CustomTextFieldDialog
+import com.example.pillinTimeAndroid.presentation.common.CustomToast
 import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.example.pillinTimeAndroid.presentation.common.InputType
 import com.example.pillinTimeAndroid.presentation.main.MainViewModel
 import com.example.pillinTimeAndroid.ui.theme.Gray60
 import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.example.pillinTimeAndroid.ui.theme.White
+import com.example.pillinTimeAndroid.util.PhoneVisualTransformation
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RelationManageScreen(
     navController: NavController,
+    title: String?,
     viewModel: RelationManageViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val userDetail = mainViewModel.userDetails.collectAsState()
-    val relationList = mainViewModel.relationInfoList.collectAsState()
+    val relationList by mainViewModel.relationInfoList.collectAsState()
     val showDialog = remember { mutableStateOf(false) }
+    val showBottomSheet = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    val showToast = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val selectedUser = remember { mutableStateOf("") }
+    val managerRequest by viewModel.managerRequest.collectAsState()
 
-    Column(
-
-    ) {
+    Column {
         CustomTopBar(
-            title = "피보호자 관리",
+            title = title.toString(),
             showBackButton = true,
             onBackClicked = { navController.popBackStack() },
         )
@@ -56,22 +75,37 @@ fun RelationManageScreen(
         ) {
             Text(
                 modifier = Modifier.padding(start = BasicPadding),
-                text = "총 ${relationList.value.size}명",
+                text = "총 ${relationList.size}명",
                 color = Gray90,
                 style = PillinTimeTheme.typography.headline5Bold
             )
-            Icon(
-                modifier = Modifier
-                    .padding(end = BasicPadding)
-                    .clickable(
-                        onClick = { showDialog.value = true },
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ),
-                painter = painterResource(id = R.drawable.ic_add_relation),
-                contentDescription = null,
-                tint = Gray60
-            )
+            if(userDetail.value?.isManager == true) {
+                Icon(
+                    modifier = Modifier
+                        .padding(end = BasicPadding)
+                        .clickable(
+                            onClick = { showDialog.value = true },
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ),
+                    painter = painterResource(id = R.drawable.ic_add_relation),
+                    contentDescription = null,
+                    tint = Gray60
+                )
+            } else {
+                Icon(
+                    modifier = Modifier
+                        .padding(end = BasicPadding)
+                        .clickable(
+                            onClick = { showBottomSheet.value = true },
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ),
+                    painter = painterResource(id = R.drawable.ic_add_relation),
+                    contentDescription = null,
+                    tint = Gray60
+                )
+            }
             if (showDialog.value) {
                 CustomTextFieldDialog(
                     onRequestRelation = { viewModel.postRelationReq() },
@@ -81,12 +115,30 @@ fun RelationManageScreen(
                             modifier = Modifier.padding(horizontal = 20.dp),
                             state = viewModel.isValidateInput(),
                             value = viewModel.getCurrentInput(),
-                            onValueChange = viewModel::updateInput
+                            onValueChange = viewModel::updateInput,
+                            trailIcon = R.drawable.ic_cancel,
+                            visualTransformation = PhoneVisualTransformation(),
+                            inputType = InputType.PHONE
                         )
                     },
-                    buttonState = viewModel.isValidateInput() && viewModel.getCurrentInput().isNotEmpty(),
+                    buttonState = viewModel.isValidateInput() && viewModel.getCurrentInput()
+                        .isNotEmpty(),
                     isValidInput = viewModel.isValidateInput()
                 )
+            }
+            if (showBottomSheet.value) {
+                ModalBottomSheet(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(top = BasicPadding),
+                    onDismissRequest = {
+                        showBottomSheet.value = false
+                    },
+                    sheetState = sheetState,
+                    containerColor = White
+                ) {
+
+                }
             }
         }
 
@@ -94,11 +146,26 @@ fun RelationManageScreen(
 
         CustomSwipeCard(
             isManager = userDetail.value?.isManager,
-            relationList = relationList.value,
-            onRemove = {
-                relation -> viewModel.deleteRelation(relation.id)
-                mainViewModel.getRelationship()
+            relationList = relationList,
+            onRemove = { relation ->
+                selectedUser.value = relation.memberName
+                scope.launch {
+                    showToast.value = true
+                    mainViewModel.removeRelation(relation)
+                    viewModel.deleteRelation(relation.id)
+                }
+            },
+            onDisconnect = {cabinetId ->
+                viewModel.deleteCabinet(cabinetId)
             }
         )
+        Spacer(modifier = Modifier.weight(1f))
+        if(showToast.value) {
+            CustomToast(
+                text = "${selectedUser.value}님과의 보호관계를 삭제했어요"
+            ) {
+                showToast.value = false
+            }
+        }
     }
 }

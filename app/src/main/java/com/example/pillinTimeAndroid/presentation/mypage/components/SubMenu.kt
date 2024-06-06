@@ -23,33 +23,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.R
+import com.example.pillinTimeAndroid.domain.entity.User
 import com.example.pillinTimeAndroid.ui.theme.Gray50
 import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 
 @Composable
 fun SubMenu(
-    isManager: Boolean,
+    userDetails: User?,
     onItemClick: (destination: String) -> Unit
 ) {
-    val manage = if (isManager) "피보호자 관리" else "보호관계 관리"
+    val manage = if (userDetails?.isManager == true) "피보호자 관리" else "보호관계 관리"
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         SubMenuItem(R.drawable.ic_manage, manage) {
-            onItemClick("relationManageScreen")
-        }
-        SubMenuItem(R.drawable.ic_manage, "연결된 기기") {
-            onItemClick("cabinetManageScreen")
+            onItemClick("relationManageScreen/${manage}")
         }
         SubMenuItem(R.drawable.ic_calendar, "복약 일정 관리") {
-            onItemClick("doseScheduleManageScreen")
+            onItemClick("editScheduleScreen")
         }
     }
 }
@@ -89,17 +85,5 @@ fun SubMenuItem(
             color = Gray90,
             style = PillinTimeTheme.typography.body2Regular
         )
-    }
-}
-
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-private fun SubMenuPreview() {
-    PillinTimeAndroidTheme {
-//        SubMenu(isManager = true)
     }
 }

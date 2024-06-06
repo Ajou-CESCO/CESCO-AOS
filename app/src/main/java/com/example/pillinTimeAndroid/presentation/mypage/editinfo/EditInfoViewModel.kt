@@ -1,6 +1,7 @@
 package com.example.pillinTimeAndroid.presentation.mypage.editinfo
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
@@ -17,14 +18,16 @@ import javax.inject.Inject
 @HiltViewModel
 class EditInfoViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val localUserDataSource: LocalUserDataSource,
-    ) : ViewModel() {
+    private val localUserDataSource: LocalUserDataSource
+) : ViewModel() {
     private val _userDetails = MutableStateFlow<UserDTO<Any>?>(null)
     val userDetails = _userDetails.asStateFlow()
+    val showToast = mutableStateOf(false)
 
     init {
         getUserInfo()
     }
+
     private fun getUserInfo() {
         viewModelScope.launch {
             val accessToken = localUserDataSource.getAccessToken().firstOrNull().orEmpty()
@@ -46,6 +49,18 @@ class EditInfoViewModel @Inject constructor(
                 Log.d("EditInfoViewModel", "Succeeded to patch: ${it.result}")
             }.onFailure {
                 Log.e("EditInfoViewModel", "Failed to patch: ${it.message}")
+            }
+        }
+    }
+
+    fun deleteCabinet(cabinetId: Int) {
+        viewModelScope.launch {
+            val result = userRepository.deleteCabinet(cabinetId)
+            result.onSuccess {
+                Log.d("deleteCabinet", "Succeeded to delete Cabinet: ${it.result}")
+                showToast.value = true
+            }.onFailure {
+                Log.e("deleteCabinet", "Failed to delete Cabinet: ${it.message}")
             }
         }
     }

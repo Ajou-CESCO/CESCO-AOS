@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -32,8 +34,11 @@ fun MyPageScreen(
     navController: NavController
 ) {
     val userDetails by mainViewModel.userDetails.collectAsState()
+    val relationInfoList by mainViewModel.relationInfoList.collectAsState()
+
     val role = if (userDetails?.isManager == true) "보호자" else "피보호자"
     val name = userDetails?.name
+    val context = LocalContext.current
 
     val navigateToScreen by viewModel.navigateToScreen.collectAsState()
 
@@ -71,7 +76,7 @@ fun MyPageScreen(
             )
             Spacer(modifier = Modifier.height(35.dp))
             SubMenu(
-                isManager = userDetails?.isManager == true,
+                userDetails = userDetails,
                 onItemClick = { destination ->
                     viewModel.navigateTo(destination)
                 }
@@ -83,7 +88,15 @@ fun MyPageScreen(
             onItemClick = { destination ->
                 viewModel.navigateTo(destination)
             },
-            onLogoutClick = { viewModel.signOut(navController) }
+            onLogoutClick = { viewModel.signOut(navController, context) }
         )
+    }
+    LaunchedEffect(relationInfoList, userDetails) {
+        if (relationInfoList.isEmpty() && userDetails?.isManager == false) {
+            navController.navigate("signupClientScreen") {
+                popUpTo(navController.graph.startDestinationId)
+                launchSingleTop = true
+            }
+        }
     }
 }
