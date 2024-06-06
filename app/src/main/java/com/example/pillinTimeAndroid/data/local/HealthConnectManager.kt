@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 const val MIN_SUPPORTED_SDK = Build.VERSION_CODES.O_MR1
 
-class LocalHealthConnectManager @Inject constructor(
+class HealthConnectManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     private val healthConnectClient by lazy { HealthConnectClient.getOrCreate(context) }
@@ -58,7 +58,6 @@ class LocalHealthConnectManager @Inject constructor(
         return healthConnectClient.readRecords(request).records
     }
     suspend fun aggregateSleepSessions(
-        healthConnectClient: HealthConnectClient,
         start: Instant,
         end: Instant
     ): Duration? {
@@ -73,7 +72,7 @@ class LocalHealthConnectManager @Inject constructor(
             response[SleepSessionRecord.SLEEP_DURATION_TOTAL]
         } catch (e: Exception) {
             e.printStackTrace()
-            null
+            Duration.ZERO
         }
     }
     suspend fun readSteps(start: Instant, end: Instant): List<StepsRecord> {
@@ -92,7 +91,6 @@ class LocalHealthConnectManager @Inject constructor(
         return healthConnectClient.readRecords(request).records
     }
     suspend fun aggregateHeartRate(
-        healthConnectClient: HealthConnectClient,
         start: Instant,
         end: Instant
     ): Long? {
@@ -100,14 +98,14 @@ class LocalHealthConnectManager @Inject constructor(
             val response =
                 healthConnectClient.aggregate(
                     AggregateRequest(
-                        setOf(HeartRateRecord.BPM_MAX, HeartRateRecord.BPM_MIN),
+                        setOf(HeartRateRecord.BPM_AVG),
                         timeRangeFilter = TimeRangeFilter.between(start, end)
                     )
                 )
             response[HeartRateRecord.BPM_AVG]
         } catch (e: Exception) {
             e.printStackTrace()
-            null
+            0
         }
     }
     suspend fun readTotalCaloriesBurned(start: Instant, end: Instant): List<TotalCaloriesBurnedRecord> {

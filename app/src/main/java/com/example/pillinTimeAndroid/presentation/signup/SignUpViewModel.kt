@@ -68,7 +68,7 @@ class SignUpViewModel @Inject constructor(
                 Log.e("SignUp", "Succeed to sign up: ${authenticateResponse.status}")
                 localUserDataSource.saveAccessToken(authenticateResponse.result.accessToken)
                 postFcmToken()
-                val destination = if (isManager) "homeScreen" else "signupClientScreen"
+                val destination = if (isManager) "bottomNavigatorScreen" else "signupClientScreen"
                 _isLoading.value = true
                 delay(3000)
                 navController.navigate(destination)
