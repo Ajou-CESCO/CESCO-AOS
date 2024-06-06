@@ -58,14 +58,16 @@ fun HomeScreen(
     var isRefreshing by remember { mutableStateOf(false) }
     var hasPermissions by remember { mutableStateOf(false) }
     val permissionsLauncher =
-        rememberLauncherForActivityResult(viewModel.permissionsLauncher) {
-//            viewModel.fetchLocalHealthData()
-            hasPermissions = true
-        }
+        if (userDetails?.isManager == false)
+            rememberLauncherForActivityResult(viewModel.permissionsLauncher) { hasPermissions = true }
+        else null
+
     // 피보호자일때만 권한 체크
     LaunchedEffect(userDetails?.isManager == false) {
-        permissionsLauncher.launch(viewModel.permissions)
-        Log.d("permission", "permission launched")
+        permissionsLauncher?.let {
+            it.launch(viewModel.permissions)
+            Log.d("permission", "permission launched")
+        }
     }
 
     val homeUser = if (userDetails?.isManager == true) {
