@@ -58,6 +58,7 @@ import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary40
 import com.example.pillinTimeAndroid.ui.theme.Primary60
+import com.example.pillinTimeAndroid.ui.theme.Purple60
 import com.example.pillinTimeAndroid.ui.theme.Success60
 import com.example.pillinTimeAndroid.ui.theme.Warning60
 import com.example.pillinTimeAndroid.util.fadeInEffect
@@ -298,7 +299,7 @@ fun ScheduleAddScreen(
                 }
                 schedulePages[4] -> {
                     val indexColors =
-                        listOf(Error60, Warning60, Success60, Primary40, Color(0xFF7D5DD9))
+                        listOf(Error60, Warning60, Success60, Primary40, Purple60)
                     val colorToIndex = indexColors.withIndex().associate { it.value to it.index }
                     var selectColorIndex by remember { mutableIntStateOf(-1) }
                     Column {
