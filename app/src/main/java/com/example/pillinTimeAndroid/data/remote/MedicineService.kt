@@ -10,6 +10,7 @@ interface MedicineService {
     @GET("/api/medicine")
     suspend fun getMedicineInfo(
         @Header("Authorization") accessToken: String,
+        @Query("memberId") memberId: Int,
         @Query("name") medicineName: String
     ): BaseResponse<List<MedicineDTO>>
 }

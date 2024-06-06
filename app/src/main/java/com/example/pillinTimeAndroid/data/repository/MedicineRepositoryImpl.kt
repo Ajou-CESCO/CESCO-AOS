@@ -18,11 +18,12 @@ class MedicineRepositoryImpl @Inject constructor(
     private val tokenRepository: TokenRepository
 ) : MedicineRepository {
     override suspend fun getMedicineInfo(
+        memberId: Int,
         medicineName: String
     ): Result<BaseResponse<List<MedicineDTO>>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = medicineService.getMedicineInfo("Bearer $accessToken", medicineName)
+            val response = medicineService.getMedicineInfo("Bearer $accessToken", memberId, medicineName)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
@@ -42,13 +43,25 @@ class MedicineRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getDoseSchedule(
-        memberId: Int,
-        medicineId: String,
-        cabinetIndex: Int
+        memberId: Int
     ): Result<BaseResponse<List<ScheduleDTO>>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = scheduleService.getDoseSchedule("Bearer $accessToken", memberId, medicineId, cabinetIndex)
+            val response = scheduleService.getDoseSchedule("Bearer $accessToken", memberId)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteDoseSchedule(
+        memberId: Int,
+        medicineId: String,
+        cabinetIndex: Int
+    ): Result<BaseResponse<Any>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
+        return try {
+            val response = scheduleService.deleteDoseSchedule("Bearer $accessToken", memberId, medicineId, cabinetIndex)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

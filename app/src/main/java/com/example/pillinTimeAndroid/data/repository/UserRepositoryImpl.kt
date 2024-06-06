@@ -1,22 +1,25 @@
 package com.example.pillinTimeAndroid.data.repository
 
 import com.example.pillinTimeAndroid.data.remote.CabinetService
+import com.example.pillinTimeAndroid.data.remote.HealthService
 import com.example.pillinTimeAndroid.data.remote.UserService
 import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
 import com.example.pillinTimeAndroid.data.remote.dto.UserDTO
 import com.example.pillinTimeAndroid.data.remote.dto.request.CabinetRequest
+import com.example.pillinTimeAndroid.data.remote.dto.request.HealthDataRequest
 import com.example.pillinTimeAndroid.data.remote.dto.request.SignInRequest
+import com.example.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 import com.example.pillinTimeAndroid.domain.repository.TokenRepository
 import com.example.pillinTimeAndroid.domain.repository.UserRepository
 import kotlinx.coroutines.flow.firstOrNull
-import java.util.Objects
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val tokenRepository: TokenRepository,
     private val userService: UserService,
-    private val cabinetService: CabinetService
+    private val cabinetService: CabinetService,
+    private val healthService: HealthService
 ) : UserRepository {
 
     override suspend fun initClient(): Result<BaseResponse<UserDTO<List<RelationDTO>>>> {
@@ -61,10 +64,40 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun postRegisterCabinet(cabinetRequest: CabinetRequest): Result<BaseResponse<Objects>> {
+    override suspend fun postRegisterCabinet(cabinetRequest: CabinetRequest): Result<BaseResponse<Any>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
             val response = cabinetService.postRegisterCabinet("Bearer $accessToken", cabinetRequest)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteCabinet(cabinetId: Int): Result<BaseResponse<Any>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
+        return try {
+            val response = cabinetService.deleteCabinet("Bearer $accessToken", cabinetId)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getHealthData(memberId: Int): Result<BaseResponse<HealthStatDTO>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
+        return try {
+            val response = healthService.getHealthData("Bearer $accessToken", memberId)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun postHealthData(healthDataRequest: HealthDataRequest): Result<BaseResponse<Any>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
+        return try {
+            val response = healthService.postHealthData("Bearer $accessToken", healthDataRequest)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

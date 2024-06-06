@@ -5,6 +5,7 @@ import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -14,9 +15,7 @@ interface ScheduleService {
     @GET("/api/dose/plan")
     suspend fun getDoseSchedule(
         @Header("Authorization") accessToken: String,
-        @Query("memberId") memberId: Int,
-        @Query("medicineId") medicineId: String,
-        @Query("cabinetIndex") cabinetIndex: Int
+        @Query("memberId") memberId: Int
     ) : BaseResponse<List<ScheduleDTO>>
 
     @POST("/api/dose/plan")
@@ -24,7 +23,13 @@ interface ScheduleService {
         @Header("Authorization") accessToken: String,
         @Body scheduleRequest: ScheduleRequest
     ): BaseResponse<Any>
-
+    @DELETE("/api/dose/plan")
+    suspend fun deleteDoseSchedule(
+        @Header("Authorization") accessToken: String,
+        @Query("memberId") memberId: Int,
+        @Query("medicineId") medicineId: String,
+        @Query("cabinetIndex") cabinetIndex: Int
+    ): BaseResponse<Any>
     @GET("/api/dose/log")
     suspend fun getScheduleLog(
         @Header("Authorization") accessToken: String,

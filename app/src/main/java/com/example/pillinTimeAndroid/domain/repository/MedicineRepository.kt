@@ -7,9 +7,10 @@ import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 
 interface MedicineRepository {
-    suspend fun getMedicineInfo(medicineName: String): Result<BaseResponse<List<MedicineDTO>>>
+    suspend fun getMedicineInfo(memberId: Int, medicineName: String): Result<BaseResponse<List<MedicineDTO>>>
     suspend fun postDoseSchedule(scheduleRequest: ScheduleRequest): Result<BaseResponse<Any>>
-    suspend fun getDoseSchedule(memberId: Int, medicineId: String, cabinetIndex: Int): Result<BaseResponse<List<ScheduleDTO>>>
+    suspend fun getDoseSchedule(memberId: Int): Result<BaseResponse<List<ScheduleDTO>>>
+    suspend fun deleteDoseSchedule(memberId: Int, medicineId: String, cabinetIndex: Int): Result<BaseResponse<Any>>
     suspend fun getDoseLog(memberId: Int): Result<BaseResponse<List<ScheduleLogDTO>>>
 
 }
