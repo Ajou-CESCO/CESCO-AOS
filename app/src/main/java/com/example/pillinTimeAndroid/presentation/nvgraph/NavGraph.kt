@@ -1,6 +1,9 @@
 package com.example.pillinTimeAndroid.presentation.nvgraph
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -79,6 +82,12 @@ fun NavGraph(
             modifier = Modifier.padding(bottom = it.calculateBottomPadding()),
             navController = navController,
             startDestination = startDestination,
+            enterTransition = {
+                fadeIn(animationSpec = tween(300))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(300))
+            }
         ) {
             composable(route = Route.SignInScreen.route) {
                 SignInScreen(navController = navController)
@@ -107,8 +116,29 @@ fun NavGraph(
                 composable(route = Route.HomeScreen.route) {
                     HomeScreen(navController = navController)
                 }
-                composable(route = Route.HealthScreen.route) {
-                    HealthScreen(navController = navController)
+                composable(
+                    route = "${Route.HealthScreen.route}/{memberName}/{memberId}/{isManager}",
+                    arguments = listOf(
+                        navArgument("memberName") {
+                            type = NavType.StringType
+                        },
+                        navArgument("memberId") {
+                            type = NavType.IntType
+                        },
+                        navArgument("isManager") {
+                            type = NavType.BoolType
+                        }
+                    )
+                ) {entry ->
+                    val memberName = entry.arguments?.getString("memberName")
+                    val memberId = entry.arguments?.getInt("memberId")
+                    val isManager = entry.arguments?.getBoolean("isManager")
+                    HealthScreen(
+                        navController = navController,
+                        memberName = memberName,
+                        memberId = memberId,
+                        isManager = isManager
+                    )
                 }
                 composable(
                     route = "${Route.CabinetRegisterScreen.route}/{memberId}",
@@ -170,9 +200,7 @@ fun NavGraph(
                         val title = entry.arguments?.getString("title")
                         RelationManageScreen(navController = navController, title = title)
                     }
-                    composable(
-                        route = Route.EditScheduleScreen.route
-                    ) {
+                    composable(route = Route.EditScheduleScreen.route) {
                         EditScheduleScreen(navController = navController)
                     }
                 }
