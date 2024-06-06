@@ -16,6 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +41,7 @@ fun CustomAlertDialog(
     dismissText: String = "",
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
+    colorString: AnnotatedString? = AnnotatedString("")
 ) {
     BasicAlertDialog(
         modifier = modifier.padding(horizontal = BasicPadding),
@@ -59,7 +62,10 @@ fun CustomAlertDialog(
                 modifier = Modifier
                     .padding(horizontal = AlertDialogPadding)
                     .padding(top = 29.dp),
-                text = title,
+                text = buildAnnotatedString {
+                    append(title)
+                    append(colorString)
+                },
                 style = PillinTimeTheme.typography.headline4Bold,
                 color = Gray90,
                 lineHeight = 35.sp

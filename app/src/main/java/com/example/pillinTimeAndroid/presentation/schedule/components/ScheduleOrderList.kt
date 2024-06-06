@@ -21,5 +21,9 @@ val schedulePages = listOf(
     ScheduleOrderList(
         title = "언제까지 복용하나요?",
         subtitle = "의약품을 복용하는 시작일과 종료일을 선택해주세요"
+    ),
+    ScheduleOrderList(
+        title = "약통 칸을 선택해주세요",
+        subtitle = "약을 담을 칸의 색상을 선택해주세요"
     )
 )

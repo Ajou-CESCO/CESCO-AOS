@@ -11,14 +11,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import coil.compose.AsyncImage
@@ -35,6 +41,7 @@ import com.example.pillinTimeAndroid.ui.theme.Gray40
 import com.example.pillinTimeAndroid.ui.theme.Gray70
 import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.example.pillinTimeAndroid.ui.theme.Primary40
 import com.example.pillinTimeAndroid.ui.theme.White
 import com.example.pillinTimeAndroid.ui.theme.shapes
 
@@ -84,6 +91,72 @@ fun MedicineDetailDialog(
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth
                 )
+                // 부작용
+                if (medicineInfo.medicineAdverse?.dosageCaution != null ||
+                    medicineInfo.medicineAdverse?.ageSpecificContraindication != null ||
+                    medicineInfo.medicineAdverse?.elderlyCaution != null ||
+                    medicineInfo.medicineAdverse?.administrationPeriodCaution != null ||
+                    medicineInfo.medicineAdverse?.pregnancyContraindication != null ||
+                    medicineInfo.medicineAdverse?.duplicateEfficacyGroup != null) {
+                    Column (
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .clip(shapes.medium)
+                            .background(Primary40)
+                            .padding(20.dp)
+                            .fillMaxWidth()
+                    ){
+                        Row(
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                contentDescription = null,
+                                tint = White
+                            )
+                            Text(
+                                modifier = Modifier.padding(start = 4.dp),
+                                text = "부작용 주의",
+                                color = White,
+                                style = PillinTimeTheme.typography.body2Bold
+                            )
+                        }
+                        val textStyle = PillinTimeTheme.typography.body2Medium.copy(color = White)
+                        val warningMessage = buildAnnotatedString {
+                            append("해당 의약품은")
+                            listOf(
+                                medicineInfo.medicineAdverse.dosageCaution,
+                                medicineInfo.medicineAdverse.ageSpecificContraindication,
+                                medicineInfo.medicineAdverse.elderlyCaution,
+                                medicineInfo.medicineAdverse.administrationPeriodCaution,
+                                medicineInfo.medicineAdverse.pregnancyContraindication
+                            ).forEach { warning ->
+                                warning?.let {
+                                    append("\n")
+                                    withStyle(style = textStyle.toSpanStyle().copy(color = White)) {
+                                        append("-$it")
+                                    }
+                                }
+                            }
+                            if(medicineInfo.medicineAdverse.duplicateEfficacyGroup != null) {
+                                append("\n의 부작용과,\n")
+//                                withStyle(style = SpanStyle(color = White, fontSize =  PillinTimeTheme.typography.body2Bold.fontSize, fontWeight = PillinTimeTheme.typography.body2Bold.fontWeight)) {
+//                                    append(it)
+//                                }
+                                append("\n현재 복용중인 약물 \n\"${medicineInfo.medicineAdverse.duplicateEfficacyGroup}\"\n과 중복되는 효과가 있으니,")
+                            } else {
+                                append("\n의 부작용 위험이 있습니다.\n")
+                            }
+
+                            append("\n섭취에 주의 바랍니다.")
+                        }.toString()
+                        Text(
+                            text = warningMessage,
+                            style = textStyle
+                        )
+                    }
+                }
                 Text(
                     modifier = Modifier,
                     text = medicineInfo.medicineName,

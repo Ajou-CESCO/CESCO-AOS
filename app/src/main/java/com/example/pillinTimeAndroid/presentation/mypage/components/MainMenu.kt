@@ -6,16 +6,17 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.presentation.Dimens
-import com.example.pillinTimeAndroid.ui.theme.Gray5
+import com.example.pillinTimeAndroid.presentation.common.CustomAlertDialog
+import com.example.pillinTimeAndroid.ui.theme.Gray10
 import com.example.pillinTimeAndroid.ui.theme.Gray90
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.White
@@ -24,7 +25,8 @@ import com.example.pillinTimeAndroid.ui.theme.shapes
 @Composable
 fun MainMenu(
     isManager: Boolean,
-    onItemClick: (destination: String) -> Unit
+    onItemClick: (destination: String) -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -37,20 +39,33 @@ fun MainMenu(
                 .background(White)
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
-            MainMenuItem("내 정보 관리") {
+            val showDialog = remember { mutableStateOf(false) }
+
+            MainMenuItem(title = "내 정보 관리") {
                 onItemClick("editInfoScreen")
             }
-            if(isManager) MainMenuItem("구독 결제 내역") {
+            if (isManager) MainMenuItem(title = "구독 결제 내역") {
                 onItemClick("subscribeScreen")
             }
-            MainMenuItem("고객 센터") {
+            MainMenuItem(title = "고객 센터") {
                 onItemClick("serviceScreen")
             }
-            MainMenuItem("로그아웃") {
-
+            MainMenuItem(title = "로그아웃") {
+                showDialog.value = true
             }
-            MainMenuItem("회원 탈퇴") {
+
+            MainMenuItem(title = "회원 탈퇴") {
                 onItemClick("withdrawalScreen")
+            }
+            if (showDialog.value) {
+                CustomAlertDialog(
+                    title = "로그아웃",
+                    description = "로그아웃하시겠습니까?",
+                    confirmText = "로그아웃",
+                    dismissText = "닫기",
+                    onConfirm = onLogoutClick,
+                    onDismiss = { showDialog.value = false }
+                )
             }
         }
     }
@@ -59,20 +74,11 @@ fun MainMenu(
 @Composable
 fun MainMenuItem(
     title: String,
-    onClick: () -> Unit
+    onClick: () -> Unit = {},
 ) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .drawBehind {
-                val y = size.height
-                drawLine(
-                    color = Gray5,
-                    start = Offset(x = 0f, y = y),
-                    end = Offset(x = size.width, y = y),
-                    strokeWidth = 1.dp.toPx()
-                )
-            }
             .padding(horizontal = 22.dp, vertical = 17.dp)
             .clickable(
                 onClick = onClick,
@@ -83,4 +89,5 @@ fun MainMenuItem(
         color = Gray90,
         style = PillinTimeTheme.typography.headline5Medium
     )
+    HorizontalDivider(color = Gray10)
 }

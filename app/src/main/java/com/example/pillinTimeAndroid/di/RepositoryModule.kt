@@ -1,10 +1,12 @@
 package com.example.pillinTimeAndroid.di
 
+import com.example.pillinTimeAndroid.data.repository.FcmRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.MedicineRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.RelationRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.SignInRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.SignUpRepositoryImpl
 import com.example.pillinTimeAndroid.data.repository.TokenRepositoryImpl
+import com.example.pillinTimeAndroid.domain.repository.FcmRepository
 import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
 import com.example.pillinTimeAndroid.domain.repository.RelationRepository
 import com.example.pillinTimeAndroid.domain.repository.SignInRepository
@@ -40,4 +42,7 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindTokenRepository(tokenRepositoryImpl: TokenRepositoryImpl): TokenRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindFcmRepository(fcmRepositoryImpl: FcmRepositoryImpl): FcmRepository
 }

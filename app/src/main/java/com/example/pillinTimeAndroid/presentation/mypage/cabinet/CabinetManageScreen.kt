@@ -11,23 +11,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.pillinTimeAndroid.presentation.common.ButtonColor
 import com.example.pillinTimeAndroid.presentation.common.ButtonSize
 import com.example.pillinTimeAndroid.presentation.common.CustomButton
 import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
 import com.example.pillinTimeAndroid.ui.theme.Gray60
 import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 
 @Composable
 fun CabinetManageScreen(
     navController: NavController,
-    onRegisterClick: () -> Unit
+    memberId: Int?,
+    onRegisterClick: () -> Unit,
 ) {
     val hasCase = false
     Box(
@@ -75,16 +73,5 @@ fun CabinetManageScreen(
                 )
             }
         }
-    }
-}
-
-@Preview(
-    showSystemUi = true,
-    showBackground = true
-)
-@Composable
-private fun CabinetManageScreenPreview() {
-    PillinTimeAndroidTheme {
-        CabinetManageScreen(rememberNavController(), {})
     }
 }

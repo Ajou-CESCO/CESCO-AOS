@@ -1,10 +1,11 @@
 package com.example.pillinTimeAndroid.data.remote
 
 import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.RelationRequest
+import com.example.pillinTimeAndroid.data.remote.dto.request.RelationReqRequest
 import com.example.pillinTimeAndroid.data.remote.dto.response.RelationReqResponse
 import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -14,8 +15,8 @@ interface RelationService {
     @POST("/api/request")
     suspend fun postRelationRequest(
         @Header("Authorization") accessToken: String,
-        @Body relationRequest: RelationRequest
-    ): BaseResponse<RelationDTO>
+        @Body relationReqRequest: RelationReqRequest
+    ): BaseResponse<Any>
 
     @GET("/api/request")
     suspend fun getRelationRequest(
@@ -32,5 +33,11 @@ interface RelationService {
     suspend fun postRelation(
         @Header("Authorization") accessToken: String,
         @Query("requestId") requestId: Int
+    ): BaseResponse<Any>
+
+    @DELETE("/api/relation")
+    suspend fun deleteRelation(
+        @Header("Authorization") accessToken: String,
+        @Query("relationId") relationId: Int
     ): BaseResponse<Any>
 }

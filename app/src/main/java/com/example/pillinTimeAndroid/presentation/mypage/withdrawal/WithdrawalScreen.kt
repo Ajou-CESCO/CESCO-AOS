@@ -80,18 +80,11 @@ fun WithdrawalScreen(
     }
     if (showDialog.value) {
         CustomAlertDialog(
-            title = "정말?",
-            description = "굿",
-            confirmText = "삭제할래요",
+            title = "회원 탈퇴",
+            description = "회원 탈퇴하시겠습니까?",
+            confirmText = "탈퇴할래요",
             dismissText = "취소할래요",
-            onConfirm = {
-                viewModel.deleteUserInfo()
-                navController.navigate("signInScreen") {
-                    popUpTo(navController.graph.id) {
-                        inclusive = true
-                    }
-                }
-            },
+            onConfirm = { viewModel.deleteUserInfo(navController) },
             onDismiss = { showDialog.value = false }
         )
     }

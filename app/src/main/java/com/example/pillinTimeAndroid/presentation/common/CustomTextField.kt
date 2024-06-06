@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.ui.theme.Error90
@@ -32,7 +31,6 @@ import com.example.pillinTimeAndroid.ui.theme.Gray10
 import com.example.pillinTimeAndroid.ui.theme.Gray30
 import com.example.pillinTimeAndroid.ui.theme.Gray5
 import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeAndroidTheme
 import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.example.pillinTimeAndroid.ui.theme.Primary60
 import com.example.pillinTimeAndroid.ui.theme.White
@@ -44,10 +42,12 @@ fun CustomTextField(
     state: Boolean,
     value: String,
     onValueChange: (String) -> Unit,
+    onClickIcon: () -> Unit = {},
     hint: String = "",
     trailIcon: Int? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    inputType: InputType = InputType.PLAIN
+    inputType: InputType = InputType.PLAIN,
+    enabled: Boolean = true
 ) {
     val (maxLength, keyboardType) = when (inputType) {
         InputType.NAME -> Pair(8, KeyboardType.Text)
@@ -73,7 +73,7 @@ fun CustomTextField(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     BasicTextField(
-        modifier = Modifier
+        modifier = modifier
             .clip(shapes.small)
             .border(1.dp, borderColor, shapes.small)
             .fillMaxWidth()
@@ -106,8 +106,9 @@ fun CustomTextField(
                             .size(trailIconSize),
                         onClick = {
                             if (isCancelButton) onValueChange("")
+                            else onClickIcon()
                         },
-                        enabled = isCancelButton
+                        enabled = enabled
                     ) {
                         Icon(
                             painter = painterResource(id = trailIcon),
@@ -140,21 +141,4 @@ enum class InputType(val type: String) {
     OTP("otp"),
     PLAIN("plain"),
     SERIAL("serial")
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-private fun CustomTextFieldPreview() {
-    PillinTimeAndroidTheme {
-        CustomTextField(
-            state = true,
-            value = "",
-            onValueChange = {},
-            trailIcon = R.drawable.ic_cancel,
-            hint = "dddddd"
-        )
-    }
 }

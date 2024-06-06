@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
 import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
 import com.example.pillinTimeAndroid.domain.entity.User
@@ -27,12 +28,13 @@ class MainViewModel @Inject constructor(
     private val readUserSession: ReadUserSession,
     private val userRepository: UserRepository,
     private val medicineRepository: MedicineRepository,
-    private val relationRepository: RelationRepository
+    private val relationRepository: RelationRepository,
+    private val localUserDataSource: LocalUserDataSource
 ) : ViewModel() {
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
 
-    private val _startDestination = mutableStateOf(Route.AppStartNavigation.route)
+    private val _startDestination = mutableStateOf(Route.SignInScreen.route)
     val startDestination: State<String> = _startDestination
 
     private val _userDetails = MutableStateFlow<User?>(null)
@@ -44,13 +46,18 @@ class MainViewModel @Inject constructor(
     private val _userDoseLog = MutableStateFlow<List<ScheduleLogDTO>>(emptyList())
     val userDoseLog: StateFlow<List<ScheduleLogDTO>> = _userDoseLog
 
+    private val _appEntry = MutableStateFlow(false)
+    val appEntry: StateFlow<Boolean> = _appEntry
+
     init {
+//        observeAppEntry()
+        getRelationship()
         viewModelScope.launch {
             val hasToken = readUserSession().firstOrNull().orEmpty().isNotEmpty()
             if (hasToken) {
                 val result = userRepository.initClient()
                 result.onSuccess { response ->
-                    Log.d("MainViewModelREAAAAAL MAAAAIN", "succeed to init: ${response.message}")
+                    Log.d("MainViewModel", "succeed to init: ${response.message}")
                     _userDetails.value = User(
                         memberId = response.result.memberId,
                         name = response.result.name,
@@ -61,19 +68,39 @@ class MainViewModel @Inject constructor(
                         isSubscriber = response.result.isSubscriber
                     )
                     _relationInfoList.value = response.result.relationList
-                    if (!response.result.isManager && response.result.relationList.isEmpty()) {
-                        _startDestination.value = Route.AppStartNavigationV2.route
-                    } else if (response.result.isManager || response.result.relationList.isNotEmpty()) {
-                        _startDestination.value = Route.BottomNavigation.route
+                    when (response.result.isManager) {
+                        true -> { // when Manager
+                            _startDestination.value = Route.BottomNavigatorScreen.route
+//                            if(appEntry.value) { // Manager
+//                            } else {
+//                                _startDestination.value = Route.OnBoardingScreen.route
+//                            }
+                        }
+
+                        false -> { // when Client
+                            if (response.result.relationList.isEmpty()) {
+                                _startDestination.value = Route.SignUpClientScreen.route
+                            } else {
+                                _startDestination.value = Route.BottomNavigatorScreen.route
+                            }
+                        }
                     }
                 }.onFailure {
                     Log.d("MainViewModel", "failed to init: ${it.cause}")
                 }
             } else {
-                _startDestination.value = Route.AppStartNavigation.route
+                _startDestination.value = Route.SignInScreen.route
             }
             delay(300)
             _splashCondition.value = false
+        }
+    }
+
+    private fun observeAppEntry() {
+        viewModelScope.launch {
+            localUserDataSource.appEntry.collect { entry ->
+                _appEntry.value = entry
+            }
         }
     }
 
@@ -114,8 +141,15 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val result = relationRepository.getRelations()
             result.onSuccess { response ->
+                Log.e("MainVM", "success getRelationShip: ${response.message}")
                 _relationInfoList.value = response.result
+            }.onFailure {
+                Log.e("MainVM", "failed getRelationShip: ${it.message}")
             }
         }
+    }
+
+    fun removeRelation(relation: RelationDTO) {
+        _relationInfoList.value = _relationInfoList.value.toMutableList().apply { remove(relation) }
     }
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
     private val localUserDataSource: LocalUserDataSource
-): TokenRepository {
+) : TokenRepository {
     private val _accessToken = MutableStateFlow<String?>(null)
     val accessToken: StateFlow<String?> = _accessToken
 

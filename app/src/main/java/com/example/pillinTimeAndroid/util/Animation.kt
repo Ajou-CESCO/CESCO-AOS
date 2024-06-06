@@ -44,7 +44,7 @@ fun Modifier.fadeInSlideUpAnimation(
 }
 
 @Composable
-fun Modifier.fadeInEffect(
+fun Modifier.fadeInSlideEffect(
     delayMillis: Int = 0,
     durationMillis: Int = 400
 ): Modifier = composed {
@@ -66,4 +66,24 @@ fun Modifier.fadeInEffect(
 
     this.alpha(alpha)
         .offset { IntOffset(0, offset.dp.roundToPx()) }
+}
+
+@Composable
+fun Modifier.fadeInEffect(
+    delayMillis: Int = 0,
+    durationMillis: Int = 400
+): Modifier = composed {
+    var isVisible by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(delayMillis.toLong())
+        isVisible = true
+    }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis)
+    )
+
+    this.alpha(alpha)
 }
