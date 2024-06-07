@@ -1,5 +1,6 @@
 package com.example.pillinTimeAndroid.presentation.home.health
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.navigation.NavController
 import com.example.pillinTimeAndroid.R
 import com.example.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
 import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.example.pillinTimeAndroid.presentation.common.ext.buildStyledText
 import com.example.pillinTimeAndroid.ui.theme.Gray40
 import com.example.pillinTimeAndroid.ui.theme.Gray5
 import com.example.pillinTimeAndroid.ui.theme.Gray50
@@ -40,6 +42,7 @@ import com.example.pillinTimeAndroid.ui.theme.shapes
 import com.example.pillinTimeAndroid.util.fadeInEffect
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 
 @Composable
 fun HealthScreen(
@@ -68,16 +71,21 @@ fun HealthScreen(
         )
         Spacer(modifier = Modifier.height(29.dp))
         Column(
-            modifier = Modifier.padding(horizontal = 33.dp)
+            modifier = Modifier
+                .padding(horizontal = 33.dp)
+                .padding(bottom = 100.dp)
         ) {
             Text(
+                modifier = Modifier.fadeInEffect(400),
                 text = coloredText,
                 color = Gray90,
                 style = PillinTimeTheme.typography.logo3Medium
             )
-            val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+            val today = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
             Text(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier
+                    .padding(top = 12.dp)
+                    .fadeInEffect(650),
                 text = "$today 일자",
                 color = Gray70,
                 style = PillinTimeTheme.typography.body1Regular
@@ -88,11 +96,12 @@ fun HealthScreen(
                 Row(
                     modifier = Modifier.weight(1f)
                 ) {
-                    // first box
+                    // First box
                     Box(
                         modifier = Modifier
                             .weight(1f)
                             .clip(shape = shapes.small)
+                            .fadeInEffect(delayMillis = 900)
                             .background(White)
                     ) {
                         Column {
@@ -103,60 +112,46 @@ fun HealthScreen(
                                 style = PillinTimeTheme.typography.body1Medium
                             )
                             Text(
-                                modifier = Modifier.padding(
-                                    top = 10.dp,
-                                    start = 16.dp,
-                                    end = 32.dp
-                                ),
+                                modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 32.dp),
                                 text = healthData.stepsMessage,
                                 color = Gray90,
                                 style = PillinTimeTheme.typography.body1Bold
                             )
                             Spacer(modifier = Modifier.weight(1f))
-                            Text(
-                                modifier = Modifier.padding(
-                                    top = 10.dp,
-                                    start = 16.dp,
-                                    end = 32.dp
-                                ),
-                                text = "오늘 걸음수 ${healthData.steps}보",
-                                color = Primary60,
-                                style = PillinTimeTheme.typography.body1Bold
+                            HealthStyledText(
+                                modifier = Modifier,
+                                fullText = "오늘 걸음수 ${healthData.steps}보",
+                                targetText = "${healthData.steps}보",
+                                textColor = Primary60
                             )
-                            Text(
-                                modifier = Modifier.padding(
-                                    top = 2.dp,
-                                    start = 16.dp,
-                                    bottom = 16.dp
-                                ),
-                                text = "${healthData.ageGroup}대 평균 ${healthData.averStep}보",
-                                color = Gray40,
-                                style = PillinTimeTheme.typography.body1Bold
+                            HealthStyledText(
+                                modifier = Modifier.padding(top = 2.dp, bottom = 16.dp),
+                                fullText = "${healthData.ageGroup}대 평균 ${healthData.averStep}보",
+                                targetText = "${healthData.averStep}보",
+                                textColor = Gray40
                             )
                         }
                         Image(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fadeInEffect(),
+                            modifier = Modifier.fillMaxWidth(),
                             painter = painterResource(id = R.drawable.img_health_stats_outer),
                             contentDescription = null,
                             contentScale = ContentScale.Crop
+
                         )
                         Image(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fadeInEffect(),
+                            modifier = Modifier.fillMaxWidth(),
                             painter = painterResource(id = R.drawable.img_health_stats_inner),
                             contentDescription = null,
                             contentScale = ContentScale.Crop
                         )
                     }
                     Spacer(modifier = Modifier.width(12.dp))
-                    // second box
+                    // Second box
                     Box(
                         modifier = Modifier
                             .weight(1f)
                             .clip(shape = shapes.small)
+                            .fadeInEffect(delayMillis = 900)
                             .background(White)
                     ) {
                         Column(
@@ -169,8 +164,8 @@ fun HealthScreen(
                                 style = PillinTimeTheme.typography.body1Medium
                             )
                             Text(
-                                modifier = Modifier.padding(top = 12.dp, start = 16.dp),
-                                text = "${healthData.sleepTimeMessage}",
+                                modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp),
+                                text = healthData.sleepTimeMessage,
                                 color = Gray90,
                                 style = PillinTimeTheme.typography.body1Bold
                             )
@@ -180,37 +175,29 @@ fun HealthScreen(
                                     .padding(top = 36.dp),
                             ) {
                                 Image(
-                                    modifier = Modifier
-                                        .padding(end = 12.dp)
-                                        .fadeInEffect(),
+                                    modifier = Modifier.padding(end = 12.dp),
                                     painter = painterResource(id = R.drawable.img_health_arrow),
                                     contentDescription = null,
                                     contentScale = ContentScale.Fit
                                 )
                                 Image(
-                                    modifier = Modifier
-                                        .fadeInEffect(),
                                     painter = painterResource(id = R.drawable.img_health_moon),
                                     contentDescription = null,
                                     contentScale = ContentScale.Fit
                                 )
                             }
                             Spacer(modifier = Modifier.weight(1f))
-                            Text(
-                                modifier = Modifier.padding(top = 12.dp, start = 16.dp),
-                                text = "오늘 수면 시간 ${healthData.sleepTime}시간",
-                                color = Primary60,
-                                style = PillinTimeTheme.typography.body1Bold
+                            HealthStyledText(
+                                modifier = Modifier.padding(top = 12.dp),
+                                fullText = "오늘 수면 시간 ${healthData.sleepTime}시간",
+                                targetText = "${healthData.sleepTime}시간",
+                                textColor = Primary60
                             )
-                            Text(
-                                modifier = Modifier.padding(
-                                    top = 2.dp,
-                                    start = 16.dp,
-                                    bottom = 16.dp
-                                ),
-                                text = "${healthData.ageGroup}대 평균 ${healthData.recommendSleepTime}시간",
-                                color = Gray40,
-                                style = PillinTimeTheme.typography.body1Bold
+                            HealthStyledText(
+                                modifier = Modifier.padding(top = 2.dp, bottom = 16.dp),
+                                fullText = "${healthData.ageGroup}대 평균 ${healthData.recommendSleepTime}시간",
+                                targetText = "${healthData.recommendSleepTime}시간",
+                                textColor = Gray40
                             )
                         }
                     }
@@ -224,8 +211,9 @@ fun HealthScreen(
                         modifier = Modifier
                             .weight(1f)
                             .clip(shape = shapes.small)
+                            .fadeInEffect(delayMillis = 1200)
                             .background(White)
-                    ) {
+                        ) {
                         Column(
                             modifier = Modifier.fillMaxSize()
                         ) {
@@ -262,17 +250,16 @@ fun HealthScreen(
                             Image(
                                 modifier = Modifier
                                     .padding(top = 15.dp)
-                                    .fillMaxWidth()
-                                    .fadeInEffect(),
+                                    .fillMaxWidth(),
                                 painter = painterResource(id = R.drawable.img_health_heartrate),
                                 contentDescription = null
                             )
                             Spacer(modifier = Modifier.weight(1f))
-                            Text(
-                                modifier = Modifier.padding(start = 16.dp, bottom = 16.dp),
-                                text = "${healthData.ageGroup}대 평균 ${healthData.heartRateMessage}",
-                                color = Gray40,
-                                style = PillinTimeTheme.typography.body2Bold
+                            HealthStyledText(
+                                modifier = Modifier.padding(bottom = 16.dp),
+                                fullText = "${healthData.ageGroup}대 평균\n${healthData.heartRateMessage}",
+                                targetText = healthData.heartRateMessage,
+                                textColor = Gray40
                             )
                         }
                     }
@@ -282,10 +269,12 @@ fun HealthScreen(
                         modifier = Modifier
                             .weight(1f)
                             .clip(shape = shapes.small)
+                            .fadeInEffect(delayMillis = 1200)
                             .background(White)
                     ) {
                         Column(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize(),
                         ) {
                             Text(
                                 modifier = Modifier.padding(top = 12.dp, start = 16.dp),
@@ -293,23 +282,27 @@ fun HealthScreen(
                                 color = Gray50,
                                 style = PillinTimeTheme.typography.body1Medium
                             )
-                            CircularIntermediateProgressBar(
-                                modifier = Modifier
-                                    .padding(top = 24.dp, start = 12.dp)
-                                    .size(130.dp),
-                                progress = .4f,
-                                text = "${healthData.calorie}"
+                            val recommendedCal = healthData.calorieMessage.substring(0,4).toFloat()
+                            val progress = (healthData.calorie.toFloat() / recommendedCal) * 100
+                            Log.e("progress", "$recommendedCal, ${healthData.calorie} $progress")
+                            CircularProgressbar(
+                                modifier = Modifier.padding(top = 12.dp),
+                                size = 120.dp,
+                                calorie = healthData.calorie.toFloat(),
+                                recommended = recommendedCal
                             )
                             Spacer(modifier = Modifier.weight(1f))
-                            Text(
-                                modifier = Modifier.padding(
-                                    top = 12.dp,
-                                    start = 16.dp,
-                                    bottom = 16.dp
-                                ),
-                                text = "권장량 ${healthData.calorieMessage}",
-                                color = Gray50,
-                                style = PillinTimeTheme.typography.body1Bold
+                            HealthStyledText(
+                                modifier = Modifier,
+                                fullText = "활동량 ${healthData.calorie}kcal",
+                                targetText = "${healthData.calorie}kcal",
+                                textColor = Primary60
+                            )
+                            HealthStyledText(
+                                modifier = Modifier.padding(top = 2.dp, bottom = 16.dp),
+                                fullText = "권장량 ${healthData.calorieMessage}",
+                                targetText = healthData.calorieMessage,
+                                textColor = Gray40
                             )
                         }
                     }
@@ -317,4 +310,26 @@ fun HealthScreen(
             }
         }
     }
+}
+
+@Composable
+fun HealthStyledText(
+    modifier: Modifier,
+    fullText: String,
+    targetText: String,
+    textColor: Color
+) {
+    val targetStyle = PillinTimeTheme.typography.body1Bold.copy(color = textColor).toSpanStyle()
+    val defaultStyle = PillinTimeTheme.typography.body1Regular
+    Text(
+        modifier = modifier.padding(start = 16.dp),
+        text = buildStyledText(
+            fullText = fullText,
+            targetText = targetText,
+            targetStyle = targetStyle,
+            defaultStyle = defaultStyle
+        ),
+        style = defaultStyle,
+        color = textColor
+    )
 }

@@ -1,12 +1,15 @@
 package com.example.pillinTimeAndroid.presentation.home.health
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -31,6 +34,11 @@ fun CircularIntermediateProgressBar(
     color: Color = Primary60,
     text: String = "0"
 ) {
+    val progressAnimation by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(durationMillis = 1500, easing = LinearEasing),
+    )
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -55,7 +63,7 @@ fun CircularIntermediateProgressBar(
             drawArc(
                 color = color,
                 startAngle = -90f,
-                sweepAngle = -360 * progress,
+                sweepAngle = -360 * progressAnimation,
                 useCenter = false,
                 topLeft = rect.topLeft,
                 size = rect.size,
@@ -84,11 +92,15 @@ fun CircularIntermediateProgressBar(
 @Composable
 fun CircularIntermediateProgressBarPreview() {
     PillinTimeAndroidTheme {
-        CircularIntermediateProgressBar(
-            progress = .4f,
-            modifier = Modifier.size(130.dp),
-            strokeWidth = 36f,
-            color = Primary60
+//        CircularIntermediateProgressBar(
+//            progress = .4f,
+//            modifier = Modifier.size(130.dp),
+//            strokeWidth = 36f,
+//            color = Primary60
+//        )
+        CircularProgressbar(
+            size = 110.dp,
+            calorie = 130f
         )
     }
 
