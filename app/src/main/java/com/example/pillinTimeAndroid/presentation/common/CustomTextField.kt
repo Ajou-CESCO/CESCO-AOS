@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,7 +48,8 @@ fun CustomTextField(
     trailIcon: Int? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     inputType: InputType = InputType.PLAIN,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
     val (maxLength, keyboardType) = when (inputType) {
         InputType.NAME -> Pair(8, KeyboardType.Text)
@@ -90,6 +92,7 @@ fun CustomTextField(
         textStyle = PillinTimeTheme.typography.headline5Medium,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardActions = keyboardActions,
         visualTransformation = visualTransformation,
         decorationBox = { innerTextField ->
             Box(

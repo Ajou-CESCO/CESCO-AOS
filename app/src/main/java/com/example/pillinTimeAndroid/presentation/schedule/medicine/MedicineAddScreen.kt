@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -121,7 +122,14 @@ fun ScheduleAddScreen(
                                 viewModel.getMedicineInfo(memberId, medicineInput)
                             }
                         },
-                        enabled = medicineInput.isNotEmpty()
+                        enabled = medicineInput.isNotEmpty(),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                if (memberId != null) {
+                                    viewModel.getMedicineInfo(memberId, medicineInput)
+                                }
+                            }
+                        )
                     )
                     if(searchStatus) {
                         Column(
