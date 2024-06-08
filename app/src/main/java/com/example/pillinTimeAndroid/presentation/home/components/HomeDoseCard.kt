@@ -105,7 +105,7 @@ fun HomeDoseCard(
                 } else {
                     Text(
                         modifier = Modifier.padding(top = 32.dp, bottom = 2.dp),
-                        text = "오늘 등록된 복약 일정이 없어요",
+                        text = "오늘 예된 복약 일정이 없어요",
                         color = Gray90,
                         style = PillinTimeTheme.typography.body1Bold
                     )
