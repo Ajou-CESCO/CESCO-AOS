@@ -44,16 +44,12 @@ fun MainMenu(
             MainMenuItem(title = "내 정보 관리") {
                 onItemClick("editInfoScreen")
             }
-            if (isManager) MainMenuItem(title = "구독 결제 내역") {
+            if (isManager) MainMenuItem(title = "결제 내역") {
                 onItemClick("subscribeScreen")
-            }
-            MainMenuItem(title = "고객 센터") {
-                onItemClick("serviceScreen")
             }
             MainMenuItem(title = "로그아웃") {
                 showDialog.value = true
             }
-
             MainMenuItem(title = "회원 탈퇴") {
                 onItemClick("withdrawalScreen")
             }
