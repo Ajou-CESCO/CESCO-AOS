@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.signin.components
+package com.whdaud.pillinTimeAndroid.presentation.signin.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,13 +23,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pillinTimeAndroid.R
-import com.example.pillinTimeAndroid.presentation.common.CustomTextField
-import com.example.pillinTimeAndroid.presentation.common.InputType
-import com.example.pillinTimeAndroid.ui.theme.Error90
-import com.example.pillinTimeAndroid.ui.theme.Gray40
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTextField
+import com.whdaud.pillinTimeAndroid.presentation.common.InputType
+import com.whdaud.pillinTimeAndroid.ui.theme.Error90
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray40
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)

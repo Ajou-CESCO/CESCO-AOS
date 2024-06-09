@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.signup
+package com.whdaud.pillinTimeAndroid.presentation.signup
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -12,17 +12,17 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.presentation.common.ButtonColor
-import com.example.pillinTimeAndroid.presentation.common.ButtonSize
-import com.example.pillinTimeAndroid.presentation.common.CustomAlertDialog
-import com.example.pillinTimeAndroid.presentation.common.CustomButton
-import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
-import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
-import com.example.pillinTimeAndroid.presentation.common.LoadingScreen
-import com.example.pillinTimeAndroid.presentation.signup.components.RoleSelector
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.presentation.common.ButtonColor
+import com.whdaud.pillinTimeAndroid.presentation.common.ButtonSize
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomAlertDialog
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomButton
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.whdaud.pillinTimeAndroid.presentation.common.GeneralScreen
+import com.whdaud.pillinTimeAndroid.presentation.common.LoadingScreen
+import com.whdaud.pillinTimeAndroid.presentation.signup.components.RoleSelector
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
 
 @Composable
 fun RoleSelectScreen(

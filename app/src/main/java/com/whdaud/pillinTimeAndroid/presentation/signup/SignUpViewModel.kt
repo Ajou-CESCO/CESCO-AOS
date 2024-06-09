@@ -1,16 +1,16 @@
-package com.example.pillinTimeAndroid.presentation.signup
+package com.whdaud.pillinTimeAndroid.presentation.signup
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
-import com.example.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.SignUpRequest
-import com.example.pillinTimeAndroid.data.remote.dto.response.RelationReqResponse
-import com.example.pillinTimeAndroid.domain.repository.FcmRepository
-import com.example.pillinTimeAndroid.domain.repository.RelationRepository
-import com.example.pillinTimeAndroid.domain.repository.SignUpRepository
+import com.whdaud.pillinTimeAndroid.data.local.LocalUserDataSource
+import com.whdaud.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.request.SignUpRequest
+import com.whdaud.pillinTimeAndroid.data.remote.dto.response.RelationReqResponse
+import com.whdaud.pillinTimeAndroid.domain.repository.FcmRepository
+import com.whdaud.pillinTimeAndroid.domain.repository.RelationRepository
+import com.whdaud.pillinTimeAndroid.domain.repository.SignUpRepository
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel

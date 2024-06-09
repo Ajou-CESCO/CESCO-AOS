@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.signup.components
+package com.whdaud.pillinTimeAndroid.presentation.signup.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,14 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.ui.theme.Gray70
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary40
-import com.example.pillinTimeAndroid.ui.theme.Primary5
-import com.example.pillinTimeAndroid.ui.theme.Primary60
-import com.example.pillinTimeAndroid.ui.theme.White
-import com.example.pillinTimeAndroid.ui.theme.shapes
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary40
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary5
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.ui.theme.shapes
 
 @Composable
 fun RoleSelector(

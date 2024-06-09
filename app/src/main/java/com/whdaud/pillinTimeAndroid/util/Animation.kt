@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.util
+package com.whdaud.pillinTimeAndroid.util
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.Animatable

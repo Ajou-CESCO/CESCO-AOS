@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.signin.components
+package com.whdaud.pillinTimeAndroid.presentation.signin.components
 
 data class SignInPageList(
     val title: String,

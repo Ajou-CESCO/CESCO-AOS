@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.signup
+package com.whdaud.pillinTimeAndroid.presentation.signup
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -26,16 +26,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.R
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicHeight
-import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
-import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
-import com.example.pillinTimeAndroid.presentation.signup.components.ManagerRequestList
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary60
-import com.example.pillinTimeAndroid.ui.theme.White
-import com.example.pillinTimeAndroid.ui.theme.shapes
+import com.whdaud.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicHeight
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.whdaud.pillinTimeAndroid.presentation.common.GeneralScreen
+import com.whdaud.pillinTimeAndroid.presentation.signup.components.ManagerRequestList
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.ui.theme.shapes
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
