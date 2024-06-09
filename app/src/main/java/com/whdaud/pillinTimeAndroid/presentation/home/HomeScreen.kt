@@ -79,7 +79,7 @@ fun HomeScreen(
                 memberId = relationInfoList[selectedUserIndex].memberId,
                 name = relationInfoList[selectedUserIndex].memberName,
                 cabinetId = relationInfoList[selectedUserIndex].cabinetId,
-                isManager = false
+                isManager = true
             )
         } else {
             null
@@ -99,7 +99,7 @@ fun HomeScreen(
         homeUser?.memberId.let {
             if (it != null) {
                 mainViewModel.getUserDoseLog(it)
-                homeUser?.isManager?.let { it1 -> viewModel.getRemoteHealthData(it, it1) }
+                viewModel.getRemoteHealthData(it)
                 Log.e("homeScreen health", "$it, ${homeUser?.isManager}")
             }
         }
@@ -145,7 +145,7 @@ fun HomeScreen(
                         onPullRefresh = {
                             scope.launch {
                                 isRefreshing = true
-                                homeUser?.memberId?.let { it1 -> viewModel.getRemoteHealthData(it1, true) }
+                                homeUser?.memberId?.let { it1 -> viewModel.getRemoteHealthData(it1) }
                                 if (userDetails?.isManager == true) {
                                     mainViewModel.getUserDoseLog(relationInfoList[selectedUserIndex].memberId)
                                     mainViewModel.getRelationship()
@@ -156,6 +156,9 @@ fun HomeScreen(
                                 delay(1000)
                                 isRefreshing = false
                             }
+                        },
+                        onHealthRefresh = {
+                            homeUser?.memberId?.let { it1 -> viewModel.postLocalHealthData(it1) }
                         },
                         isRefreshing = isRefreshing,
                         userDoseLog = userDoseLog,

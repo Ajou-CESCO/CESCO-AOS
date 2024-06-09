@@ -1,12 +1,21 @@
 package com.whdaud.pillinTimeAndroid.presentation.home.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.buildAnnotatedString
@@ -17,6 +26,7 @@ import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLog
 import com.whdaud.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
 import com.whdaud.pillinTimeAndroid.domain.entity.HomeUser
 import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
 import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
@@ -31,6 +41,7 @@ fun HomeDetailPage(
     userDetail: HomeUser?,
     userDoseLog: List<ScheduleLog>,
     onPullRefresh: () -> Unit,
+    onHealthRefresh: () -> Unit,
     isRefreshing: Boolean,
     healthData: HealthStatDTO? = null
 ) {
@@ -84,10 +95,32 @@ fun HomeDetailPage(
                 HealthCard(
                     healthData = healthData,
                     onCardClick = {healthDataJson ->
-//                        navController.navigate("healthScreen/${userDetail?.name}/${userDetail?.memberId}/${userDetail?.isManager}")
                         navController.navigate("healthScreen/${userDetail?.name}/${healthDataJson}")
                     }
                 )
+                if(userDetail?.isManager == false) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                            .clickable { onHealthRefresh() },
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(20.dp),
+                            imageVector = Icons.Filled.Refresh,
+                            contentDescription = null,
+                            tint = Gray70
+                        )
+                        Text(
+                            modifier = Modifier.padding(start = 4.dp),
+                            text = "건강 정보 다시 불러오기",
+                            color = Gray70,
+                            style = PillinTimeTheme.typography.body2Medium
+                        )
+                    }
+                }
             }
         }
     )

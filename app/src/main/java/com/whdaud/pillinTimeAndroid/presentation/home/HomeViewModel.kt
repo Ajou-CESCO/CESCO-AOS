@@ -55,12 +55,11 @@ class HomeViewModel @Inject constructor(
     private val _remoteHealthData = MutableStateFlow<HealthStatDTO?>(null)
     val remoteHealthData: StateFlow<HealthStatDTO?> = _remoteHealthData.asStateFlow()
 
-    fun fetchLocalHealthData() {
+    fun postLocalHealthData(memberId: Int) {
         viewModelScope.launch {
             permissionsGranted.value = healthConnectManager.hasAllPermissions(permissions)
             if (permissionsGranted.value) {
-                val startTime =
-                    LocalDate.now().minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
+                val startTime = LocalDate.now().minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
                 val endTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
                 val steps = healthConnectManager.readSteps(startTime, endTime)
                 _stepsData.value = steps.sumOf { it.count }
@@ -77,11 +76,6 @@ class HomeViewModel @Inject constructor(
                     "${_sleepData.value}${_stepsData.value}${_heartRateData.value}${_totalCaloriesData.value}"
                 )
             }
-        }
-    }
-
-    fun postLocalHealthData() {
-        viewModelScope.launch {
             val request = HealthDataRequest(
                 steps = _stepsData.value.toInt(),
                 sleepTime = if(_sleepData.value != null) _sleepData.value!!.roundToNearestHour() else 0,
@@ -90,24 +84,20 @@ class HomeViewModel @Inject constructor(
             )
             val result = userRepository.postHealthData(request)
             result.onSuccess {response ->
+
                 Log.e("Post Health Data", "succeed to post remote health data: ${response.result}")
             }.onFailure {
                 Log.e("Post Health Data", "failed to post remote health data: ${it.message}")
             }
+            getRemoteHealthData(memberId)
         }
     }
 
-    fun getRemoteHealthData(memberId: Int, isManager: Boolean) {
+    fun getRemoteHealthData(memberId: Int) {
         viewModelScope.launch {
             val result = userRepository.getHealthData(memberId)
             result.onSuccess { response ->
                 _remoteHealthData.value = response.result
-                // 피보호자의 건강 정보
-                if (!isManager) {
-                    fetchLocalHealthData()
-                    postLocalHealthData()
-                }
-                Log.e("Health Data", "succeed to get remote health data: ${response.result}")
                 Log.e("Health Dataaaa", "succeed to get remote health data: ${_remoteHealthData.value}")
             }.onFailure {
                 Log.e("Health Data", "failed to get remote health data: ${it.message}")
