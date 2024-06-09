@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PillinTimeAndroidTheme {
                 val systemUiColor = rememberSystemUiController()
-                val appEntry by viewModel.appEntry.collectAsState()
+//                val appEntry by viewModel.appEntry.collectAsState()
                 SideEffect {
                     systemUiColor.setSystemBarsColor(
                         color = Color.Transparent,
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         color = White
                     )
                 }
-                NavGraph(startDestination = viewModel.startDestination.value, appEntry = appEntry)
+                NavGraph(startDestination = viewModel.startDestination.value)
             }
         }
     }

@@ -40,6 +40,7 @@ import com.whdaud.pillinTimeAndroid.ui.theme.Gray60
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
 import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary40
 import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
 import com.whdaud.pillinTimeAndroid.ui.theme.Primary90
 import com.whdaud.pillinTimeAndroid.ui.theme.Purple60
@@ -141,7 +142,7 @@ fun DoseItem(
         2 -> Pair(Error60, "미완료")
         else -> Pair(Gray30, "예정")
     }
-    val indexColor = listOf(Error60, Warning60, Success60, Primary60, Purple60)
+    val indexColor = listOf(Error60, Warning60, Success60, Primary40, Purple60)
     val cabinetColor =
         if (doseLog.cabinetIndex in 1..5) indexColor[doseLog.cabinetIndex - 1]
         else Gray60 // index out of range 방지

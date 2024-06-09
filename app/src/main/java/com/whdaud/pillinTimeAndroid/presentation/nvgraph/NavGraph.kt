@@ -22,6 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.google.gson.Gson
 import com.whdaud.pillinTimeAndroid.R
 import com.whdaud.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
 import com.whdaud.pillinTimeAndroid.presentation.home.HomeScreen
@@ -38,12 +39,10 @@ import com.whdaud.pillinTimeAndroid.presentation.schedule.medicine.ScheduleAddSc
 import com.whdaud.pillinTimeAndroid.presentation.signin.SignInScreen
 import com.whdaud.pillinTimeAndroid.presentation.signup.RoleSelectScreen
 import com.whdaud.pillinTimeAndroid.presentation.signup.SignUpClientScreen
-import com.google.gson.Gson
 
 @Composable
 fun NavGraph(
-    startDestination: String,
-    appEntry: Boolean
+    startDestination: String
 ) {
     val navController = rememberNavController()
     val bottomNavigationItems = remember {
