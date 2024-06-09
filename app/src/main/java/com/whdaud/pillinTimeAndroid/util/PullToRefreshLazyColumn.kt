@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.util
+package com.whdaud.pillinTimeAndroid.util
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,9 +14,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.example.pillinTimeAndroid.ui.theme.Gray5
-import com.example.pillinTimeAndroid.ui.theme.Primary60
-import com.example.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray5
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

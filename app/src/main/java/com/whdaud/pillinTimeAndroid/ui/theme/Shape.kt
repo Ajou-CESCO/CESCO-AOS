@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.ui.theme
+package com.whdaud.pillinTimeAndroid.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes

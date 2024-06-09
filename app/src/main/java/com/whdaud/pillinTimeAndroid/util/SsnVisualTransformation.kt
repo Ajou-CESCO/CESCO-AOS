@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.util
+package com.whdaud.pillinTimeAndroid.util
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping

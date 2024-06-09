@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.ui.theme
+package com.whdaud.pillinTimeAndroid.ui.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.R
 
 private val OAGothic = FontFamily(
     Font(R.font.oagothic_extrabold, FontWeight.ExtraBold),
