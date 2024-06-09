@@ -136,7 +136,7 @@ fun HomeScreen(
                             homeUser?.memberId?.let { it1 -> viewModel.getRemoteHealthData(it1, true) }
                             if (userDetails?.isManager == true) {
                                 mainViewModel.getUserDoseLog(relationInfoList[selectedUserIndex].memberId)
-                                Log.d("homedose", "${relationInfoList[selectedUserIndex].memberId}")
+                                mainViewModel.getRelationship()
                             } else {
                                 userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) }
                             }
@@ -153,7 +153,7 @@ fun HomeScreen(
         }
     }
     LaunchedEffect(pagerState.currentPage) { selectedUserIndex = pagerState.currentPage }
-
+    LaunchedEffect(userDetails?.isManager) { mainViewModel.getRelationship() }
     // when refreshed, there is no relation
     LaunchedEffect(relationInfoList, userDetails) {
         if (relationInfoList.isEmpty() && userDetails?.isManager == false) {

@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.whdaud.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.whdaud.pillinTimeAndroid.data.remote.dto.MedicineDTO
 import com.whdaud.pillinTimeAndroid.data.remote.dto.RelationDTO
 import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLog
@@ -30,7 +29,6 @@ class MainViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val medicineRepository: MedicineRepository,
     private val relationRepository: RelationRepository,
-    private val localUserDataSource: LocalUserDataSource
 ) : ViewModel() {
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
@@ -45,11 +43,8 @@ class MainViewModel @Inject constructor(
     val userDoseLog: StateFlow<List<ScheduleLog>> = _userDoseLog
     private val _medicineInfoV2 = MutableStateFlow<MedicineDTO?>(null)
     val medicineInfoV2: StateFlow<MedicineDTO?> = _medicineInfoV2
-//    private val _appEntry = MutableStateFlow(false)
-//    val appEntry: StateFlow<Boolean> = _appEntry
 
     init {
-//        observeAppEntry()
         getRelationship()
         viewModelScope.launch {
             val hasToken = readUserSession().firstOrNull().orEmpty().isNotEmpty()
@@ -91,14 +86,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-//    private fun observeAppEntry() {
-//        viewModelScope.launch {
-//            localUserDataSource.appEntry.collect { entry ->
-//                _appEntry.value = entry
-//            }
-//        }
-//    }
-
     fun getInitData() {
         viewModelScope.launch {
             val result = userRepository.initClient()
@@ -123,9 +110,10 @@ class MainViewModel @Inject constructor(
     fun getUserDoseLog(memberId: Int) {
         viewModelScope.launch {
             val result = medicineRepository.getDoseLog(memberId)
+            Log.e("getUserDoseLog in main", "${memberId}")
             result.onSuccess {
                 _userDoseLog.value = it.result.logList
-//                Log.e("getUserDoseLog in main", "Succeeded to fetch: ${it.result}")
+                Log.e("getUserDoseLog in main", "Succeeded to fetch: ${it.result}")
             }.onFailure {
                 Log.e("getUserDoseLog in main", "Failed to fetch user details: ${it.message}")
             }
@@ -152,8 +140,10 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val result = relationRepository.getRelations()
             result.onSuccess { response ->
-//                Log.e("MainVM", "success getRelationShip: ${response.message}")
+
+                Log.e("MainVM", "success getRelationShip: ${response.result}")
                 _relationInfoList.value = response.result
+                Log.e("MainVM", "success getRelationShip: ${_relationInfoList.value}")
             }.onFailure {
                 Log.e("MainVM", "failed getRelationShip: ${it.message}")
             }
