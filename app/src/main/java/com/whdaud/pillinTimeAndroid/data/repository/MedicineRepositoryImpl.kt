@@ -1,14 +1,14 @@
-package com.example.pillinTimeAndroid.data.repository
+package com.whdaud.pillinTimeAndroid.data.repository
 
-import com.example.pillinTimeAndroid.data.remote.MedicineService
-import com.example.pillinTimeAndroid.data.remote.ScheduleService
-import com.example.pillinTimeAndroid.data.remote.dto.MedicineDTO
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleDTO
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
-import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
-import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
-import com.example.pillinTimeAndroid.domain.repository.TokenRepository
+import com.whdaud.pillinTimeAndroid.data.remote.MedicineService
+import com.whdaud.pillinTimeAndroid.data.remote.ScheduleService
+import com.whdaud.pillinTimeAndroid.data.remote.dto.MedicineDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
+import com.whdaud.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
+import com.whdaud.pillinTimeAndroid.domain.repository.MedicineRepository
+import com.whdaud.pillinTimeAndroid.domain.repository.TokenRepository
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
@@ -30,9 +30,17 @@ class MedicineRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun postDoseSchedule(
-        scheduleRequest: ScheduleRequest
-    ): Result<BaseResponse<Any>> {
+    override suspend fun getMedicineInfoV2(medicineId: Int): Result<BaseResponse<MedicineDTO>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
+        return try {
+            val response = medicineService.getMedicineInfoV2("Bearer $accessToken", medicineId)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun postDoseSchedule(scheduleRequest: ScheduleRequest): Result<BaseResponse<Any>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
             val response = scheduleService.postDoseSchedule("Bearer $accessToken", scheduleRequest)
@@ -42,9 +50,7 @@ class MedicineRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDoseSchedule(
-        memberId: Int
-    ): Result<BaseResponse<List<ScheduleDTO>>> {
+    override suspend fun getDoseSchedule(memberId: Int): Result<BaseResponse<List<ScheduleDTO>>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
             val response = scheduleService.getDoseSchedule("Bearer $accessToken", memberId)
@@ -68,9 +74,7 @@ class MedicineRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDoseLog(
-        memberId: Int
-    ): Result<BaseResponse<List<ScheduleLogDTO>>> {
+    override suspend fun getDoseLog(memberId: Int): Result<BaseResponse<ScheduleLogDTO>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
             val response = scheduleService.getScheduleLog("Bearer $accessToken", memberId)

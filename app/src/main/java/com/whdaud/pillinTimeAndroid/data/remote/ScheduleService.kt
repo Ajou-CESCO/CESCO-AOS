@@ -1,9 +1,9 @@
-package com.example.pillinTimeAndroid.data.remote
+package com.whdaud.pillinTimeAndroid.data.remote
 
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleDTO
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
-import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
+import com.whdaud.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -34,5 +34,5 @@ interface ScheduleService {
     suspend fun getScheduleLog(
         @Header("Authorization") accessToken: String,
         @Query("memberId") memberId: Int
-    ) : BaseResponse<List<ScheduleLogDTO>>
+    ) : BaseResponse<ScheduleLogDTO>
 }

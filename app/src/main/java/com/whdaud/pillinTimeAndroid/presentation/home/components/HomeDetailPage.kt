@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.home.components
+package com.whdaud.pillinTimeAndroid.presentation.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,26 +13,25 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
-import com.example.pillinTimeAndroid.domain.entity.HomeUser
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary60
-import com.example.pillinTimeAndroid.ui.theme.White
-import com.example.pillinTimeAndroid.ui.theme.shapes
-import com.example.pillinTimeAndroid.util.PullToRefreshLazyColumn
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLog
+import com.whdaud.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
+import com.whdaud.pillinTimeAndroid.domain.entity.HomeUser
+import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.ui.theme.shapes
+import com.whdaud.pillinTimeAndroid.util.PullToRefreshLazyColumn
 
 @Composable
 fun HomeDetailPage(
     modifier: Modifier,
     navController: NavController,
     userDetail: HomeUser?,
-    userDoseLog: List<ScheduleLogDTO>,
+    userDoseLog: List<ScheduleLog>,
     onPullRefresh: () -> Unit,
     isRefreshing: Boolean,
-//    healthData: HealthData? = null
     healthData: HealthStatDTO? = null
 ) {
     val textStyle = PillinTimeTheme.typography.logo3Medium.copy(color = Gray90)

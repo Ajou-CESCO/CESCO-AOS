@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.schedule.medicine
+package com.whdaud.pillinTimeAndroid.presentation.schedule.medicine
 
 import android.util.Log
 import androidx.collection.mutableIntListOf
@@ -8,15 +8,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.data.remote.dto.MedicineAdverse
-import com.example.pillinTimeAndroid.data.remote.dto.MedicineDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
-import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
-import com.example.pillinTimeAndroid.presentation.schedule.components.ScheduleOrderList
-import com.example.pillinTimeAndroid.presentation.schedule.components.schedulePages
+import com.whdaud.pillinTimeAndroid.data.remote.dto.MedicineAdverse
+import com.whdaud.pillinTimeAndroid.data.remote.dto.MedicineDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.request.ScheduleRequest
+import com.whdaud.pillinTimeAndroid.domain.repository.MedicineRepository
+import com.whdaud.pillinTimeAndroid.presentation.schedule.components.ScheduleOrderList
+import com.whdaud.pillinTimeAndroid.presentation.schedule.components.schedulePages
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -24,7 +22,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class MedicineAddViewModel @Inject constructor(
     private val medicineRepository: MedicineRepository
@@ -44,6 +41,7 @@ class MedicineAddViewModel @Inject constructor(
     val scheduleStartDate = mutableStateOf("")
     val scheduleEndDate = mutableStateOf("")
     val selectedIndex = mutableIntStateOf(-1)
+
     val currentUsedIndex = mutableIntListOf()
     private val _memberId = mutableIntStateOf(-1)
 

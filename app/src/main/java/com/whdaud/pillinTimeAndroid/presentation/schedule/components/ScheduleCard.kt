@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.schedule.components
+package com.whdaud.pillinTimeAndroid.presentation.schedule.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -18,21 +18,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.R
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.presentation.home.components.DoseItem
-import com.example.pillinTimeAndroid.ui.theme.Error40
-import com.example.pillinTimeAndroid.ui.theme.Gray70
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary40
-import com.example.pillinTimeAndroid.ui.theme.White
-import com.example.pillinTimeAndroid.ui.theme.shapes
+import com.whdaud.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLog
+import com.whdaud.pillinTimeAndroid.presentation.home.components.DoseItem
+import com.whdaud.pillinTimeAndroid.ui.theme.Error40
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary40
+import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.ui.theme.shapes
 
 @Composable
 fun ScheduleCard(
     status: Int,
-    doseLog: List<ScheduleLogDTO>,
+    doseLog: List<ScheduleLog>,
 ) {
     val (pillColor, statusWord) = when (status) {
         0 -> Pair(Color.Unspecified, "예정")
@@ -43,10 +43,9 @@ fun ScheduleCard(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .animateContentSize()
             .background(Color.Transparent)
             .padding(bottom = 16.dp)
-            .animateContentSize()
-
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -64,7 +63,6 @@ fun ScheduleCard(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-
         if (doseLog.isEmpty()) {
             Column(
                 modifier = Modifier
@@ -86,7 +84,6 @@ fun ScheduleCard(
                     style = PillinTimeTheme.typography.caption1Medium,
                 )
             }
-
         } else {
             Column(
                 modifier = Modifier

@@ -51,6 +51,7 @@ fun MedicineDetailDialog(
     medicineInfo: MedicineDTO,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
+    simpleType: Boolean = false
 ) {
     val scrollState = rememberScrollState()
 
@@ -141,14 +142,10 @@ fun MedicineDetailDialog(
                             }
                             if(medicineInfo.medicineAdverse.duplicateEfficacyGroup != null) {
                                 append("\n의 부작용과,\n")
-//                                withStyle(style = SpanStyle(color = White, fontSize =  PillinTimeTheme.typography.body2Bold.fontSize, fontWeight = PillinTimeTheme.typography.body2Bold.fontWeight)) {
-//                                    append(it)
-//                                }
                                 append("\n현재 복용중인 약물 \n\"${medicineInfo.medicineAdverse.duplicateEfficacyGroup}\"\n과 중복되는 효과가 있으니,")
                             } else {
                                 append("\n의 부작용 위험이 있습니다.\n")
                             }
-
                             append("\n섭취에 주의 바랍니다.")
                         }.toString()
                         Text(
@@ -181,35 +178,55 @@ fun MedicineDetailDialog(
                 MedicineDetailItem(title = "효능", value = medicineInfo.medicineEffect)
                 MedicineDetailItem(title = "복용 방법", value = medicineInfo.useMethod)
                 MedicineDetailItem(title = "복용 전 알아두세요!", value = medicineInfo.useWarning)
+                MedicineDetailItem(title = "보관법", value = medicineInfo.depositMethod)
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(AlertDialogPadding, 0.dp, AlertDialogPadding, AlertDialogPadding),
-            ) {
-                CustomButton(
+            if(simpleType) {
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(SmallSize),
-                    enabled = true,
-                    filled = ButtonColor.BLANK,
-                    size = ButtonSize.MEDIUM,
-                    text = "이전으로",
-                    onClick = onDismiss
-                )
-                Spacer(modifier = Modifier.width(14.dp))
-                CustomButton(
+                        .fillMaxWidth()
+                        .padding(AlertDialogPadding, 0.dp, AlertDialogPadding, AlertDialogPadding),
+                ) {
+                    CustomButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(SmallSize),
+                        enabled = true,
+                        filled = ButtonColor.FILLED,
+                        size = ButtonSize.MEDIUM,
+                        text = "닫기",
+                        onClick = onDismiss
+                    )
+                }
+            } else {
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(SmallSize),
-                    enabled = true,
-                    filled = ButtonColor.FILLED,
-                    size = ButtonSize.MEDIUM,
-                    text = "선택하기",
-                    onClick = {
-                        onConfirm()
-                    }
-                )
+                        .fillMaxWidth()
+                        .padding(AlertDialogPadding, 0.dp, AlertDialogPadding, AlertDialogPadding),
+                ) {
+                    CustomButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(SmallSize),
+                        enabled = true,
+                        filled = ButtonColor.BLANK,
+                        size = ButtonSize.MEDIUM,
+                        text = "이전으로",
+                        onClick = onDismiss
+                    )
+                    Spacer(modifier = Modifier.width(14.dp))
+                    CustomButton(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(SmallSize),
+                        enabled = true,
+                        filled = ButtonColor.FILLED,
+                        size = ButtonSize.MEDIUM,
+                        text = "선택하기",
+                        onClick = {
+                            onConfirm()
+                        }
+                    )
+                }
             }
         }
     }

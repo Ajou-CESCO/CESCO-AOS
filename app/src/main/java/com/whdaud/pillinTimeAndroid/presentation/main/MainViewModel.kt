@@ -1,19 +1,20 @@
-package com.example.pillinTimeAndroid.presentation.main
+package com.whdaud.pillinTimeAndroid.presentation.main
 
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
-import com.example.pillinTimeAndroid.data.remote.dto.RelationDTO
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.domain.entity.User
-import com.example.pillinTimeAndroid.domain.repository.MedicineRepository
-import com.example.pillinTimeAndroid.domain.repository.RelationRepository
-import com.example.pillinTimeAndroid.domain.repository.UserRepository
-import com.example.pillinTimeAndroid.domain.usecase.session.ReadUserSession
-import com.example.pillinTimeAndroid.presentation.nvgraph.Route
+import com.whdaud.pillinTimeAndroid.data.local.LocalUserDataSource
+import com.whdaud.pillinTimeAndroid.data.remote.dto.MedicineDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.RelationDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLog
+import com.whdaud.pillinTimeAndroid.domain.entity.User
+import com.whdaud.pillinTimeAndroid.domain.repository.MedicineRepository
+import com.whdaud.pillinTimeAndroid.domain.repository.RelationRepository
+import com.whdaud.pillinTimeAndroid.domain.repository.UserRepository
+import com.whdaud.pillinTimeAndroid.domain.usecase.session.ReadUserSession
+import com.whdaud.pillinTimeAndroid.presentation.nvgraph.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,21 +34,19 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     private val _splashCondition = mutableStateOf(true)
     val splashCondition: State<Boolean> = _splashCondition
-
     private val _startDestination = mutableStateOf(Route.SignInScreen.route)
     val startDestination: State<String> = _startDestination
 
     private val _userDetails = MutableStateFlow<User?>(null)
     val userDetails: StateFlow<User?> = _userDetails
-
     private val _relationInfoList = MutableStateFlow<List<RelationDTO>>(emptyList())
     val relationInfoList: StateFlow<List<RelationDTO>> = _relationInfoList
-
-    private val _userDoseLog = MutableStateFlow<List<ScheduleLogDTO>>(emptyList())
-    val userDoseLog: StateFlow<List<ScheduleLogDTO>> = _userDoseLog
-
-    private val _appEntry = MutableStateFlow(false)
-    val appEntry: StateFlow<Boolean> = _appEntry
+    private val _userDoseLog = MutableStateFlow<List<ScheduleLog>>(emptyList())
+    val userDoseLog: StateFlow<List<ScheduleLog>> = _userDoseLog
+    private val _medicineInfoV2 = MutableStateFlow<MedicineDTO?>(null)
+    val medicineInfoV2: StateFlow<MedicineDTO?> = _medicineInfoV2
+//    private val _appEntry = MutableStateFlow(false)
+//    val appEntry: StateFlow<Boolean> = _appEntry
 
     init {
 //        observeAppEntry()
@@ -71,10 +70,6 @@ class MainViewModel @Inject constructor(
                     when (response.result.isManager) {
                         true -> { // when Manager
                             _startDestination.value = Route.BottomNavigatorScreen.route
-//                            if(appEntry.value) { // Manager
-//                            } else {
-//                                _startDestination.value = Route.OnBoardingScreen.route
-//                            }
                         }
 
                         false -> { // when Client
@@ -96,13 +91,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun observeAppEntry() {
-        viewModelScope.launch {
-            localUserDataSource.appEntry.collect { entry ->
-                _appEntry.value = entry
-            }
-        }
-    }
+//    private fun observeAppEntry() {
+//        viewModelScope.launch {
+//            localUserDataSource.appEntry.collect { entry ->
+//                _appEntry.value = entry
+//            }
+//        }
+//    }
 
     fun getInitData() {
         viewModelScope.launch {
@@ -129,19 +124,35 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val result = medicineRepository.getDoseLog(memberId)
             result.onSuccess {
-                _userDoseLog.value = it.result
-                Log.e("getUserDoseLog in main", "Succeeded to fetch: ${it.result}")
+                _userDoseLog.value = it.result.logList
+//                Log.e("getUserDoseLog in main", "Succeeded to fetch: ${it.result}")
             }.onFailure {
                 Log.e("getUserDoseLog in main", "Failed to fetch user details: ${it.message}")
             }
         }
     }
 
+    fun getMedicineInfoV2(medicineId: Int) {
+        viewModelScope.launch {
+            val result = medicineRepository.getMedicineInfoV2(medicineId)
+            result.onSuccess {
+                _medicineInfoV2.value = it.result
+                Log.e("getUserDoseLog in main", "Succeeded to fetch: ${it.result}")
+            }.onFailure {
+                Log.e("MainVM", "failed getMedInfoV2: ${it.message}")
+            }
+        }
+    }
+
+    fun clearMedicineInfo() {
+        _medicineInfoV2.value = null
+    }
+
     fun getRelationship() {
         viewModelScope.launch {
             val result = relationRepository.getRelations()
             result.onSuccess { response ->
-                Log.e("MainVM", "success getRelationShip: ${response.message}")
+//                Log.e("MainVM", "success getRelationShip: ${response.message}")
                 _relationInfoList.value = response.result
             }.onFailure {
                 Log.e("MainVM", "failed getRelationShip: ${it.message}")

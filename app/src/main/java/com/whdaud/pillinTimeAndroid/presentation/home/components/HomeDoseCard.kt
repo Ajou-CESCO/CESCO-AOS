@@ -1,8 +1,9 @@
-package com.example.pillinTimeAndroid.presentation.home.components
+package com.whdaud.pillinTimeAndroid.presentation.home.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,27 +18,36 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.data.remote.dto.ScheduleLogDTO
-import com.example.pillinTimeAndroid.ui.theme.Error60
-import com.example.pillinTimeAndroid.ui.theme.Gray10
-import com.example.pillinTimeAndroid.ui.theme.Gray30
-import com.example.pillinTimeAndroid.ui.theme.Gray60
-import com.example.pillinTimeAndroid.ui.theme.Gray70
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary60
-import com.example.pillinTimeAndroid.ui.theme.Primary90
-import com.example.pillinTimeAndroid.ui.theme.Purple60
-import com.example.pillinTimeAndroid.ui.theme.Success60
-import com.example.pillinTimeAndroid.ui.theme.Warning60
-import com.example.pillinTimeAndroid.ui.theme.White
-import com.example.pillinTimeAndroid.ui.theme.shapes
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleLog
+import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
+import com.whdaud.pillinTimeAndroid.presentation.schedule.medicine.MedicineDetailDialog
+import com.whdaud.pillinTimeAndroid.ui.theme.Error60
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray10
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray30
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray60
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary90
+import com.whdaud.pillinTimeAndroid.ui.theme.Purple60
+import com.whdaud.pillinTimeAndroid.ui.theme.Success60
+import com.whdaud.pillinTimeAndroid.ui.theme.Warning60
+import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.ui.theme.shapes
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -45,7 +55,7 @@ import java.time.format.DateTimeFormatter
 fun HomeDoseCard(
     cabinetId: Int,
     onRegisterClick: () -> Unit,
-    doseLog: List<ScheduleLogDTO>
+    doseLog: List<ScheduleLog>
 ) {
     val backgroundColor = if(cabinetId == 0 || doseLog.isEmpty()) Gray10 else White
     val scrollState = rememberScrollState()
@@ -123,7 +133,8 @@ fun HomeDoseCard(
 
 @Composable
 fun DoseItem(
-    doseLog: ScheduleLogDTO
+    doseLog: ScheduleLog,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val (doseColor, doseStatus) = when (doseLog.takenStatus) {
         1 -> Pair(Primary60, "완료")
@@ -135,11 +146,22 @@ fun DoseItem(
         if (doseLog.cabinetIndex in 1..5) indexColor[doseLog.cabinetIndex - 1]
         else Gray60 // index out of range 방지
 
+    val medicineInfoV2 by mainViewModel.medicineInfoV2.collectAsState()
+    val showMedicineDialog = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     Row(
         modifier = Modifier
             .padding(
                 vertical = 10.dp,
                 horizontal = 8.dp
+            )
+            .clickable(
+                onClick = {
+                    scope.launch {
+                        mainViewModel.getMedicineInfoV2(doseLog.medicineId)
+                        showMedicineDialog.value = true
+                    }
+                }
             )
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -178,6 +200,21 @@ fun DoseItem(
             style = PillinTimeTheme.typography.logo4Extra,
             color = doseColor
         )
+    }
+    if (showMedicineDialog.value) {
+        medicineInfoV2?.let {
+            MedicineDetailDialog(
+                medicineInfo = it,
+                onConfirm = {
+                    showMedicineDialog.value = false
+                },
+                onDismiss = {
+                    showMedicineDialog.value = false
+                    mainViewModel.clearMedicineInfo()
+                },
+                simpleType = true
+            )
+        }
     }
 }
 fun convertToAmPm(time: String): String {
