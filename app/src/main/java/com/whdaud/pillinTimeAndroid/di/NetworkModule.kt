@@ -4,6 +4,7 @@ import com.whdaud.pillinTimeAndroid.data.remote.CabinetService
 import com.whdaud.pillinTimeAndroid.data.remote.FcmService
 import com.whdaud.pillinTimeAndroid.data.remote.HealthService
 import com.whdaud.pillinTimeAndroid.data.remote.MedicineService
+import com.whdaud.pillinTimeAndroid.data.remote.PaymentService
 import com.whdaud.pillinTimeAndroid.data.remote.RelationService
 import com.whdaud.pillinTimeAndroid.data.remote.ScheduleService
 import com.whdaud.pillinTimeAndroid.data.remote.SignInService
@@ -65,5 +66,11 @@ object NetworkModule {
     @Singleton
     fun provideHealthService(retrofit: Retrofit): HealthService {
         return retrofit.create(HealthService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun providePaymentService(retrofit: Retrofit): PaymentService {
+        return retrofit.create(PaymentService::class.java)
     }
 }

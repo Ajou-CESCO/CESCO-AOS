@@ -44,7 +44,7 @@ fun MainMenu(
             MainMenuItem(title = "내 정보 관리") {
                 onItemClick("editInfoScreen")
             }
-            if (isManager) MainMenuItem(title = "결제 내역") {
+            if (isManager) MainMenuItem(title = "프리미엄 결제") {
                 onItemClick("subscribeScreen")
             }
             MainMenuItem(title = "로그아웃") {

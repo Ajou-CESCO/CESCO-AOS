@@ -40,6 +40,9 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:name="com.tosspayments.paymentsdk.activity.TossPaymentActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <service
             android:name=".data.remote.PushNotificationService"
             android:exported="false">

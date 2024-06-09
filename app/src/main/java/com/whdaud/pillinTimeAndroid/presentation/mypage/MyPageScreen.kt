@@ -43,7 +43,13 @@ fun MyPageScreen(
     val userDetails by mainViewModel.userDetails.collectAsState()
     val relationInfoList by mainViewModel.relationInfoList.collectAsState()
 
-    val role = if (userDetails?.isManager == true) "보호자" else "피보호자"
+    val role =
+        if (userDetails?.isManager == true) {
+            if(userDetails?.isSubscriber == true) "프리미엄 보호자"
+            else "보호자"
+        }
+        else "피보호자"
+
     val name = userDetails?.name
     val navigateToScreen by viewModel.navigateToScreen.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }

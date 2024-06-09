@@ -22,7 +22,6 @@ sealed class Route(
     object EditInfoScreen : Route(route = "editInfoScreen")
     object EditScheduleScreen : Route(route = "editScheduleScreen")
     object WithdrawalScreen : Route(route = "withdrawalScreen")
-    object ServiceScreen : Route(route = "serviceScreen")
     object SubscribeScreen : Route(route = "subscribeScreen")
     object CabinetRegisterScreen : Route(route = "cabinetRegisterScreen")
     object RelationManageScreen : Route(route = "relationManageScreen")

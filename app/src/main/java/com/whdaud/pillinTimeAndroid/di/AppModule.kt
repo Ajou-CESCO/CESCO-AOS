@@ -1,11 +1,9 @@
 package com.whdaud.pillinTimeAndroid.di
 
 import android.content.Context
-import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingResult
-import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.PurchasesUpdatedListener
+import com.tosspayments.paymentsdk.TossPayments
 import com.whdaud.pillinTimeAndroid.BuildConfig.BASE_URL
+import com.whdaud.pillinTimeAndroid.BuildConfig.TOSS_KEY
 import com.whdaud.pillinTimeAndroid.data.local.HealthConnectManager
 import com.whdaud.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.whdaud.pillinTimeAndroid.data.remote.CabinetService
@@ -51,24 +49,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideBillingClient(
-        @ApplicationContext context: Context
-    ): BillingClient {
-        return BillingClient.newBuilder(context)
-            .setListener(object : PurchasesUpdatedListener {
-                override fun onPurchasesUpdated(
-                    billingResult: BillingResult,
-                    purchases: MutableList<Purchase>?
-                ) {
-                    // Handle the updated purchases here.
-                }
-            })
-            .enablePendingPurchases()
-            .build()
-    }
-
-    @Provides
-    @Singleton
     fun provideUserLocalDataSource(@ApplicationContext context: Context): LocalUserDataSource {
         return LocalUserDataSource(context)
     }
@@ -83,5 +63,11 @@ object AppModule {
     @Singleton
     fun provideUserRepository(tokenRepository: TokenRepository, userService: UserService, cabinetService: CabinetService, healthService: HealthService): UserRepository {
         return UserRepositoryImpl(tokenRepository, userService, cabinetService, healthService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTossPayments(): TossPayments {
+        return TossPayments(TOSS_KEY)
     }
 }

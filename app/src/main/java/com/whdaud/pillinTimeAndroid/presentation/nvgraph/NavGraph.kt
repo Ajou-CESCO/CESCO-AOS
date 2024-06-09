@@ -32,6 +32,7 @@ import com.whdaud.pillinTimeAndroid.presentation.mypage.cabinet.CabinetRegisterS
 import com.whdaud.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoScreen
 import com.whdaud.pillinTimeAndroid.presentation.mypage.editschedule.EditScheduleScreen
 import com.whdaud.pillinTimeAndroid.presentation.mypage.relation.RelationManageScreen
+import com.whdaud.pillinTimeAndroid.presentation.mypage.subscribe.SubscribeScreen
 import com.whdaud.pillinTimeAndroid.presentation.mypage.withdrawal.WithdrawalScreen
 import com.whdaud.pillinTimeAndroid.presentation.onboarding.OnBoardingScreen
 import com.whdaud.pillinTimeAndroid.presentation.schedule.ScheduleScreen
@@ -179,8 +180,8 @@ fun NavGraph(
                     composable(route = Route.EditInfoScreen.route) {
                         EditInfoScreen(navController = navController)
                     }
-                    composable(route = Route.ServiceScreen.route) {
-//                    ServiceScreen()
+                    composable(route = Route.SubscribeScreen.route) {
+                        SubscribeScreen(navController = navController)
                     }
                     composable(route = Route.WithdrawalScreen.route) {
                         WithdrawalScreen(navController = navController)

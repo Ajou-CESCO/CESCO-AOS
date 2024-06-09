@@ -35,7 +35,7 @@ android {
         }
 
         buildConfigField("String", "BASE_URL", "${properties["BASE_URL"]}")
-
+        buildConfigField("String", "TOSS_KEY", "${properties["TOSS_KEY"]}")
     }
 
     buildTypes {
@@ -138,6 +138,6 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.barcode.scanning)
 
-    // Google Play Billing
-    implementation(libs.billing.ktx)
+    // Toss Payments
+    implementation(libs.payment.sdk.android)
 }
