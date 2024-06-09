@@ -3,12 +3,16 @@ package com.whdaud.pillinTimeAndroid.presentation.mypage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +39,7 @@ import com.whdaud.pillinTimeAndroid.ui.theme.Gray5
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
 import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.whdaud.pillinTimeAndroid.ui.theme.Primary40
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
 import com.whdaud.pillinTimeAndroid.ui.theme.White
 import kotlinx.coroutines.launch
 
@@ -46,12 +51,7 @@ fun MyPageScreen(
 ) {
     val userDetails by mainViewModel.userDetails.collectAsState()
     val relationInfoList by mainViewModel.relationInfoList.collectAsState()
-    val role =
-        if (userDetails?.isManager == true) {
-            if(userDetails?.isSubscriber == true) "프리미엄 보호자"
-            else "보호자"
-        }
-        else "피보호자"
+    val role = if (userDetails?.isManager == true) "보호자" else "피보호자"
     val name = userDetails?.name
     val navigateToScreen by viewModel.navigateToScreen.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -95,11 +95,22 @@ fun MyPageScreen(
                     .padding(bottom = BasicPadding)
             ) {
                 Spacer(modifier = Modifier.height(18.dp))
-                Text(
-                    text = role,
-                    color = Primary40,
-                    style = PillinTimeTheme.typography.body1Medium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = role,
+                        color = Primary40,
+                        style = PillinTimeTheme.typography.body1Medium
+                    )
+                    if(userDetails?.isSubscriber == true) {
+                        Icon(
+                            imageVector = Icons.Rounded.Star,
+                            contentDescription = null,
+                            tint = Primary60
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "${name}님, 안녕하세요!",
