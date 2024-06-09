@@ -135,8 +135,8 @@ fun MyPageScreen(
                     viewModel.signOut(navController) { message ->
                         scope.launch {
                             if (message != null) {
-                                snackbarHostState.showSnackbar(message)
                                 snackMessage.value = message
+                                snackbarHostState.showSnackbar(message)
                             }
                         }
                     }
