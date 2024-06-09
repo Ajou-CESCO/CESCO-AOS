@@ -1,11 +1,11 @@
-package com.example.pillinTimeAndroid.data.repository
+package com.whdaud.pillinTimeAndroid.data.repository
 
-import com.example.pillinTimeAndroid.data.remote.FcmService
-import com.example.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.FcmPushNotificationRequest
-import com.example.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
-import com.example.pillinTimeAndroid.domain.repository.FcmRepository
-import com.example.pillinTimeAndroid.domain.repository.TokenRepository
+import com.whdaud.pillinTimeAndroid.data.remote.FcmService
+import com.whdaud.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.request.FcmPushNotificationRequest
+import com.whdaud.pillinTimeAndroid.data.remote.dto.response.base.BaseResponse
+import com.whdaud.pillinTimeAndroid.domain.repository.FcmRepository
+import com.whdaud.pillinTimeAndroid.domain.repository.TokenRepository
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
@@ -27,7 +27,11 @@ class FcmRepositoryImpl @Inject constructor(
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
             val response = fcmService.postFcmPushNotification("Bearer $accessToken", fcmPushNotificationRequest)
-            Result.success(response)
+            if (response.status == 200) {
+                Result.success(response)
+            } else {
+                Result.failure(Exception(response.message))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }
