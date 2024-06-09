@@ -134,7 +134,7 @@ fun MedicineItem(
                     MedicineEffectChip(effect = sideEffects, backgroundColor = backgroundColor, textColor = White)
                 }
                 items(effects) { effect ->
-                    MedicineEffectChip(effect)
+                    MedicineEffectChip(effect = effect)
                 }
             }
         }
@@ -143,17 +143,18 @@ fun MedicineItem(
 
 @Composable
 fun MedicineEffectChip(
+    modifier: Modifier = Modifier,
     effect: String,
     backgroundColor: Color = Gray10,
     textColor: Color = Gray80
 ) {
     Box(
-        modifier = Modifier.padding(end = 6.dp)
+        modifier = Modifier
+            .padding(end = 6.dp)
+            .background(backgroundColor, shape = shapes.extraSmall)
     ) {
         Text(
-            modifier = Modifier
-                .background(backgroundColor, shape = shapes.extraSmall)
-                .padding(horizontal = 8.dp, vertical = 3.dp),
+            modifier = modifier.padding(horizontal = 8.dp, vertical = 3.dp),
             text = effect,
             color = textColor,
             style = PillinTimeTheme.typography.caption2Medium
