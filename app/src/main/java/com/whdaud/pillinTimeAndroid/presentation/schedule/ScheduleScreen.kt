@@ -19,7 +19,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +27,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whdaud.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.whdaud.pillinTimeAndroid.presentation.common.ClientListBar
 import com.whdaud.pillinTimeAndroid.presentation.common.CustomLottieView
 import com.whdaud.pillinTimeAndroid.presentation.common.CustomSnackBar
@@ -36,7 +36,6 @@ import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
 import com.whdaud.pillinTimeAndroid.presentation.schedule.calendar.WeeklyCalendar
 import com.whdaud.pillinTimeAndroid.presentation.schedule.components.ScheduleAddButton
 import com.whdaud.pillinTimeAndroid.presentation.schedule.components.ScheduleDetailPage
-import com.whdaud.pillinTimeAndroid.util.getWeeksOfMonth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -56,22 +55,9 @@ fun ScheduleScreen(
     var isRefreshing by remember { mutableStateOf(false) }
     var selectedUserIndex by remember { mutableIntStateOf(0) }
 
-    val notificationResult by viewModel.notificationResult.collectAsState("")
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val selectedDate by viewModel.selectedDate.collectAsState()
-    val totalWeeks =
-        getWeeksOfMonth(selectedDate.year, selectedDate.monthValue, selectedDate.month.maxLength())
-    val selectedWeeks =
-        getWeeksOfMonth(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+    val snackMessage = remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(true) }
-
-    val calendarPagerState =
-        rememberPagerState(pageCount = { totalWeeks }, initialPage = selectedWeeks - 1)
-    var onClickedTodayButton by remember { mutableStateOf(false) }
-    var isExpanded by rememberSaveable { mutableStateOf(false) }
-    var showCalendarBottomSheet by remember { mutableStateOf(false) }
-
 
     // when manager, memberId = current profile index memberId, else memberId = userDetails.memberId
     val memberId = if (userDetails?.isManager == true) {
@@ -161,12 +147,15 @@ fun ScheduleScreen(
                                     viewModel.postFcmPushNotification(
                                         memberId,
                                         relationInfoList[selectedUserIndex].memberName
-                                    )
-                                    scope.launch {
-                                        snackbarHostState.showSnackbar(
-                                            message = notificationResult
-                                        )
+                                    ) { message ->
+                                        scope.launch {
+                                            if (message != null) {
+                                                snackMessage.value = message
+                                                snackbarHostState.showSnackbar(message)
+                                            }
+                                        }
                                     }
+
                                 }
                             },
                             // calendar content
@@ -183,7 +172,6 @@ fun ScheduleScreen(
                     }
                 }
             }
-
             if (isButtonVisible) {
                 ScheduleAddButton(
                     Modifier
@@ -198,13 +186,13 @@ fun ScheduleScreen(
             }
             Box(
                 modifier = Modifier
+                    .padding(horizontal = BasicPadding)
                     .align(Alignment.BottomCenter)
-                    .fillMaxSize()
                     .zIndex(1f)
             ) {
                 CustomSnackBar(
                     snackbarHostState = snackbarHostState,
-                    message = notificationResult
+                    message = snackMessage.value
                 )
             }
         }
