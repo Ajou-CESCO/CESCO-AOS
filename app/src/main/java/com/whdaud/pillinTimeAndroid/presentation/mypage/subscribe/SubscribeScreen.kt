@@ -66,11 +66,10 @@ fun SubscribeScreen(
                     }
                 }
             }
+            mainViewModel.getInitData()
             Log.e("payment", "success ${result.resultCode}, ${result.data}")
-            // 결제가 취소되었어요
         } else {
             Log.e("payment", "failed: ${result.resultCode} ${result.data}")
-            // 결제가 실패하였어요
         }
     }
     Column(
