@@ -107,10 +107,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getUserDoseLog(memberId: Int) {
+    fun getUserDoseLog(memberId: Int, date: String = "") {
         viewModelScope.launch {
-            val result = medicineRepository.getDoseLog(memberId)
-            Log.e("getUserDoseLog in main", "${memberId}")
+            val result = medicineRepository.getDoseLog(memberId, date)
+            Log.e("getUserDoseLog in main", "${memberId}, ${date}")
             result.onSuccess {
                 _userDoseLog.value = it.result.logList
                 Log.e("getUserDoseLog in main", "Succeeded to fetch: ${it.result}")

@@ -172,19 +172,11 @@ fun ScheduleScreen(
                             // calendar content
                             calendar = {
                                 WeeklyCalendar(
-                                    pagerState = calendarPagerState,
-                                    onClickDate = { clickedDate ->
-                                        viewModel.updateDate(clickedDate)
-                                    },
-                                    onClickedTodayButton = {
-                                        viewModel.setDateToday()
-                                        onClickedTodayButton = true
-                                        scope.launch {
-                                            calendarPagerState.scrollToPage(selectedWeeks - 1)
+                                    onClickDate = {
+                                        if (memberId != null) {
+                                            mainViewModel.getUserDoseLog(memberId, it.toString())
                                         }
-                                    },
-                                    modifier = Modifier.weight(1f),
-                                    selectedDate = selectedDate
+                                    }
                                 )
                             }
                         )

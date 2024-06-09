@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.schedule.components
+package com.whdaud.pillinTimeAndroid.presentation.schedule.components
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -42,17 +42,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.pillinTimeAndroid.R
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicHeight
-import com.example.pillinTimeAndroid.ui.theme.Gray10
-import com.example.pillinTimeAndroid.ui.theme.Gray5
-import com.example.pillinTimeAndroid.ui.theme.Gray50
-import com.example.pillinTimeAndroid.ui.theme.Gray70
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.Primary60
-import com.example.pillinTimeAndroid.ui.theme.White
-import com.example.pillinTimeAndroid.ui.theme.shapes
+import com.whdaud.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicHeight
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray10
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray40
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray5
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray50
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
+import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.ui.theme.shapes
+import com.whdaud.pillinTimeAndroid.util.PresentOrFutureSelectableDates
+import com.whdaud.pillinTimeAndroid.util.getTodayInMillis
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -240,7 +243,10 @@ fun ScheduleDatePickerDialog(
     onDateSelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = getTodayInMillis(),
+        selectableDates = PresentOrFutureSelectableDates
+    )
     val remoteFormatter = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
     val selectedDate = datePickerState.selectedDateMillis?.let {
         remoteFormatter.format(Date(it))
@@ -288,6 +294,7 @@ fun ScheduleDatePickerDialog(
             }
         },
         colors = DatePickerDefaults.colors().copy(containerColor = White)
+
     ) {
         DatePicker(
             state = datePickerState,
@@ -307,8 +314,12 @@ fun ScheduleDatePickerDialog(
                 selectedDayContainerColor = Primary60,
                 todayContentColor = Gray90,
                 todayDateBorderColor = Primary60,
-                dividerColor = Gray70
-            )
+                dividerColor = Gray70,
+                disabledDayContentColor = Gray40,
+                disabledYearContentColor = Gray40,
+                disabledSelectedDayContainerColor = Primary60,
+                disabledSelectedDayContentColor = White
+            ),
         )
     }
 }

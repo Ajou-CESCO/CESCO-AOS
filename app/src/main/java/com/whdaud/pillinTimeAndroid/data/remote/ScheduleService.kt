@@ -31,6 +31,7 @@ interface ScheduleService {
     @GET("/api/dose/log")
     suspend fun getScheduleLog(
         @Header("Authorization") accessToken: String,
-        @Query("memberId") memberId: Int
+        @Query("memberId") memberId: Int,
+        @Query("date") date: String
     ) : BaseResponse<ScheduleLogDTO>
 }

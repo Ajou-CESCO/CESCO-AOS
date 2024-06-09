@@ -73,10 +73,10 @@ class MedicineRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getDoseLog(memberId: Int): Result<BaseResponse<ScheduleLogDTO>> {
+    override suspend fun getDoseLog(memberId: Int, date: String): Result<BaseResponse<ScheduleLogDTO>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = scheduleService.getScheduleLog("Bearer $accessToken", memberId)
+            val response = scheduleService.getScheduleLog("Bearer $accessToken", memberId, date)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)
