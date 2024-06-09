@@ -3,8 +3,11 @@ package com.whdaud.pillinTimeAndroid.presentation.home
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -16,12 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.whdaud.pillinTimeAndroid.R
 import com.whdaud.pillinTimeAndroid.domain.entity.HomeUser
 import com.whdaud.pillinTimeAndroid.presentation.common.ClientListBar
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomLottieView
 import com.whdaud.pillinTimeAndroid.presentation.common.ManagerEmptyView
 import com.whdaud.pillinTimeAndroid.presentation.home.components.HomeDetailPage
 import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
@@ -38,10 +45,7 @@ fun HomeScreen(
     val userDetails by mainViewModel.userDetails.collectAsState()
     val userDoseLog by mainViewModel.userDoseLog.collectAsState()
     val relationInfoList by mainViewModel.relationInfoList.collectAsState()
-    val totalSteps by viewModel.stepsData.collectAsState()
-    val totalSleep by viewModel.sleepData.collectAsState()
-    val avgHeartRate by viewModel.heartRateData.collectAsState()
-    val totalCalories by viewModel.totalCaloriesData.collectAsState()
+    var isLoading by remember { mutableStateOf(true) }
     val relationUserNames = relationInfoList.map { it.memberName }
     val remoteHealthData by viewModel.remoteHealthData.collectAsState()
 
@@ -101,57 +105,67 @@ fun HomeScreen(
         }
     }
 
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        if (userDetails?.isManager == true) {
-            ClientListBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .zIndex(1f),
-                profiles = relationUserNames,
-                selectedIndex = selectedUserIndex,
-                onProfileSelected = { index ->
-                    selectedUserIndex = index
-                    scope.launch {
-                        pagerState.scrollToPage(selectedUserIndex)
-                    }
-                }
+    if(isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CustomLottieView(
+                modifier = Modifier.size(200.dp),
+                lottieAnim = R.raw.dots_loading
             )
         }
-        if (userDetails?.isManager == true && relationInfoList.isEmpty()) {
-            ManagerEmptyView(navController)
-        } else {
-            HorizontalPager(
-                state = pagerState,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                HomeDetailPage(
-                    modifier = Modifier.zIndex(-1f),
-                    navController = navController,
-                    userDetail = homeUser,
-                    onPullRefresh = {
+    } else {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (userDetails?.isManager == true) {
+                ClientListBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .zIndex(1f),
+                    profiles = relationUserNames,
+                    selectedIndex = selectedUserIndex,
+                    onProfileSelected = { index ->
+                        selectedUserIndex = index
                         scope.launch {
-                            isRefreshing = true
-                            homeUser?.memberId?.let { it1 -> viewModel.getRemoteHealthData(it1, true) }
-                            if (userDetails?.isManager == true) {
-                                mainViewModel.getUserDoseLog(relationInfoList[selectedUserIndex].memberId)
-                                mainViewModel.getRelationship()
-                            } else {
-                                userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) }
-                            }
-                            mainViewModel.getInitData()
-                            delay(1000)
-                            isRefreshing = false
+                            pagerState.scrollToPage(selectedUserIndex)
                         }
-                    },
-                    isRefreshing = isRefreshing,
-                    userDoseLog = userDoseLog,
-                    healthData = remoteHealthData
+                    }
                 )
+            }
+            if (userDetails?.isManager == true && relationInfoList.isEmpty()) {
+                ManagerEmptyView(navController)
+            } else {
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    HomeDetailPage(
+                        modifier = Modifier.zIndex(-1f),
+                        navController = navController,
+                        userDetail = homeUser,
+                        onPullRefresh = {
+                            scope.launch {
+                                isRefreshing = true
+                                homeUser?.memberId?.let { it1 -> viewModel.getRemoteHealthData(it1, true) }
+                                if (userDetails?.isManager == true) {
+                                    mainViewModel.getUserDoseLog(relationInfoList[selectedUserIndex].memberId)
+                                    mainViewModel.getRelationship()
+                                } else {
+                                    userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) }
+                                }
+                                mainViewModel.getInitData()
+                                delay(1000)
+                                isRefreshing = false
+                            }
+                        },
+                        isRefreshing = isRefreshing,
+                        userDoseLog = userDoseLog,
+                        healthData = remoteHealthData
+                    )
+                }
             }
         }
     }
+    LaunchedEffect(userDetails) { if (userDetails != null) { isLoading = false } }
     LaunchedEffect(pagerState.currentPage) { selectedUserIndex = pagerState.currentPage }
     LaunchedEffect(userDetails?.isManager) { mainViewModel.getRelationship() }
     // when refreshed, there is no relation

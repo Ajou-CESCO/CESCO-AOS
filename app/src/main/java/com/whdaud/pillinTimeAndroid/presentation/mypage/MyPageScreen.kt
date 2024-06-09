@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,12 +18,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.whdaud.pillinTimeAndroid.R
 import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomLottieView
 import com.whdaud.pillinTimeAndroid.presentation.common.CustomSnackBar
 import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
 import com.whdaud.pillinTimeAndroid.presentation.mypage.components.MainMenu
@@ -42,18 +46,17 @@ fun MyPageScreen(
 ) {
     val userDetails by mainViewModel.userDetails.collectAsState()
     val relationInfoList by mainViewModel.relationInfoList.collectAsState()
-
     val role =
         if (userDetails?.isManager == true) {
             if(userDetails?.isSubscriber == true) "프리미엄 보호자"
             else "보호자"
         }
         else "피보호자"
-
     val name = userDetails?.name
     val navigateToScreen by viewModel.navigateToScreen.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    var isLoading by remember { mutableStateOf(true) }
     val snackMessage = remember { mutableStateOf("") }
     if (navigateToScreen != null) {
         navController.navigate(navigateToScreen!!) {
@@ -62,7 +65,7 @@ fun MyPageScreen(
         }
         viewModel.clearNavigation()
     }
-
+    LaunchedEffect(userDetails) { if (userDetails != null) { isLoading = false } }
     LaunchedEffect(relationInfoList, userDetails) {
         if (relationInfoList.isEmpty() && userDetails?.isManager == false) {
             navController.navigate("signupClientScreen") {
@@ -71,22 +74,14 @@ fun MyPageScreen(
             }
         }
     }
-    if (userDetails == null) {
-        // 로딩 상태를 표시
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Gray5),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "로딩 중...",
-                color = Gray90,
-                style = PillinTimeTheme.typography.body1Medium
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CustomLottieView(
+                modifier = Modifier.size(200.dp),
+                lottieAnim = R.raw.dots_loading
             )
         }
-    } else
-    {
+    } else {
         Column(
             modifier = Modifier
                 .fillMaxSize()

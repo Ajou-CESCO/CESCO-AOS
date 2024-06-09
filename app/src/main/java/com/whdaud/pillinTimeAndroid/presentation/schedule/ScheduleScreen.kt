@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.SnackbarHostState
@@ -26,7 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.whdaud.pillinTimeAndroid.R
 import com.whdaud.pillinTimeAndroid.presentation.common.ClientListBar
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomLottieView
 import com.whdaud.pillinTimeAndroid.presentation.common.CustomSnackBar
 import com.whdaud.pillinTimeAndroid.presentation.common.ManagerEmptyView
 import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
@@ -57,10 +60,14 @@ fun ScheduleScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val selectedDate by viewModel.selectedDate.collectAsState()
-    val totalWeeks = getWeeksOfMonth(selectedDate.year, selectedDate.monthValue, selectedDate.month.maxLength())
-    val selectedWeeks = getWeeksOfMonth(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+    val totalWeeks =
+        getWeeksOfMonth(selectedDate.year, selectedDate.monthValue, selectedDate.month.maxLength())
+    val selectedWeeks =
+        getWeeksOfMonth(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+    var isLoading by remember { mutableStateOf(true) }
 
-    val calendarPagerState = rememberPagerState(pageCount = {totalWeeks}, initialPage = selectedWeeks-1)
+    val calendarPagerState =
+        rememberPagerState(pageCount = { totalWeeks }, initialPage = selectedWeeks - 1)
     var onClickedTodayButton by remember { mutableStateOf(false) }
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     var showCalendarBottomSheet by remember { mutableStateOf(false) }
@@ -97,112 +104,123 @@ fun ScheduleScreen(
             } else 1
         }
     )
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Column {
-            if (userDetails?.isManager == true) {
-                ClientListBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .zIndex(1f),
-                    profiles = relationUserNames,
-                    selectedIndex = selectedUserIndex,
-                    onProfileSelected = { index ->
-                        selectedUserIndex = index
-                        scope.launch {
-                            pagerState.scrollToPage(selectedUserIndex)
-                        }
-                    }
-                )
-            }
-
-            if (userDetails?.isManager == true && relationInfoList.isEmpty()) {
-                ManagerEmptyView(navController)
-            } else {
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    ScheduleDetailPage(
-                        modifier = Modifier.zIndex(-1f),
-                        isManager = userDetails?.isManager == true,
-                        onPullRefresh = {
+    if (isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CustomLottieView(
+                modifier = Modifier.size(200.dp),
+                lottieAnim = R.raw.dots_loading
+            )
+        }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Column {
+                if (userDetails?.isManager == true) {
+                    ClientListBar(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .zIndex(1f),
+                        profiles = relationUserNames,
+                        selectedIndex = selectedUserIndex,
+                        onProfileSelected = { index ->
+                            selectedUserIndex = index
                             scope.launch {
-                                isRefreshing = true
-                                mainViewModel.getInitData()
-                                if (memberId != null) {
-                                    mainViewModel.getUserDoseLog(memberId)
-                                    mainViewModel.getRelationship()
-                                }
-                                delay(1000)
-                                isRefreshing = false
+                                pagerState.scrollToPage(selectedUserIndex)
                             }
-                        },
-                        isRefreshing = isRefreshing,
-                        userDoseLog = userDoseLog,
-                        onPokeClick = {
-                            if (memberId != null) {
-                                viewModel.postFcmPushNotification(memberId, relationInfoList[selectedUserIndex].memberName)
-                                scope.launch {
-                                    snackbarHostState.showSnackbar(
-                                            message = notificationResult
-                                        )
-                                }
-                            }
-                        },
-                        // calendar content
-                        calendar = {
-                            WeeklyCalendar(
-                                pagerState = calendarPagerState,
-                                onClickDate = { clickedDate ->
-                                    viewModel.updateDate(clickedDate)
-                                },
-                                onClickedTodayButton = {
-                                    viewModel.setDateToday()
-                                    onClickedTodayButton = true
-                                    scope.launch {
-                                        calendarPagerState.scrollToPage(selectedWeeks - 1)
-                                    }
-                                },
-                                modifier = Modifier.weight(1f),
-                                selectedDate = selectedDate
-                            )
                         }
                     )
                 }
 
+                if (userDetails?.isManager == true && relationInfoList.isEmpty()) {
+                    ManagerEmptyView(navController)
+                } else {
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ScheduleDetailPage(
+                            modifier = Modifier.zIndex(-1f),
+                            isManager = userDetails?.isManager == true,
+                            onPullRefresh = {
+                                scope.launch {
+                                    isRefreshing = true
+                                    mainViewModel.getInitData()
+                                    if (memberId != null) {
+                                        mainViewModel.getUserDoseLog(memberId)
+                                        mainViewModel.getRelationship()
+                                    }
+                                    delay(1000)
+                                    isRefreshing = false
+                                }
+                            },
+                            isRefreshing = isRefreshing,
+                            userDoseLog = userDoseLog,
+                            onPokeClick = {
+                                if (memberId != null) {
+                                    viewModel.postFcmPushNotification(
+                                        memberId,
+                                        relationInfoList[selectedUserIndex].memberName
+                                    )
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            message = notificationResult
+                                        )
+                                    }
+                                }
+                            },
+                            // calendar content
+                            calendar = {
+                                WeeklyCalendar(
+                                    pagerState = calendarPagerState,
+                                    onClickDate = { clickedDate ->
+                                        viewModel.updateDate(clickedDate)
+                                    },
+                                    onClickedTodayButton = {
+                                        viewModel.setDateToday()
+                                        onClickedTodayButton = true
+                                        scope.launch {
+                                            calendarPagerState.scrollToPage(selectedWeeks - 1)
+                                        }
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    selectedDate = selectedDate
+                                )
+                            }
+                        )
+                    }
+                }
             }
 
-        }
-        if (isButtonVisible) {
-            ScheduleAddButton(
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(bottom = 12.dp, end = 16.dp),
-                buttonState = buttonState,
-                onClick = {
-                    Log.e("scheduleAddScreen", "On Navigate With $memberId")
-                    navController.navigate("scheduleAddScreen/${memberId}")
-                }
-            )
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxSize()
-                .zIndex(1f)
-        ) {
-            CustomSnackBar(
-                snackbarHostState = snackbarHostState,
-                message = notificationResult
-            )
+            if (isButtonVisible) {
+                ScheduleAddButton(
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 12.dp, end = 16.dp),
+                    buttonState = buttonState,
+                    onClick = {
+                        Log.e("scheduleAddScreen", "On Navigate With $memberId")
+                        navController.navigate("scheduleAddScreen/${memberId}")
+                    }
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxSize()
+                    .zIndex(1f)
+            ) {
+                CustomSnackBar(
+                    snackbarHostState = snackbarHostState,
+                    message = notificationResult
+                )
+            }
         }
     }
+    LaunchedEffect(userDetails) { if (userDetails != null) { isLoading = false } }
     LaunchedEffect(memberId) { memberId?.let { mainViewModel.getUserDoseLog(it) } }
     LaunchedEffect(true) { userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) } }
     LaunchedEffect(selectedUserIndex) { pagerState.scrollToPage(selectedUserIndex) }
     LaunchedEffect(pagerState.currentPage) { selectedUserIndex = pagerState.currentPage }
     LaunchedEffect(userDetails?.isManager) { mainViewModel.getRelationship() }
-
 }
