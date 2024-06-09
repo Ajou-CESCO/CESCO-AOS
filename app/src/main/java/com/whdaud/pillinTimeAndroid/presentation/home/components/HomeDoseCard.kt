@@ -35,6 +35,7 @@ import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
 import com.whdaud.pillinTimeAndroid.presentation.schedule.medicine.MedicineDetailDialog
 import com.whdaud.pillinTimeAndroid.ui.theme.Error60
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray10
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray20
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray30
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray60
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
@@ -145,7 +146,7 @@ fun DoseItem(
     val indexColor = listOf(Error60, Warning60, Success60, Primary40, Purple60)
     val cabinetColor =
         if (doseLog.cabinetIndex in 1..5) indexColor[doseLog.cabinetIndex - 1]
-        else Gray60 // index out of range 방지
+        else Gray20 // index out of range 방지
 
     val medicineInfoV2 by mainViewModel.medicineInfoV2.collectAsState()
     val showMedicineDialog = remember { mutableStateOf(false) }
