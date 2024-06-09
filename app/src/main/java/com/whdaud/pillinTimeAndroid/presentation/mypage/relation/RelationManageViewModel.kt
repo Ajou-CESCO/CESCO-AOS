@@ -9,6 +9,7 @@ import com.whdaud.pillinTimeAndroid.data.remote.dto.response.RelationReqResponse
 import com.whdaud.pillinTimeAndroid.domain.repository.RelationRepository
 import com.whdaud.pillinTimeAndroid.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,8 +51,9 @@ class RelationManageViewModel @Inject constructor(
             }
         }
     }
-    fun deleteRelation(relationId: Int) {
-        viewModelScope.launch {
+
+    fun deleteRelation(relationId: Int): Job {
+        return viewModelScope.launch {
             val result = relationRepository.deleteRelation(relationId)
             Log.d("Relation Delete", "보호 관계 id: $relationId")
             result.onSuccess { response ->
@@ -62,8 +64,8 @@ class RelationManageViewModel @Inject constructor(
         }
     }
 
-    fun deleteCabinet(cabinetId: Int) {
-        viewModelScope.launch {
+    fun deleteCabinet(cabinetId: Int): Job {
+        return viewModelScope.launch {
             val result = userRepository.deleteCabinet(cabinetId)
             result.onSuccess {
                 Log.d("deleteCabinet", "Succeeded to delete Cabinet: ${it.result}")

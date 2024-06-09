@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.mypage.relation
+package com.whdaud.pillinTimeAndroid.presentation.mypage.relation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,21 +26,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.R
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
-import com.example.pillinTimeAndroid.presentation.common.CustomSwipeCard
-import com.example.pillinTimeAndroid.presentation.common.CustomTextField
-import com.example.pillinTimeAndroid.presentation.common.CustomTextFieldDialog
-import com.example.pillinTimeAndroid.presentation.common.CustomToast
-import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
-import com.example.pillinTimeAndroid.presentation.common.InputType
-import com.example.pillinTimeAndroid.presentation.main.MainViewModel
-import com.example.pillinTimeAndroid.ui.theme.Gray60
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.White
-import com.example.pillinTimeAndroid.util.PhoneVisualTransformation
+import com.whdaud.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomSwipeCard
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTextField
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTextFieldDialog
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.whdaud.pillinTimeAndroid.presentation.common.InputType
+import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray60
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.util.PhoneVisualTransformation
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +61,6 @@ fun RelationManageScreen(
     val showToast = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val selectedUser = remember { mutableStateOf("") }
-    val managerRequest by viewModel.managerRequest.collectAsState()
 
     Column {
         CustomTopBar(
@@ -141,31 +141,37 @@ fun RelationManageScreen(
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(20.dp))
-
         CustomSwipeCard(
             isManager = userDetail.value?.isManager,
-            relationList = relationList,
             onRemove = { relation ->
-                selectedUser.value = relation.memberName
                 scope.launch {
+                    selectedUser.value = relation.memberName
                     showToast.value = true
-                    mainViewModel.removeRelation(relation)
-                    viewModel.deleteRelation(relation.id)
+                    val deleteRelationJob = withContext(Dispatchers.Main) {
+                        viewModel.deleteRelation(relation.id)
+                    }
+                    deleteRelationJob.join()
+                    mainViewModel.getRelationship()
                 }
             },
-            onDisconnect = {cabinetId ->
-                viewModel.deleteCabinet(cabinetId)
-            }
+            onDisconnect = { cabinetId ->
+                scope.launch {
+                    val deleteCabinetJob = withContext(Dispatchers.Main) {
+                        viewModel.deleteCabinet(cabinetId)
+                    }
+                    deleteCabinetJob.join()
+                    mainViewModel.getRelationship()
+                }
+            },
         )
         Spacer(modifier = Modifier.weight(1f))
         if(showToast.value) {
-            CustomToast(
-                text = "${selectedUser.value}님과의 보호관계를 삭제했어요"
-            ) {
-                showToast.value = false
-            }
+//            CustomToast(
+//                text = "${selectedUser.value}님과의 보호관계를 삭제했어요"
+//            ) {
+//                showToast.value = false
+//            }
         }
     }
 }
