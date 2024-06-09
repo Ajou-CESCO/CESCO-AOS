@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.common.ext
+package com.whdaud.pillinTimeAndroid.presentation.common.ext
 
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
