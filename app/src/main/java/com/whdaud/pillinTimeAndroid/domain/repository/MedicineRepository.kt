@@ -11,6 +11,6 @@ interface MedicineRepository {
     suspend fun getMedicineInfoV2(medicineId: Int): Result<BaseResponse<MedicineDTO>>
     suspend fun postDoseSchedule(scheduleRequest: ScheduleRequest): Result<BaseResponse<Any>>
     suspend fun getDoseSchedule(memberId: Int): Result<BaseResponse<List<ScheduleDTO>>>
-    suspend fun deleteDoseSchedule(memberId: Int, medicineId: String, cabinetIndex: Int): Result<BaseResponse<Any>>
+    suspend fun deleteDoseSchedule(memberId: Int, groupId: Int): Result<BaseResponse<Any>>
     suspend fun getDoseLog(memberId: Int): Result<BaseResponse<ScheduleLogDTO>>
 }

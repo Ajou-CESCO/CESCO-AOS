@@ -62,12 +62,11 @@ class MedicineRepositoryImpl @Inject constructor(
 
     override suspend fun deleteDoseSchedule(
         memberId: Int,
-        medicineId: String,
-        cabinetIndex: Int
+        groupId: Int
     ): Result<BaseResponse<Any>> {
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
-            val response = scheduleService.deleteDoseSchedule("Bearer $accessToken", memberId, medicineId, cabinetIndex)
+            val response = scheduleService.deleteDoseSchedule("Bearer $accessToken", memberId, groupId)
             Result.success(response)
         } catch (e: Exception) {
             Result.failure(e)

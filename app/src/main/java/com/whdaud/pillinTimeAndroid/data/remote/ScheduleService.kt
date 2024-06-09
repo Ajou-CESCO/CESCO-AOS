@@ -17,7 +17,6 @@ interface ScheduleService {
         @Header("Authorization") accessToken: String,
         @Query("memberId") memberId: Int
     ) : BaseResponse<List<ScheduleDTO>>
-
     @POST("/api/dose/plan")
     suspend fun postDoseSchedule(
         @Header("Authorization") accessToken: String,
@@ -27,8 +26,7 @@ interface ScheduleService {
     suspend fun deleteDoseSchedule(
         @Header("Authorization") accessToken: String,
         @Query("memberId") memberId: Int,
-        @Query("medicineId") medicineId: String,
-        @Query("cabinetIndex") cabinetIndex: Int
+        @Query("groupId") groupId: Int
     ): BaseResponse<Any>
     @GET("/api/dose/log")
     suspend fun getScheduleLog(

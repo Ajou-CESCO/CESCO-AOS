@@ -71,9 +71,9 @@ class EditScheduleViewModel @Inject constructor(
         }
     }
 
-    fun deleteDoseSchedule(memberId: Int, medicineId: String, cabinetIndex: Int) {
+    fun deleteDoseSchedule(memberId: Int, groupId: Int) {
         viewModelScope.launch {
-            val result = medicineRepository.deleteDoseSchedule(memberId, medicineId, cabinetIndex)
+            val result = medicineRepository.deleteDoseSchedule(memberId, groupId)
             result.onSuccess {
                 Log.e("EditScheduleViewModel", "succeed to delete dose schedule")
                 getDoseSchedule(memberId)
