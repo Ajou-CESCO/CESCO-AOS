@@ -55,7 +55,6 @@ import com.whdaud.pillinTimeAndroid.ui.theme.Primary60
 import com.whdaud.pillinTimeAndroid.ui.theme.White
 import com.whdaud.pillinTimeAndroid.ui.theme.shapes
 import com.whdaud.pillinTimeAndroid.util.PresentOrFutureSelectableDates
-import com.whdaud.pillinTimeAndroid.util.getTodayInMillis
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -244,7 +243,6 @@ fun ScheduleDatePickerDialog(
     onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = getTodayInMillis(),
         selectableDates = PresentOrFutureSelectableDates
     )
     val remoteFormatter = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())

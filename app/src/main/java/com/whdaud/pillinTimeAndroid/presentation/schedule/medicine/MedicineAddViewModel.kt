@@ -38,8 +38,8 @@ class MedicineAddViewModel @Inject constructor(
     val selectedMedicine = mutableStateOf<MedicineDTO?>(null)
     val selectedDays = mutableStateListOf<Int>()
     val selectedTimes = mutableStateListOf<String>()
-    val scheduleStartDate = mutableStateOf("")
-    val scheduleEndDate = mutableStateOf("")
+    val scheduleStartDate = mutableStateOf(getCurrentDateFormatted())
+    val scheduleEndDate = mutableStateOf(getEndDateFormatted())
     val selectedIndex = mutableIntStateOf(-1)
 
     val currentUsedIndex = mutableIntListOf()
@@ -48,7 +48,15 @@ class MedicineAddViewModel @Inject constructor(
     fun setMemberId(memberId: Int) {
         _memberId.intValue = memberId
     }
+    private fun getCurrentDateFormatted(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        return LocalDate.now().format(formatter)
+    }
 
+    private fun getEndDateFormatted(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        return LocalDate.now().plusDays(7).format(formatter)
+    }
     fun getUsingCabinetIndex(memberId: Int) {
         viewModelScope.launch {
             val result = medicineRepository.getDoseSchedule(memberId)
@@ -173,12 +181,25 @@ class MedicineAddViewModel @Inject constructor(
     }
 
     fun checkButtonState(): Boolean {
+        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일")
+        val start = LocalDate.parse(scheduleStartDate.value, formatter)
+        val end = LocalDate.parse(scheduleEndDate.value, formatter)
+        val isInWeek = start.plusDays(7).isBefore(end)
+        val daysOfWeek = mutableListOf<Int>()
+        var current = start
+        while (!current.isAfter(end)) {
+            daysOfWeek.add(current.dayOfWeek.value)
+            current = current.plusDays(1)
+        }
+        val adjustedSelectedDays = selectedDays.map { it + 1 }
+        val containsAll = daysOfWeek.containsAll(adjustedSelectedDays)
         return when (currentPageIndex.intValue) {
             0 -> selectedMedicine.value != null
             1 -> selectedDays.isNotEmpty()
             2 -> selectedDays.isNotEmpty() && selectedTimes.isNotEmpty()
             3 -> scheduleStartDate.value.isNotEmpty() && scheduleEndDate.value.isNotEmpty()
                 && scheduleStartDate.value <= scheduleEndDate.value
+                && (isInWeek || containsAll)
             4 -> selectedIndex.intValue > 0 && !currentUsedIndex.contains(selectedIndex.intValue)
             else -> true
         }
