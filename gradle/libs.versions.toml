@@ -3,6 +3,7 @@ accompanistPermissions = "0.30.1"
 accompanistSystemuicontroller = "0.31.4-beta"
 agp = "8.3.1"
 barcodeScanning = "17.2.0"
+billingKtx = "6.0.1"
 cameraCamera2 = "1.3.3"
 coilCompose = "2.4.0"
 connectClient = "1.1.0-alpha07"
@@ -10,17 +11,17 @@ converterGson = "2.9.0"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
 detektFormatting = "1.19.0"
-firebaseBom = "33.0.0"
+firebaseBom = "33.1.0"
 foundation = "1.6.7"
-hiltAndroid = "2.49"
-hiltCompiler = "2.48.1"
+hiltAndroid = "2.50"
+hiltCompiler = "2.50"
 hiltNavigationCompose = "1.2.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.0"
+lifecycleRuntimeKtx = "2.8.1"
 activityCompose = "1.9.0"
 composeBom = "2024.05.00"
 navigationCompose = "2.7.7"
@@ -32,7 +33,7 @@ parcelize = "1.9.0"
 ktlint = "10.2.1"
 detekt = "1.19.0"
 lottie = "6.4.0"
-googleService = "4.4.1"
+googleService = "4.4.2"
 firebaseCrashlytics = "3.0.1"
 
 [libraries]
@@ -51,6 +52,7 @@ androidx-navigation-compose = { module = "androidx.navigation:navigation-compose
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingCompose" }
 barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
+billing-ktx = { module = "com.android.billingclient:billing-ktx", version.ref = "billingKtx" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektFormatting" }
