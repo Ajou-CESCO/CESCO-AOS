@@ -1,4 +1,4 @@
-# PillinTime-Android
+# CESCO-Android
 
 ## 팀원 소개
 
