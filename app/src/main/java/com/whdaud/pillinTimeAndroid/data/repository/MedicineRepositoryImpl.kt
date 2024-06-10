@@ -82,4 +82,14 @@ class MedicineRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun patchDoseSchedule(scheduleDTO: ScheduleDTO): Result<BaseResponse<Any>> {
+        val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
+        return try {
+            val response = scheduleService.patchDoseSchedule("Bearer $accessToken", scheduleDTO)
+            Result.success(response)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

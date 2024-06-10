@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,8 +29,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.whdaud.pillinTimeAndroid.R
 import com.whdaud.pillinTimeAndroid.domain.entity.HomeUser
+import com.whdaud.pillinTimeAndroid.presentation.Dimens
 import com.whdaud.pillinTimeAndroid.presentation.common.ClientListBar
 import com.whdaud.pillinTimeAndroid.presentation.common.CustomLottieView
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomSnackBar
 import com.whdaud.pillinTimeAndroid.presentation.common.ManagerEmptyView
 import com.whdaud.pillinTimeAndroid.presentation.home.components.HomeDetailPage
 import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
@@ -48,6 +52,7 @@ fun HomeScreen(
     var isLoading by remember { mutableStateOf(true) }
     val relationUserNames = relationInfoList.map { it.memberName }
     val remoteHealthData by viewModel.remoteHealthData.collectAsState()
+    val managerRequest by viewModel.managerRequest.collectAsState()
 
     val pagerState = rememberPagerState(
         pageCount = {
@@ -64,6 +69,8 @@ fun HomeScreen(
         if (userDetails?.isManager == false)
             rememberLauncherForActivityResult(viewModel.permissionsLauncher) { hasPermissions = true }
         else null
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackMessage = remember { mutableStateOf("") }
 
     // 피보호자일때만 권한 체크
     LaunchedEffect(userDetails?.isManager == false) {
@@ -153,19 +160,45 @@ fun HomeScreen(
                                     userDetails?.memberId?.let { mainViewModel.getUserDoseLog(it) }
                                 }
                                 mainViewModel.getInitData()
+                                viewModel.getManagerRequest()
                                 delay(1000)
                                 isRefreshing = false
                             }
                         },
+
                         onHealthRefresh = {
                             homeUser?.memberId?.let { it1 -> viewModel.postLocalHealthData(it1) }
                         },
                         isRefreshing = isRefreshing,
                         userDoseLog = userDoseLog,
-                        healthData = remoteHealthData
-                    )
+                        healthData = remoteHealthData,
+                        managerRequest = managerRequest
+                    ) { requestId, managerName ->
+                        if (managerName != null) {
+                            viewModel.acceptManagerRequest(requestId, managerName) { message ->
+                                if (message != null) {
+                                    scope.launch {
+                                        snackMessage.value = message
+                                        snackbarHostState.showSnackbar(message)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
+        }
+        Box(
+            modifier = Modifier
+                .padding(horizontal = Dimens.BasicPadding)
+                .fillMaxSize()
+                .zIndex(2f),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            CustomSnackBar(
+                snackbarHostState = snackbarHostState,
+                message = snackMessage.value
+            )
         }
     }
     LaunchedEffect(userDetails) { if (userDetails != null) { isLoading = false } }

@@ -149,8 +149,4 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
-    fun removeRelation(relation: RelationDTO) {
-        _relationInfoList.value = _relationInfoList.value.toMutableList().apply { remove(relation) }
-    }
 }

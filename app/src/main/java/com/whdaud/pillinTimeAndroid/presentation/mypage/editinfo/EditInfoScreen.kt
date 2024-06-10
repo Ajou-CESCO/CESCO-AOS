@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.mypage.editinfo
+package com.whdaud.pillinTimeAndroid.presentation.mypage.editinfo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,16 +18,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicPadding
-import com.example.pillinTimeAndroid.presentation.common.ButtonColor
-import com.example.pillinTimeAndroid.presentation.common.ButtonSize
-import com.example.pillinTimeAndroid.presentation.common.CustomAlertDialog
-import com.example.pillinTimeAndroid.presentation.common.CustomButton
-import com.example.pillinTimeAndroid.presentation.common.CustomToast
-import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
-import com.example.pillinTimeAndroid.ui.theme.Gray90
-import com.example.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.example.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.whdaud.pillinTimeAndroid.presentation.common.ButtonColor
+import com.whdaud.pillinTimeAndroid.presentation.common.ButtonSize
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomAlertDialog
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomButton
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
+import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
+import com.whdaud.pillinTimeAndroid.ui.theme.White
 
 @Composable
 fun EditInfoScreen(
@@ -120,9 +119,9 @@ fun EditInfoScreen(
                 onDismiss = { showDialog.value = false })
         }
         if(showToast.value) {
-            CustomToast(text = "약통을 성공적으로 연결 해제하였습니다") {
-                showToast.value = false
-            }
+//            CustomToast(text = "약통을 성공적으로 연결 해제하였습니다") {
+//                showToast.value = false
+//            }
         }
     }
 }

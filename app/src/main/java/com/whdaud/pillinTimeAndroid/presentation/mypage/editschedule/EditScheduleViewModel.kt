@@ -1,6 +1,7 @@
 package com.whdaud.pillinTimeAndroid.presentation.mypage.editschedule
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.whdaud.pillinTimeAndroid.data.remote.dto.RelationDTO
@@ -22,7 +23,6 @@ class EditScheduleViewModel @Inject constructor(
     private val medicineRepository: MedicineRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
-
     private val _relationInfoList = MutableStateFlow<List<RelationDTO>>(emptyList())
     val relationInfoList: StateFlow<List<RelationDTO>> = _relationInfoList
 
@@ -31,6 +31,9 @@ class EditScheduleViewModel @Inject constructor(
 
     private val _doseSchedule = MutableStateFlow<List<ScheduleDTO>>(emptyList())
     val doseSchedule: StateFlow<List<ScheduleDTO>> = _doseSchedule
+
+    val selectedDays = mutableStateListOf<Int>()
+    val selectedTimes = mutableStateListOf<String>()
 
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage: SharedFlow<String> get() = _toastMessage
@@ -71,6 +74,19 @@ class EditScheduleViewModel @Inject constructor(
         }
     }
 
+    fun patchDoseSchedule(scheduleDTO: ScheduleDTO, memberId: Int) {
+        viewModelScope.launch {
+            Log.e("EditScheduleViewModel", "$scheduleDTO, $memberId")
+            val result = medicineRepository.patchDoseSchedule(scheduleDTO)
+            result.onSuccess {response ->
+                getDoseSchedule(memberId)
+                Log.e("EditScheduleViewModel", "succeed to patch dose schedule")
+            }.onFailure {
+                Log.e("EditScheduleViewModel", "Failed to patch dose schedule: ${it.message}")
+            }
+        }
+    }
+
     fun deleteDoseSchedule(memberId: Int, groupId: Int) {
         viewModelScope.launch {
             val result = medicineRepository.deleteDoseSchedule(memberId, groupId)
@@ -88,5 +104,38 @@ class EditScheduleViewModel @Inject constructor(
 
     private suspend fun showToast(message: String) {
         _toastMessage.emit(message)
+    }
+
+    fun selectDays(dayIndex: Int) {
+        if (selectedDays.contains(dayIndex)) {
+            selectedDays.remove(dayIndex)
+        } else {
+            selectedDays.add(dayIndex)
+        }
+    }
+
+    fun selectTimes(timeIndex: String) {
+        if (selectedTimes.contains(timeIndex)) {
+            selectedTimes.remove(timeIndex)
+        } else {
+            selectedTimes.add(timeIndex)
+        }
+    }
+
+    fun validateChange(): Boolean {
+        return when {
+            selectedDays != _doseSchedule.value -> true
+            else -> false
+//            selectedDays != _doseSchedule.value && selectedTimes == _doseSchedule.value.-> true
+//
+//            0 -> selectedMedicine.value != null
+//            1 -> selectedDays.isNotEmpty()
+//            2 -> selectedDays.isNotEmpty() && selectedTimes.isNotEmpty()
+//            3 -> scheduleStartDate.value.isNotEmpty() && scheduleEndDate.value.isNotEmpty()
+//                && scheduleStartDate.value <= scheduleEndDate.value
+//                && (isInWeek || containsAll)
+//            4 -> selectedIndex.intValue > 0 && !currentUsedIndex.contains(selectedIndex.intValue)
+//            else -> true
+        }
     }
 }

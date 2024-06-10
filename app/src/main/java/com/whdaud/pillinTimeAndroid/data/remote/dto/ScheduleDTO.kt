@@ -2,6 +2,7 @@ package com.whdaud.pillinTimeAndroid.data.remote.dto
 
 data class ScheduleDTO (
     val groupId: Int,
+    val memberId: Int,
     val medicineId: String,
     val medicineName: String,
     val medicineAdverse: MedicineAdverse,

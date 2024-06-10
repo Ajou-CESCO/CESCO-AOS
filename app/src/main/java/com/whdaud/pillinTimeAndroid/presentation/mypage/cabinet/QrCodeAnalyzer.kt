@@ -1,6 +1,5 @@
-package com.example.pillinTimeAndroid.presentation.mypage.cabinet
+package com.whdaud.pillinTimeAndroid.presentation.mypage.cabinet
 
-import android.content.Context
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -11,7 +10,6 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 
 class QrCodeAnalyzer(
-    private val context: Context,
     private val onQrCodeScanned: (String) -> Unit
 ): ImageAnalysis.Analyzer {
     private val options = BarcodeScannerOptions.Builder()
@@ -32,7 +30,6 @@ class QrCodeAnalyzer(
                     ?.mapNotNull { it.rawValue }
                     ?.joinToString(",")
                     ?.let {
-//                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                         onQrCodeScanned(it)
                     }
             }.addOnCompleteListener {

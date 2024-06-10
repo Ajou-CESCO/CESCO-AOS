@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.signin
+package com.whdaud.pillinTimeAndroid.presentation.signin
 
 import android.Manifest
 import android.os.Build
@@ -13,17 +13,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.presentation.common.ButtonColor
-import com.example.pillinTimeAndroid.presentation.common.ButtonSize
-import com.example.pillinTimeAndroid.presentation.common.CustomButton
-import com.example.pillinTimeAndroid.presentation.common.CustomTopBar
-import com.example.pillinTimeAndroid.presentation.common.GeneralScreen
-import com.example.pillinTimeAndroid.presentation.common.LoadingScreen
-import com.example.pillinTimeAndroid.presentation.signin.components.SignInPage
-import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
-import com.example.pillinTimeAndroid.util.fadeInSlideEffect
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
+import com.whdaud.pillinTimeAndroid.presentation.common.ButtonColor
+import com.whdaud.pillinTimeAndroid.presentation.common.ButtonSize
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomButton
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomTopBar
+import com.whdaud.pillinTimeAndroid.presentation.common.GeneralScreen
+import com.whdaud.pillinTimeAndroid.presentation.common.LoadingScreen
+import com.whdaud.pillinTimeAndroid.presentation.signin.components.SignInPage
+import com.whdaud.pillinTimeAndroid.presentation.signin.components.signInPages
+import com.whdaud.pillinTimeAndroid.util.fadeInSlideEffect
 import kotlinx.coroutines.delay
 
 @Composable

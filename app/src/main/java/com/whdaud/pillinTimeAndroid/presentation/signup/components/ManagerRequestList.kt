@@ -33,7 +33,7 @@ import com.whdaud.pillinTimeAndroid.ui.theme.shapes
 @Composable
 fun ManagerRequestList(
     managers: List<RelationReqResponse>,
-    onConfirm: (Int) -> Unit
+    onConfirm: (Int, String) -> Unit
 ) {
     val showDialog = remember { mutableStateOf(false) }
     var selectedManagerName by remember { mutableStateOf("") }
@@ -83,7 +83,7 @@ fun ManagerRequestList(
                 description = "수락을 선택하면 ${selectedManagerName}님이 회원님의\n약 복용 현황과 건강 상태를 관리할 수 있어요.",
                 confirmText = "수락할게요",
                 dismissText = "거절할게요",
-                onConfirm = { onConfirm(requestId) },
+                onConfirm = { onConfirm(requestId, selectedManagerName) },
                 onDismiss = { showDialog.value = false }
             )
         }

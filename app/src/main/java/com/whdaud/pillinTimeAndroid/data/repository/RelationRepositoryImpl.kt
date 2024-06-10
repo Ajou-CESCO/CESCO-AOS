@@ -58,7 +58,11 @@ class RelationRepositoryImpl @Inject constructor(
         val accessToken = tokenRepository.loadAccessToken().firstOrNull().orEmpty()
         return try {
             val response = relationService.postRelation("Bearer $accessToken", requestId)
-            Result.success(response)
+            if (response.status == 200) {
+                Result.success(response)
+            } else {
+                Result.failure(Exception(response.message))
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }

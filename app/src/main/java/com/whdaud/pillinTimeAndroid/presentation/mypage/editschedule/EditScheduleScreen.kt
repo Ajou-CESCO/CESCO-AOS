@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,9 +28,13 @@ import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material.icons.twotone.Edit
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -51,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.whdaud.pillinTimeAndroid.R
+import com.whdaud.pillinTimeAndroid.data.remote.dto.ScheduleDTO
 import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
 import com.whdaud.pillinTimeAndroid.presentation.common.CustomAlertDialog
 import com.whdaud.pillinTimeAndroid.presentation.common.CustomTopBar
@@ -74,7 +80,7 @@ import com.whdaud.pillinTimeAndroid.ui.theme.White
 import com.whdaud.pillinTimeAndroid.ui.theme.shapes
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun EditScheduleScreen(
     navController: NavHostController,
@@ -104,11 +110,46 @@ fun EditScheduleScreen(
     } else {
         userDetails?.memberId
     }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackMessage = remember { mutableStateOf("") }
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    var selectedSchedule by remember { mutableStateOf<ScheduleDTO?>(null) }
+
 
     LaunchedEffect(pagerState.currentPage) { selectedUserIndex = pagerState.currentPage }
     LaunchedEffect(memberId) {
         if (memberId != null) {
             viewModel.getDoseSchedule(memberId)
+        }
+    }
+    if(showBottomSheet) {
+        ModalBottomSheet(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = BasicPadding),
+            onDismissRequest = {
+                showBottomSheet = false
+            },
+            sheetState = sheetState,
+            containerColor = White
+        ) {
+            Column(
+                modifier = Modifier.padding(horizontal = BasicPadding)
+            ) {
+                val title = "복약 계획 수정"
+                Text(
+                    modifier = Modifier.padding(bottom = 12.dp),
+                    text =title,
+                    color = Gray90,
+                    style = PillinTimeTheme.typography.logo2Extra
+                )
+                EditScheduleDetailScreen(
+                    schedule = selectedSchedule
+                )
+            }
         }
     }
     Column(
@@ -164,7 +205,9 @@ fun EditScheduleScreen(
                                 Text(text = "11111")
                             }
                         } else {
-                            Box(modifier = Modifier.height(2.dp).background(Color.Transparent))
+                            Box(modifier = Modifier
+                                .height(2.dp)
+                                .background(Color.Transparent))
                             {
                                 Text(text = "11111")
                             }
@@ -298,7 +341,8 @@ fun EditScheduleScreen(
                                                 DropdownMenuItem(
                                                     onClick = {
                                                         expanded = false
-                                                        // Add action for second menu item
+                                                        selectedSchedule = schedule
+                                                        showBottomSheet = true
                                                     },
                                                     text = {
                                                         Text(

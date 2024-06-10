@@ -12,6 +12,8 @@ import androidx.lifecycle.viewModelScope
 import com.whdaud.pillinTimeAndroid.data.local.HealthConnectManager
 import com.whdaud.pillinTimeAndroid.data.remote.dto.request.HealthDataRequest
 import com.whdaud.pillinTimeAndroid.data.remote.dto.response.HealthStatDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.response.RelationReqResponse
+import com.whdaud.pillinTimeAndroid.domain.repository.RelationRepository
 import com.whdaud.pillinTimeAndroid.domain.repository.UserRepository
 import com.whdaud.pillinTimeAndroid.presentation.home.components.roundToNearestHour
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +29,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val healthConnectManager: HealthConnectManager,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val relationRepository: RelationRepository
 ) : ViewModel() {
 
     val permissions = setOf(
@@ -55,6 +58,12 @@ class HomeViewModel @Inject constructor(
     private val _remoteHealthData = MutableStateFlow<HealthStatDTO?>(null)
     val remoteHealthData: StateFlow<HealthStatDTO?> = _remoteHealthData.asStateFlow()
 
+    private val _managerRequest = MutableStateFlow<List<RelationReqResponse>>(emptyList())
+    val managerRequest: StateFlow<List<RelationReqResponse>> = _managerRequest.asStateFlow()
+
+    init {
+        getManagerRequest()
+    }
     fun postLocalHealthData(memberId: Int) {
         viewModelScope.launch {
             permissionsGranted.value = healthConnectManager.hasAllPermissions(permissions)
@@ -101,6 +110,38 @@ class HomeViewModel @Inject constructor(
                 Log.e("Health Dataaaa", "succeed to get remote health data: ${_remoteHealthData.value}")
             }.onFailure {
                 Log.e("Health Data", "failed to get remote health data: ${it.message}")
+            }
+        }
+    }
+
+    fun getManagerRequest() {
+        viewModelScope.launch {
+            val response = relationRepository.getRelationRequest()
+            response.onSuccess { requestResponse ->
+                _managerRequest.value = requestResponse.result
+            }.onFailure { requestResponse ->
+                Log.e("fetch Manager Request", "Failed to fetch requests: ${requestResponse.message}")
+            }
+        }
+    }
+
+    fun acceptManagerRequest(requestId: Int, managerName: String, onResult: (String?) -> Unit) {
+        viewModelScope.launch {
+            val response = relationRepository.postRelation(requestId)
+            response.onSuccess {
+                if(it.status == 200) {
+                    onResult("${managerName}님과 보호관계를 맺었습니다")
+                } else {
+                    onResult("네트워크 에러 발생 다시 시도해주세요")
+                }
+                Log.e("post relation", "succeed to make relation: ${it.message}")
+            }.onFailure {
+                if(it.message?.contains("403") == true) {
+                    onResult("${managerName}님이 프리미엄 회원이 아닙니다")
+                } else {
+                    onResult("알 수 없는 오류 발생 다시 시도해주세요")
+                }
+                Log.e("post relation", "Failed to make relation: ${it.message}")
             }
         }
     }

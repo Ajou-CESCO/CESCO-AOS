@@ -31,7 +31,9 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,9 +47,11 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.whdaud.pillinTimeAndroid.R
 import com.whdaud.pillinTimeAndroid.data.remote.dto.RelationDTO
 import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicPadding
+import com.whdaud.pillinTimeAndroid.presentation.main.MainViewModel
 import com.whdaud.pillinTimeAndroid.presentation.mypage.editinfo.EditInfoBeforeItem
 import com.whdaud.pillinTimeAndroid.ui.theme.Error60
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray10
@@ -55,6 +59,8 @@ import com.whdaud.pillinTimeAndroid.ui.theme.Gray70
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray90
 import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
 import com.whdaud.pillinTimeAndroid.ui.theme.White
+import com.whdaud.pillinTimeAndroid.util.fadeInEffect
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -65,11 +71,11 @@ private enum class HorizontalDragValue { Settled, EndToStart }
 @Composable
 fun CustomSwipeCard(
     isManager: Boolean? = true,
-    relationList: List<RelationDTO>,
+    mainViewModel: MainViewModel = hiltViewModel(),
     onRemove: (RelationDTO) -> Unit = {},
     onDisconnect: (Int) -> Unit = {},
-
 ) {
+    val relationList by mainViewModel.relationInfoList.collectAsState()
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -77,6 +83,12 @@ fun CustomSwipeCard(
     var selectedRelation by remember { mutableStateOf<RelationDTO?>(null) }
     val showCabinetDialog = remember { mutableStateOf(false) }
     val showRelationDialog = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope { Dispatchers.Main }
+
+    LaunchedEffect(relationList) {
+        Log.e("CustomSwipeCard", "relationList updated: $relationList")
+    }
+
     if (showBottomSheet && isManager == true) {
         ModalBottomSheet(
             modifier = Modifier
@@ -101,14 +113,14 @@ fun CustomSwipeCard(
                     EditInfoBeforeItem("성명", relation.memberName)
                     EditInfoBeforeItem("휴대폰 번호", relation.memberPhone)
                     EditInfoBeforeItem("주민등록번호", "${relation.memberSsn}●●●●●●")
+                    Spacer(modifier = Modifier.weight(1f))
                     if(relation.cabinetId != 0) {
-                        Spacer(modifier = Modifier.weight(1f))
                         CustomButton(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(BasicPadding),
+                                .padding(bottom = 12.dp),
                             enabled = true,
-                            filled = ButtonColor.BLANK,
+                            filled = ButtonColor.FILLED,
                             size = ButtonSize.MEDIUM,
                             text = "약통 해제",
                             onClick = {
@@ -116,31 +128,41 @@ fun CustomSwipeCard(
                             }
                         )
                     }
+                    CustomButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = BasicPadding),
+                        enabled = true,
+                        filled = ButtonColor.FILLED,
+                        size = ButtonSize.MEDIUM,
+                        text = "보호관계 삭제",
+                        onClick = {
+                            showRelationDialog.value = true
+                        }
+                    )
                     if(showCabinetDialog.value) {
                         CustomAlertDialog(
-                            title = "약통의 연결을 해제하시겠습니까?",
+                            title = "${relation.memberName}님의 약통 연결을 해제하시겠습니까?",
                             description = "약통의 연결을 해제하시게 되면 더 이상 복용 스케쥴을\n추가하실 수 없게 됩니다.",
                             confirmText = "해제하기",
                             dismissText = "취소하기",
                             onConfirm = {
                                 onDisconnect(relation.cabinetId)
                                 showCabinetDialog.value = false
+                                showBottomSheet = false
                             },
                             onDismiss = { showCabinetDialog.value = false }
                         )
                     }
                 }
-
             }
         }
     }
-    LazyColumn {
-        items(
-            items = relationList,
-            key = { it }
-        ) { relation ->
+    LazyColumn(
+        modifier = Modifier.fadeInEffect()
+    ) {
+        items(items = relationList) { relations ->
             var boxSize by remember { mutableFloatStateOf(0F) }
-            val scope = rememberCoroutineScope()
             val anchors = DraggableAnchors {
                 HorizontalDragValue.Settled at 0f
                 HorizontalDragValue.EndToStart at -boxSize / 5
@@ -168,13 +190,14 @@ fun CustomSwipeCard(
             ) {
                 if(showRelationDialog.value) {
                     CustomAlertDialog(
-                        title = "${relation.memberName}님과의 연결을 해제하시겠습니까?",
+                        title = "${selectedRelation?.memberName}님과의 연결을 해제하시겠습니까?",
                         description = "보호관계 연결을 해제하시게 되면 더 이상 해당 사용자를\n관리하실 수 없게 됩니다.",
                         confirmText = "해제하기",
                         dismissText = "취소하기",
                         onConfirm = {
-                            onRemove(relation)
+                            selectedRelation?.let { onRemove(it) }
                             showRelationDialog.value = false
+                            showBottomSheet = false
                         },
                         onDismiss = { showRelationDialog.value = false }
                     )
@@ -185,11 +208,10 @@ fun CustomSwipeCard(
                         .height(70.dp)
                         .background(iconsBackgroundColor)
                         .align(Alignment.CenterEnd)
-                        .clickable(
-                            onClick = { showRelationDialog.value = true },
-//                            indication = null,
-//                            interactionSource = remember { MutableInteractionSource() }
-                        ),
+                        .clickable(onClick = {
+                            showRelationDialog.value = true
+                            selectedRelation = relations
+                        }),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -215,13 +237,11 @@ fun CustomSwipeCard(
                     .clickable(
                         onClick = {
                             if (state.currentValue == HorizontalDragValue.Settled) {
-                                selectedRelation = relation
+                                selectedRelation = relations
                                 showBottomSheet = true
-                                Log.e("relationCard", "it is settled")
                             } else {
                                 scope.launch {
                                     state.animateTo(HorizontalDragValue.Settled)
-                                    Log.e("relationCard", "it is ended")
                                 }
                             }
                         },
@@ -238,18 +258,18 @@ fun CustomSwipeCard(
                     ) {
                         Column {
                             Text(
-                                text = relation.memberName,
+                                text = relations.memberName,
                                 color = Gray90,
                                 style = PillinTimeTheme.typography.headline5Bold
                             )
                             Text(
-                                text = relation.memberPhone,
+                                text = relations.memberPhone,
                                 color = Gray70,
                                 style = PillinTimeTheme.typography.body2Medium
                             )
                         }
                         val connectivityIcon = if (isManager == true) {
-                            if (relation.cabinetId != 0) R.drawable.ic_connected else R.drawable.ic_disconnected
+                            if (relations.cabinetId != 0) R.drawable.ic_connected else R.drawable.ic_disconnected
                         } else {
                             R.drawable.ic_manager
                         }

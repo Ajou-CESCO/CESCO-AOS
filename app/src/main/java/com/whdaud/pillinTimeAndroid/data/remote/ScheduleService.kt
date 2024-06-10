@@ -8,6 +8,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -34,4 +35,10 @@ interface ScheduleService {
         @Query("memberId") memberId: Int,
         @Query("date") date: String
     ) : BaseResponse<ScheduleLogDTO>
+
+    @PATCH("/api/dose/plan")
+    suspend fun patchDoseSchedule(
+        @Header("Authorization") accessToken: String,
+        @Body scheduleDTO: ScheduleDTO
+    ): BaseResponse<Any>
 }

@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.signin
+package com.whdaud.pillinTimeAndroid.presentation.signin
 
 import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
@@ -9,19 +9,19 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.pillinTimeAndroid.data.local.LocalUserDataSource
-import com.example.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
-import com.example.pillinTimeAndroid.data.remote.dto.request.SignInRequest
-import com.example.pillinTimeAndroid.data.remote.dto.request.SignInSmsAuthRequest
-import com.example.pillinTimeAndroid.domain.repository.FcmRepository
-import com.example.pillinTimeAndroid.domain.repository.SignInRepository
-import com.example.pillinTimeAndroid.presentation.common.InputType
-import com.example.pillinTimeAndroid.presentation.signin.components.SignInPageList
-import com.example.pillinTimeAndroid.presentation.signin.components.signInPages
-import com.example.pillinTimeAndroid.util.PhoneVisualTransformation
-import com.example.pillinTimeAndroid.util.SsnVisualTransformation
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
+import com.whdaud.pillinTimeAndroid.data.local.LocalUserDataSource
+import com.whdaud.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
+import com.whdaud.pillinTimeAndroid.data.remote.dto.request.SignInRequest
+import com.whdaud.pillinTimeAndroid.data.remote.dto.request.SignInSmsAuthRequest
+import com.whdaud.pillinTimeAndroid.domain.repository.FcmRepository
+import com.whdaud.pillinTimeAndroid.domain.repository.SignInRepository
+import com.whdaud.pillinTimeAndroid.presentation.common.InputType
+import com.whdaud.pillinTimeAndroid.presentation.signin.components.SignInPageList
+import com.whdaud.pillinTimeAndroid.presentation.signin.components.signInPages
+import com.whdaud.pillinTimeAndroid.util.PhoneVisualTransformation
+import com.whdaud.pillinTimeAndroid.util.SsnVisualTransformation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

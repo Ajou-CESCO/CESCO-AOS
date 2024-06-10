@@ -1,4 +1,4 @@
-package com.example.pillinTimeAndroid.presentation.mypage.cabinet
+package com.whdaud.pillinTimeAndroid.presentation.mypage.cabinet
 
 import android.util.Log
 import androidx.camera.core.CameraSelector
@@ -14,8 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,13 +27,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
-import com.example.pillinTimeAndroid.presentation.Dimens.BasicHeight
-import com.example.pillinTimeAndroid.presentation.common.CustomToast
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.shouldShowRationale
+import com.whdaud.pillinTimeAndroid.presentation.Dimens
+import com.whdaud.pillinTimeAndroid.presentation.Dimens.BasicHeight
+import com.whdaud.pillinTimeAndroid.presentation.common.CustomSnackBar
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -45,6 +49,8 @@ fun QrCodeReaderScreen(
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(localContext)
     }
+    val snackbarHostState = remember { SnackbarHostState() }
+
     DisposableEffect(Unit) {
         val cameraProvider = cameraProviderFuture.get()
         onDispose {
@@ -68,7 +74,7 @@ fun QrCodeReaderScreen(
                     val imageAnalysis = ImageAnalysis.Builder().build()
                     imageAnalysis.setAnalyzer(
                         ContextCompat.getMainExecutor(context),
-                        QrCodeAnalyzer(context, onQrCodeScanned)
+                        QrCodeAnalyzer(onQrCodeScanned)
                     )
                     runCatching {
                         cameraProviderFuture.get().bindToLifecycle(
@@ -98,6 +104,11 @@ fun QrCodeReaderScreen(
             }
         }
     } else if (cameraPermissionState.status.shouldShowRationale) {
+        LaunchedEffect(key1 = true) {
+            snackbarHostState.showSnackbar(
+                message = "카메라 권한을 확인해주세요"
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -105,13 +116,35 @@ fun QrCodeReaderScreen(
                 .background(Color.Transparent),
             contentAlignment = Alignment.BottomCenter
         ) {
-            CustomToast(text = "카메라 권한을 확인해주세요") {
-                onDismiss()
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = Dimens.BasicPadding)
+                    .align(Alignment.BottomCenter)
+                    .zIndex(1f)
+            ) {
+                CustomSnackBar(
+                    snackbarHostState = snackbarHostState,
+                    message = "카메라 권한을 확인해주세요"
+                )
             }
+            Log.e("qr", "no permission1111")
+
         }
     } else {
         SideEffect {
             cameraPermissionState.run { launchPermissionRequest() }
+        }
+        Log.e("qr", "no permission")
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = Dimens.BasicPadding)
+                .zIndex(1f)
+        ) {
+            CustomSnackBar(
+                snackbarHostState = snackbarHostState,
+                message = "카메라 권한을 확인해주세요"
+            )
         }
     }
 }

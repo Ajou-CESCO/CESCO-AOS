@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -14,6 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import com.whdaud.pillinTimeAndroid.R
 import com.whdaud.pillinTimeAndroid.presentation.common.ButtonColor
 import com.whdaud.pillinTimeAndroid.presentation.common.ButtonSize
@@ -25,8 +30,6 @@ import com.whdaud.pillinTimeAndroid.presentation.common.InputType
 import com.whdaud.pillinTimeAndroid.ui.theme.Error90
 import com.whdaud.pillinTimeAndroid.ui.theme.Gray40
 import com.whdaud.pillinTimeAndroid.ui.theme.PillinTimeTheme
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
