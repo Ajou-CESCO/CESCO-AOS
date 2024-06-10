@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.whdaud.pillinTimeAndroid.data.local.LocalUserDataSource
 import com.whdaud.pillinTimeAndroid.data.remote.dto.FCMTokenDTO
 import com.whdaud.pillinTimeAndroid.data.remote.dto.request.SignUpRequest
@@ -11,8 +13,6 @@ import com.whdaud.pillinTimeAndroid.data.remote.dto.response.RelationReqResponse
 import com.whdaud.pillinTimeAndroid.domain.repository.FcmRepository
 import com.whdaud.pillinTimeAndroid.domain.repository.RelationRepository
 import com.whdaud.pillinTimeAndroid.domain.repository.SignUpRepository
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -87,17 +87,27 @@ class SignUpViewModel @Inject constructor(
             }
         }
     }
-    fun acceptManagerRequest(requestId: Int, navController: NavController) {
+    fun acceptManagerRequest(requestId: Int, managerName: String, navController: NavController, onResult: (String?) -> Unit) {
         viewModelScope.launch {
             val response = relationRepository.postRelation(requestId)
             response.onSuccess {
-                Log.e("post relation", "succeed to make relation: ${it.message}")
-                navController.navigate("bottomNavigatorScreen") {
-                    popUpTo(navController.graph.id) {
-                        inclusive = true
+                if(it.status == 200) {
+                    onResult("${managerName}님과 보호관계를 맺었습니다")
+                    navController.navigate("bottomNavigatorScreen") {
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
                     }
+                } else {
+                    onResult("네트워크 에러 발생 다시 시도해주세요")
                 }
+                Log.e("post relation", "succeed to make relation: ${it.message}")
             }.onFailure {
+                if(it.message?.contains("403") == true) {
+                    onResult("${managerName}님이 프리미엄 회원이 아닙니다")
+                } else {
+                    onResult("알 수 없는 오류 발생 다시 시도해주세요")
+                }
                 Log.e("post relation", "Failed to make relation: ${it.message}")
             }
         }
