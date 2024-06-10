@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "587316879541",
+    "project_id": "pillintime-49253",
+    "storage_bucket": "pillintime-49253.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587316879541:android:ca1509c8ef3009513f9efc",
+        "android_client_info": {
+          "package_name": "com.example.pillinTimeAndroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBo7qxY0ezxGZKOZdnngznW1dXGHhMmng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587316879541:android:5ea0987fdae44a403f9efc",
+        "android_client_info": {
+          "package_name": "com.whdaud.pillinTimeAndroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBo7qxY0ezxGZKOZdnngznW1dXGHhMmng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

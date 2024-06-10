@@ -19,11 +19,11 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.pillinTimeAndroid"
+    namespace = "com.whdaud.pillinTimeAndroid"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.pillinTimeAndroid"
+        applicationId = "com.whdaud.pillinTimeAndroid"
         minSdk = 34
         targetSdk = 34
         versionCode = 1
@@ -35,7 +35,7 @@ android {
         }
 
         buildConfigField("String", "BASE_URL", "${properties["BASE_URL"]}")
-
+        buildConfigField("String", "TOSS_KEY", "${properties["TOSS_KEY"]}")
     }
 
     buildTypes {
@@ -133,8 +133,11 @@ dependencies {
     implementation(libs.firebase.crashlytics)
 
     // QR code
-    implementation (libs.androidx.camera.camera2)
-    implementation (libs.androidx.camera.lifecycle)
-    implementation (libs.androidx.camera.view)
-    implementation (libs.barcode.scanning)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.barcode.scanning)
+
+    // Toss Payments
+    implementation(libs.payment.sdk.android)
 }
