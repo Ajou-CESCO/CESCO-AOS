@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="App.Starting.Theme" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#5454FF</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_main_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.PillinTimeAndroid</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_team_logo</item>
+    </style>
+</resources>
