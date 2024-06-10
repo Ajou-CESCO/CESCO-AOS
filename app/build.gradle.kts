@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.daggerHilt)
     alias(libs.plugins.kotlinParcelize)
+    alias(libs.plugins.googleService)
+    alias(libs.plugins.firebaseCrashlytics)
 }
 
 val properties = Properties()
@@ -17,12 +19,12 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.pillinTimeAndroid"
+    namespace = "com.whdaud.pillinTimeAndroid"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.pillinTimeAndroid"
-        minSdk = 31
+        applicationId = "com.whdaud.pillinTimeAndroid"
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -33,7 +35,7 @@ android {
         }
 
         buildConfigField("String", "BASE_URL", "${properties["BASE_URL"]}")
-
+        buildConfigField("String", "TOSS_KEY", "${properties["TOSS_KEY"]}")
     }
 
     buildTypes {
@@ -106,10 +108,13 @@ dependencies {
 
     // Accompanist
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.permissions)
 
-    // Retrofit
+
+    // Retrofit & OkHttp3
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation(libs.okhttp)
 
     // Paging3
     implementation(libs.androidx.paging.runtime)
@@ -117,4 +122,22 @@ dependencies {
 
     // Lottie Animation
     implementation(libs.lottie)
+
+    // Google Health Connect
+    implementation(libs.androidx.connect.client)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
+
+    // QR code
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.barcode.scanning)
+
+    // Toss Payments
+    implementation(libs.payment.sdk.android)
 }
